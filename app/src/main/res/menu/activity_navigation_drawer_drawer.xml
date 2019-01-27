@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--側滑選單item-->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/itemSignIn"
+            android:title="@string/stringSignIn" />
+        <item
+            android:id="@+id/itemNews"
+            android:title="@string/stringNews" />
+        <item
+            android:id="@+id/itemMember"
+            android:title="@string/stringMember" />
+        <item
+            android:id="@+id/itemMall"
+            android:title="@string/stringMall" />
+        <item
+            android:id="@+id/itemOrder"
+            android:title="@string/stringOrder" />
+        <item
+            android:id="@+id/itemForums"
+            android:title="@string/stringForum" />
+        <item
+            android:id="@+id/itemLives"
+            android:title="@string/stringLives" />
+        <item
+            android:id="@+id/itemCustomerService"
+            android:title="@string/stringCustomerService" />
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Share" />
+            <item
+                android:id="@+id/nav_send"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Send" />
+            <item
+                android:id="@+id/homepage"
+                android:title="首頁" />
+            <item
+                android:id="@+id/settings"
+                android:title="設定" />
+            <item
+                android:id="@+id/logout"
+                android:title="登出" />
+        </menu>
+    </item>
+
+</menu>

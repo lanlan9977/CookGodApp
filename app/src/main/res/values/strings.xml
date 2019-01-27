@@ -1,0 +1,55 @@
+<resources>
+    <string name="app_name">食神來了</string>
+    <string name="signInactivity">SignInActivity</string>
+
+
+
+    <!--主畫面-->
+    <string name="stringNews">最新消息</string>
+    <string name="stringLives">直播專區</string>
+    <string name="stringForum">主廚論壇</string>
+    <string name="stringMall">商城</string>
+    <string name="stringMember">會員專區</string>
+    <string name="stringOrder">訂單管理</string>
+    <string name="stringCustomerService">線上客服</string>
+    <!--登入會員-->
+    <string name="stringSignIn">登入</string>
+    <string name="stringLogin">登入會員</string>
+    <string name="stringKeyId">輸入帳號</string>
+    <string name="stringKeyPassword">輸入密碼</string>
+    <string name="error_invalid_email">此電子郵件地址無效</string>
+    <string name="error_invalid_password">密碼的長度太短</string>
+    <string name="error_field_required">這是必填的欄位</string>
+    <string name="error_incorrect_password">此密碼無法識別</string>
+    <!--側欄-->
+    <string name="open_drawer">打開側欄</string>
+    <string name="close_drawer">關閉側欄</string>
+    <!--直播專區Menu-->
+    <string name="stringStartLive">開始直播</string>
+    <string name="stringStopLive">停止直播</string>
+
+
+
+
+
+    <string name="title_activity_navigation_drawer">NavigationDrawerActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_login">Sign in</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+
+
+
+
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+</resources>

@@ -1,0 +1,25 @@
+<resources>
+
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- 黑色頂端列-->
+        <item name="colorPrimary">@color/colorBlack</item>
+        <item name="colorPrimaryDark">@color/colorGary</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:itemBackground">@color/colorBlack</item><!-- menu背景顏色 勿動 -->
+        <item name="android:textColor">@color/colorWhite</item> <!-- menu字體顏色 勿動 -->
+
+    </style>
+
+    <!--&lt;!&ndash; &ndash;&gt;-->
+    <!--<style name="AppTheme.NoActionBar">-->
+        <!--<item name="windowActionBar">false</item> &lt;!&ndash;此屬性表示 Activity 不會有預設的 Toolbar&ndash;&gt;-->
+        <!--<item name="windowNoTitle">true</item>&lt;!&ndash;此屬性表示 Activity 預設的 Toolbar 將不會有 label&ndash;&gt;-->
+
+    <!--</style>-->
+
+    <!--<style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />-->
+
+    <!--<style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />-->
+
+</resources>

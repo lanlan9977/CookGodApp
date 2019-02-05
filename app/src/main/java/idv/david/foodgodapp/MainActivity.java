@@ -12,9 +12,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
+
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private Toolbar toolbar;
@@ -136,7 +135,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         count++;
         provider.setBadge(count);
     }
-
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {

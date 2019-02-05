@@ -16,13 +16,13 @@ public class MemberActivity extends AppCompatActivity {
     }
 
     private void findViews() {
-        Customer customer=new Customer();
-        textViewNo=findViewById(R.id.idNo);
-        textViewId=findViewById(R.id.idId);
-        textViewPassword=findViewById(R.id.idPassword);
-        textViewNo.setText(customer.getCustomerNo());
-        textViewId.setText(customer.getCustomerId());
-        textViewPassword.setText(customer.getCustomerPassword());
+//        Customer customer=new Customer();
+//        textViewNo=findViewById(R.id.idNo);
+//        textViewId=findViewById(R.id.idId);
+//        textViewPassword=findViewById(R.id.idPassword);
+//        textViewNo.setText(customer.getCustomerNo());
+//        textViewId.setText(customer.getCustomerId());
+//        textViewPassword.setText(customer.getCustomerPassword());
     }
 }
 

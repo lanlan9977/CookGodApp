@@ -1,34 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--menu item-->
+<?xml version="1.0" encoding="utf-8"?><!--menu item-->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
-
     <item
-        android:id="@+id/itemSignIn"
-        android:title="@string/stringSignIn" />
-    <item
-        android:id="@+id/itemNews"
-        android:title="@string/stringNews" />
-    <item
-        android:id="@+id/itemMember"
-        android:title="@string/stringMember" />
-    <item
-        android:id="@+id/itemMall"
-        android:title="@string/stringMall" />
-    <item
-        android:id="@+id/itemOrder"
-        android:title="@string/stringOrder" />
-    <item
-        android:id="@+id/itemForums"
-        android:title="@string/stringForum" />
-    <item
-        android:id="@+id/itemLives"
-        android:title="@string/stringLives" />
-    <item
-        android:id="@+id/itemCustomerService"
-        android:title="@string/stringCustomerService" />
-
+        android:id="@+id/myBadge"
+        android:title="Alarm"
+        app:actionProviderClass="idv.david.foodgodapp.BadgeActionProvider"
+        app:showAsAction="always" />
+    <!-- actionProviderClass用來配置icon-->
 
 </menu>

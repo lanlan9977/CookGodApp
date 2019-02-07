@@ -27,6 +27,8 @@
     <!--直播專區Menu-->
     <string name="stringStartLive">開始直播</string>
     <string name="stringStopLive">停止直播</string>
+    <!--推播通知專區-->
+    <string name="stringMainBroast">開啟推播通知</string>
 
 
 

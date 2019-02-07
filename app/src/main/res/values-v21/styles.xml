@@ -9,10 +9,4 @@
 
     </style>
 
-
-    <!--<style name="AppTheme.NoActionBar">-->
-        <!--<item name="windowActionBar">false</item> &lt;!&ndash;此屬性表示 Activity 不會有預設的 Toolbar&ndash;&gt;-->
-        <!--<item name="windowNoTitle">true</item>&lt;!&ndash;此屬性表示 Activity 預設的 Toolbar 將不會有 label&ndash;&gt;-->
-        <!--<item name="android:statusBarColor">@android:color/transparent</item> &lt;!&ndash;此屬性表示 status bar 背景為透明&ndash;&gt;-->
-    <!--</style>-->
 </resources>

@@ -5,18 +5,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
-public class WelcomeActivity extends Activity{
+public class WelcomeActivity extends Activity {
+
+    private static final int GOTO_MAIN_ACTIVITY = 0;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome_layout);
-        mHandler.sendEmptyMessageDelayed(GOTO_MAIN_ACTIVITY, 1000); //1秒跳轉
+        mHandler.sendEmptyMessageDelayed(GOTO_MAIN_ACTIVITY, 1000);
+        //Android提供sendMessage的機制
+        //用Handler延遲傳送一個訊息，這樣Handler在2秒後收到訊息後再去執行跳轉程式碼
     }
-    private static final int GOTO_MAIN_ACTIVITY = 0;
+
     private Handler mHandler = new Handler() {//Handler負責派送訊息
         public void handleMessage(android.os.Message msg) {
-
             switch (msg.what) {
+                //檢查msg.what若為GOTO_MAIN_ACTIVITY，就執行，
                 case GOTO_MAIN_ACTIVITY:
                     Intent intent = new Intent();
                     //將原本Activity的換成MainActivity
@@ -24,7 +29,6 @@ public class WelcomeActivity extends Activity{
                     startActivity(intent);
                     finish();
                     break;
-
                 default:
                     break;
             }

@@ -62,7 +62,7 @@
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
         <activity
             android:name=".LoginActivity"
-            android:label="@string/stringSignIn"
+            android:label="@string/stringLoginM"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar"></activity>
     </application>
 

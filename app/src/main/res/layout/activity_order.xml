@@ -14,12 +14,21 @@
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:tabBackground="@color/colorWhite"
+            app:tabContentStart="999dp"
             app:tabGravity="fill"
-            app:tabIndicatorColor="#000000"
-            app:tabIndicatorHeight="5dp"
+            app:tabIndicatorColor="#ffD700"
+            app:tabIndicatorHeight="50dp"
+            app:tabInlineLabel="false"
             app:tabMaxWidth="0dp"
             app:tabMode="fixed" />
     </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 
 </android.support.design.widget.CoordinatorLayout><!--訂單專區-->

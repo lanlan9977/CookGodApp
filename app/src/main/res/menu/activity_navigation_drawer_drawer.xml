@@ -6,9 +6,6 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/itemSignIn"
-            android:title="@string/stringSignIn" />
-        <item
             android:id="@+id/itemNews"
             android:title="@string/stringNews" />
         <item

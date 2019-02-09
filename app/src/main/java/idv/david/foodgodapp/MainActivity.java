@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         inflater.inflate(R.menu.option_menu, menu);
         //將option_menu inflate使用（膨脹）
 
-
         MenuItem menuItem = menu.findItem(R.id.myBadge);
         provider = (BadgeActionProvider) MenuItemCompat.getActionProvider(menuItem);
         provider.setOnClickListener(0, onClickListener);
@@ -69,36 +68,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return false;
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        //設定Navigation側滑Item轉至該Activity
         switch (item.getItemId()) {
-            case R.id.itemSignIn://(登入專區)
-                onNavigationItemSelectedTo(R.string.stringSignIn, LoginActivity.class);
-                break;
-            case R.id.itemNews://(廣告專區)
-                onNavigationItemSelectedTo(R.string.stringNews, NewsActivity.class);
-                break;
-            case R.id.itemMember://(會員專區)
-                onNavigationItemSelectedTo(R.string.stringMember, MemberActivity.class);
-                break;
-            case R.id.itemMall://(商城專區)
-                onNavigationItemSelectedTo(R.string.stringMall, MallActivity.class);
-                break;
-            case R.id.itemOrder://(訂單專區)
-                onNavigationItemSelectedTo(R.string.stringOrder, OrderActivity.class);
-                break;
-            case R.id.itemForums://(論壇專區)
-                onNavigationItemSelectedTo(R.string.stringForum, ForumActivity.class);
-                break;
-            case R.id.itemLives://(直播專區)
-                onNavigationItemSelectedTo(R.string.stringLives, LivesActivity.class);
-                break;
-            case R.id.itemCustomerService://(客服專區)
-                onNavigationItemSelectedTo(R.string.stringCustomerService, CustomerServiceActivity.class);
+            case R.id.idLogin://(登入專區)
+                onItemSelectedTo(R.string.stringLoginM, LoginActivity.class);
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -106,7 +78,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    public void onNavigationItemSelectedTo(int toastString, Class toClass) {
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        //設定Navigation側滑Item轉至該Activity
+        switch (item.getItemId()) {
+            case R.id.itemNews://(廣告專區)
+                onItemSelectedTo(R.string.stringNews, NewsActivity.class);
+                break;
+            case R.id.itemMember://(會員專區)
+                onItemSelectedTo(R.string.stringMember, MemberActivity.class);
+                break;
+            case R.id.itemMall://(商城專區)
+                onItemSelectedTo(R.string.stringMall, MallActivity.class);
+                break;
+            case R.id.itemOrder://(訂單專區)
+                onItemSelectedTo(R.string.stringOrder, OrderActivity.class);
+                break;
+            case R.id.itemForums://(論壇專區)
+                onItemSelectedTo(R.string.stringForum, ForumActivity.class);
+                break;
+            case R.id.itemLives://(直播專區)
+                onItemSelectedTo(R.string.stringLives, LivesActivity.class);
+                break;
+            case R.id.itemCustomerService://(客服專區)
+                onItemSelectedTo(R.string.stringCustomerService, CustomerServiceActivity.class);
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return true;
+    }
+
+    public void onItemSelectedTo(int toastString, Class toClass) {
         //設定要跳轉的Activity&動畫
         Intent intent = new Intent();
         intent.setClass(MainActivity.this, toClass);

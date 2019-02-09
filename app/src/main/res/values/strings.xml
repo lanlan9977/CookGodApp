@@ -3,8 +3,8 @@
     <string name="signInactivity">SignInActivity</string>
 
 
-
     <!--主畫面-->
+    <string name="stringLoginM">登入</string>
     <string name="stringNews">最新消息</string>
     <string name="stringLives">直播專區</string>
     <string name="stringForum">主廚論壇</string>
@@ -13,7 +13,6 @@
     <string name="stringOrder">訂單管理</string>
     <string name="stringCustomerService">線上客服</string>
     <!--登入會員-->
-    <string name="stringSignIn">登入</string>
     <string name="stringLogin">登入會員</string>
     <string name="stringKeyId">輸入帳號</string>
     <string name="stringKeyPassword">輸入密碼</string>
@@ -31,7 +30,7 @@
     <string name="stringMainBroast">開啟推播通知</string>
 
 
-
+    <string name="stringOrderTest">太誇張了吧！一名77歲老婦人在英國埃克斯茅斯（Exmouth）的家中重摔在地，因為骨盆被撞裂而不敢妄動，幸好一旁還有親戚幫忙打了999緊急電話，遠在倫敦工作的親兒子馬克（Mark Clements）接到電話後立刻趕回家，但因為兩地相距甚遠，馬克花費了4個小時一路轉乘終於趕回老家，沒想到距家只要10分鐘路程的救護車竟然還沒到！</string>
 
 
     <string name="title_activity_navigation_drawer">NavigationDrawerActivity</string>
@@ -47,8 +46,6 @@
     <string name="prompt_password">Password (optional)</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
-
-
 
 
     <string name="permission_rationale">"Contacts permissions are needed for providing email

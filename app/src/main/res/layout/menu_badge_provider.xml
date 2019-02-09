@@ -4,6 +4,8 @@
     android:layout_height="match_parent"
     android:background="?actionBarItemBackground">
 
+
+    <!--圖標-->
     <ImageView
         android:id="@+id/ivIcon"
         android:layout_width="wrap_content"
@@ -11,6 +13,7 @@
         android:layout_centerInParent="true"
         android:scaleType="center" />
 
+    <!--數量-->
     <TextView
         android:id="@+id/tvBadge"
         android:layout_width="wrap_content"

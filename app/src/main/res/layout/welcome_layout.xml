@@ -4,4 +4,4 @@
     android:layout_height="match_parent"
     android:background="@drawable/home">
 </LinearLayout>
-<!--登入畫面-->
+<!--登入前畫面-->

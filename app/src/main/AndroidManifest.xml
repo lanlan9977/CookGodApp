@@ -5,7 +5,11 @@
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" /> <!-- <meta-data -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+    <!--開啟外部相機功能-->
+    <!--<uses-feature android:name="android.hardware.Camera"/>-->
+    <!-- <meta-data -->
     <!-- android:name="com.google.android." -->
     <!-- android:value="@integer/google_play_services_version" /> -->
     <!-- <meta-data -->

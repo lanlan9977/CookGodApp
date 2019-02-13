@@ -32,7 +32,7 @@ public class MenuOrderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_menuorder, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = view.findViewById(R.id.menuOrderView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(new MenuOrderAdapter(inflater));
 

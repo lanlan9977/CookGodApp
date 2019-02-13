@@ -89,6 +89,7 @@ public class OrderActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
             return pageList.get(position).getFragment();
         }
 

@@ -12,7 +12,7 @@ public class WelcomeActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.welcome_layout);
+        setContentView(R.layout.activity_welcome);
         mHandler.sendEmptyMessageDelayed(GOTO_MAIN_ACTIVITY, 1000);
         //Android提供sendMessage的機制
         //用Handler延遲傳送一個訊息，這樣Handler在2秒後收到訊息後再去執行跳轉程式碼

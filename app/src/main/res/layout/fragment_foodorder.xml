@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="idv.david.foodgodapp.order.fragment.MenuOrderFragment">
+    tools:context="idv.david.foodgodapp.order.fragment.FoodOrderFragment">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/menuOrderView"
+        android:id="@+id/foodOrderView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

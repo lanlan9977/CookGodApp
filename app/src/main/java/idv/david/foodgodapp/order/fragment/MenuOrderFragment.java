@@ -10,6 +10,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,7 +24,7 @@ public class MenuOrderFragment extends Fragment {
     public MenuOrderFragment() {
 //        利用建構子帶入MENU_ORDER VO
         MenuOrderList = new ArrayList<>();
-        MenuOrder menuOrder = new MenuOrder("M02091",0,new Date(),new Date(),new Date(),0,"","C00001","C00001","M00001");
+        MenuOrder menuOrder = new MenuOrder("M02091", "M1", new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()), new Date(), 0, "", "C00001", "C00001", "M00001");
 
         MenuOrderList.add(menuOrder);
     }
@@ -66,8 +67,8 @@ public class MenuOrderFragment extends Fragment {
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, int position) {
             final MenuOrder MenuOrder = MenuOrderList.get(position);
-            viewHolder.idMenu_or_id.setText(MenuOrder.getMenu_or_id());
-            viewHolder.idMenu_or_appt.setText((MenuOrder.getMenu_or_appt()).toString());
+            viewHolder.idMenu_or_id.setText(MenuOrder. getMenu_ID());
+            viewHolder.idMenu_or_appt.setText((MenuOrder.getMenu_od_book()).toString());
 
             viewHolder.itemView.setOnClickListener(new OnClickListener() {
                 @Override

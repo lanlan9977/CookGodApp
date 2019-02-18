@@ -2,7 +2,6 @@
     <string name="app_name">食神來了</string>
     <string name="signInactivity">SignInActivity</string>
 
-
     <!--主畫面-->
     <string name="stringLoginM">登入</string>
     <string name="stringNews">最新消息</string>
@@ -30,10 +29,19 @@
     <string name="stringMainBroast">開啟推播通知</string>
     <!--訂單專區-->
     <string name="stringCameraQRCode">開啟相機功能</string>
-    <string name="stringQRCode">顯示訂單QRCode</string>
+    <string name="stringOrderQRCode">顯示訂單QRCode</string>
+    <!--主廚食材訂單-->
+    <string name="stringChefOrder">選擇訂單所需食材</string>
+    <!--訂單審核選單-->
+    <string-array name="stringArrayStatus">
+        <item name="stringArrayStatusReady">請審核</item>
+        <item name="stringArrayStatusOK">審核通過</item>
+        <item name="stringArrayStatusNO">審核不通過</item>
+    </string-array>
 
 
-    <string name="stringOrderTest">太誇張了吧！一名77歲老婦人在英國埃克斯茅斯（Exmouth）的家中重摔在地，因為骨盆被撞裂而不敢妄動，幸好一旁還有親戚幫忙打了999緊急電話，遠在倫敦工作的親兒子馬克（Mark Clements）接到電話後立刻趕回家，但因為兩地相距甚遠，馬克花費了4個小時一路轉乘終於趕回老家，沒想到距家只要10分鐘路程的救護車竟然還沒到！</string>
+
+
 
 
     <string name="title_activity_navigation_drawer">NavigationDrawerActivity</string>

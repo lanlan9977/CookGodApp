@@ -7,8 +7,8 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
-    <!--開啟外部相機功能-->
-    <!--<uses-feature android:name="android.hardware.Camera"/>-->
+    <!-- 開啟外部相機功能 -->
+    <!-- <uses-feature android:name="android.hardware.Camera"/> -->
     <!-- <meta-data -->
     <!-- android:name="com.google.android." -->
     <!-- android:value="@integer/google_play_services_version" /> -->
@@ -39,35 +39,41 @@
         <activity
             android:name=".CustomerServiceActivity"
             android:label="@string/stringCustomerService"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity
             android:name=".ForumActivity"
             android:label="@string/stringForum"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity
             android:name=".LivesActivity"
             android:label="@string/stringLives"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity
             android:name=".MallActivity"
             android:label="@string/stringMall"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity
             android:name=".MemberActivity"
             android:label="@string/stringMember"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity
             android:name=".NewsActivity"
             android:label="@string/stringNews"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity
             android:name=".OrderActivity"
             android:label="@string/stringOrder"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity
             android:name=".LoginActivity"
             android:label="@string/stringLoginM"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+        <activity
+            android:name=".ChefOrderActivity"
+            android:label="@string/stringChefOrder"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
+
+
     </application>
 
 </manifest>

@@ -43,30 +43,32 @@
         app:layout_behavior="@string/bottom_sheet_behavior">
         <!-- 容器需加上layout_behavior這個設定，才會是系統認定的Bottom Sheets -->
         <!-- 並把此容器(不一定得是NestedScrollView，RelativeLayout, LinearLayout都可以)放置於CoordinatorLayout裡 -->
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
-
+            android:gravity="center_vertical">
             <TextView
                 android:id="@+id/idMenu_Order_msg"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="16dp"
-                android:textSize="16sp" />
-            <Button
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="end"
-                android:text="@string/stringOrderQRCode"/>
+                android:layout_height="300dp"
+                android:padding="10dp"
+                android:paddingBottom="20dp"
+                android:textSize="17sp"/>
+            <Button
+                android:id="@+id/idOrderQRCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:text="@string/stringOrderQRCode"
+                android:layout_toRightOf ="@id/idReviewStatus"/>
             <Spinner
                 android:id="@+id/idReviewStatus"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:spinnerMode="dropdown"
-                android:layout_gravity="center"></Spinner>
-        </LinearLayout>
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:spinnerMode="dialog"
+                android:layout_gravity="left"/>
+        </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>
     <!--設定訂單下方ScrollView-->
 

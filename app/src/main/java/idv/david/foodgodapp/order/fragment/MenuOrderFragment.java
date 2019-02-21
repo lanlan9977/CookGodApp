@@ -19,6 +19,7 @@ import idv.david.foodgodapp.MenuOrder;
 import idv.david.foodgodapp.R;
 
 public class MenuOrderFragment extends Fragment {
+
     private List<MenuOrder> MenuOrderList;
 
     public MenuOrderFragment() {
@@ -28,6 +29,7 @@ public class MenuOrderFragment extends Fragment {
 
         MenuOrderList.add(menuOrder);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
@@ -83,7 +85,9 @@ public class MenuOrderFragment extends Fragment {
             return MenuOrderList.size();
         }
 
+
     }
+
 
 }
 

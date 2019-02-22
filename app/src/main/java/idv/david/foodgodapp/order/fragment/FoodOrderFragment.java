@@ -51,14 +51,14 @@ public class FoodOrderFragment extends Fragment {
 
             public ViewHolder(View itemView) {
                 super(itemView);
-                idMenu_or_id = itemView.findViewById(R.id.idMenu_or_id);
-                idMenu_or_appt = itemView.findViewById(R.id.idMenu_or_appt);
+                idMenu_or_id = itemView.findViewById(R.id.idFood_or_id);
+                idMenu_or_appt = itemView.findViewById(R.id.idFood_or_appt);
             }
         }
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View itemView = inflater.inflate(R.layout.card_menuorder, parent, false);
+            View itemView = inflater.inflate(R.layout.card_foodorder, parent, false);
             ViewHolder viewHolder = new ViewHolder(itemView);
             return viewHolder;
         }

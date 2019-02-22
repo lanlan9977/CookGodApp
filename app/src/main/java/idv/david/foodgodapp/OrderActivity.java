@@ -1,10 +1,5 @@
 package idv.david.foodgodapp;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.TabLayout;
@@ -13,7 +8,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,18 +17,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.lang.reflect.Type;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,7 +33,8 @@ public class OrderActivity extends AppCompatActivity {
     private TextView textView;
     private boolean isOnClick;
     private Spinner reviewStauts;
-    private AsyncTask retrieveMenuOrderTask;
+
+
 
 
     @Override
@@ -74,19 +57,11 @@ public class OrderActivity extends AppCompatActivity {
         MenuOrderDisplay();//展示下方訂單內容方法
         findViews();
 
-        if (networkConnected()) {
-            retrieveMenuOrderTask = new RetrieveMenuOrderTask().execute(Util.URL);
-        }else{
-            Toast.makeText(this, "沒有網路", Toast.LENGTH_SHORT).show();
-        }
+
 
     }
 
-    private boolean networkConnected() {
-        ConnectivityManager conManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = conManager.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnected();
-    }
+
 
     private void findViews() {
         reviewStauts = findViewById(R.id.idReviewStatus);
@@ -191,85 +166,5 @@ public class OrderActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
-
-
-    private class RetrieveMenuOrderTask extends AsyncTask<String, String, List<String>> {
-        private ProgressDialog progressDialog;
-        private final static String TAG="OrderActivity";
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(OrderActivity.this);
-            progressDialog.setMessage("Loading...");
-            progressDialog.show();
-        }
-
-        @Override
-        protected List<String> doInBackground(String... params) {
-            String url = params[0];
-            String jsonIn;
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("param", "area");
-            jsonIn = getRemoteData(url, jsonObject.toString());
-            Gson gson = new Gson();
-            Type listType = new TypeToken<List<String>>() {
-            }.getType();
-
-            return gson.fromJson(jsonIn,listType);
-        }
-
-        @Override
-        protected void onPostExecute(List<String> items) {
-            ArrayAdapter<String> adapter=new ArrayAdapter<>(OrderActivity.this,android.R.layout.simple_list_item_1,items);
-            adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-            reviewStauts.setAdapter(adapter);
-            progressDialog.cancel();
-
-
-        }
-
-        private String getRemoteData(String url, String outStr) {
-            HttpURLConnection connection = null;
-            StringBuilder inStr = new StringBuilder();
-            try {
-                connection = (HttpURLConnection) new URL(url).openConnection();
-                connection.setDoInput(true); // allow inputs
-                connection.setDoOutput(true); // allow outputs
-                // 不知道請求內容大小時可以呼叫此方法將請求內容分段傳輸，設定0代表使用預設大小
-                connection.setChunkedStreamingMode(0);
-                connection.setUseCaches(false); // do not use a cached copy
-                connection.setRequestMethod("POST");
-                connection.setRequestProperty("charset", "UTF-8");
-                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
-                bw.write(outStr);
-                Log.d(TAG, "output: " + outStr);
-                bw.close();
-
-                int responseCode = connection.getResponseCode();
-                if (responseCode == 200) {
-                    BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                    String line;
-                    while ((line = br.readLine()) != null) {
-                        inStr.append(line);
-                    }
-                } else {
-                    Log.d(TAG, "response code: " + responseCode);
-                }
-            } catch (IOException e) {
-                Log.e(TAG, e.toString());
-            } finally {
-                if (connection != null) {
-                    connection.disconnect();
-                }
-            }
-            Log.d(TAG, "input: " + inStr);
-            return inStr.toString();
-        }
-    }
 }
 

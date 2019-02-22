@@ -18,9 +18,9 @@
         android:id="@+id/idMenu_Order_Layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#878787"
+        android:background="#13a629"
         android:gravity="center_vertical"
-        android:onClick="orderClick"
+        android:onClick="onOrderClick"
         android:orientation="vertical"
         android:paddingLeft="8dp"
         android:paddingTop="8dp"
@@ -33,7 +33,8 @@
             android:layout_height="wrap_content"
             android:text="Android version name"
             android:textColor="@color/primary_text_default_material_light"
-            android:textSize="@dimen/abc_text_size_subhead_material" />
+            android:textSize="@dimen/abc_text_size_caption_material"
+            />
         <!--訂單名稱-->
 
         <TextView
@@ -43,7 +44,8 @@
             android:paddingTop="3dp"
             android:text="Test"
             android:textColor="@color/secondary_text_default_material_light"
-            android:textSize="@dimen/abc_text_size_caption_material" />
+            android:textSize="@dimen/abc_text_size_subhead_material"
+           />
         <!--訂單內容-->
     </LinearLayout>
 </android.support.v7.widget.CardView>

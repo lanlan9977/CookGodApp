@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -74,9 +73,8 @@
         <activity
             android:name=".ChefOrderActivity"
             android:label="@string/stringChefOrder"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
-
-
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+        <activity android:name=".Login2Activity"></activity>
     </application>
 
 </manifest>

@@ -12,7 +12,7 @@
     <item
         android:id="@+id/myBadge"
         android:title="Alarm"
-        app:actionProviderClass="idv.david.foodgodapp.BadgeActionProvider"
+        app:actionProviderClass="com.cookgod.BadgeActionProvider"
         app:showAsAction="always" />
 
     <!-- actionProviderClass用來配置icon-->

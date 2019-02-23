@@ -1,114 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context=".LoginActivity">
-
-    <!-- Login progress -->
-    <!-- merge與FrameLayout布局相同，都是幀布局，不同的是，當LayoutInflater遇到這個標簽時，它會跳過它，並將<merge />內的元素添加到<merge />的父元素裏。 -->
-
-    <!-- 這個線性布局是驗證等待對話框的根元素，這個線性布局包含一個環形進度條，和一個字符標簽 -->
-    <!-- 設置子元素在這個布局中心排布 -->
-    <!-- 設置該布局在父布局及界面中心水平放置 -->
-    <!-- 設置子布局縱向布局 -->
-    <!-- 設置這個布局界面隱藏不可見 -->
+    tools:context=".LoginActivity"
+    android:orientation="vertical">
 
     <ProgressBar
-        android:id="@+id/login_progress"
-        style="?android:attr/progressBarStyleLarge"
+        android:id="@+id/idProgressBar"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone" />
-    <!-- 根目錄為滾動試圖 -->
+        android:layout_height="wrap_content" />
 
-    <ScrollView
-        android:id="@+id/login_form"
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <!-- 線性縱向排布 -->
+        android:layout_height="123dp"
+        android:padding="@dimen/activity_vertical_margin" />
 
-        <LinearLayout
-            android:id="@+id/email_login_form"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+    <AutoCompleteTextView
+        android:id="@+id/idCust_Acc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <!--hint：設置編輯框無輸入顯示，設置輸入類型為Email型，設置為一行、單行模式  -->
-                <AutoCompleteTextView
-                    android:id="@+id/email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/stringKeyId"
-                    android:inputType="textEmailAddress"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-                <!--android:textColor="@color/colorWhite"-->
-                <!--android:textColorHint="@color/colorWhite"-->
+    <AutoCompleteTextView
+        android:id="@+id/idCust_Pwd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/email_sign_in_button"
+        style="?android:textAppearanceSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/stringLogin"
+        android:textStyle="bold"
+        android:onClick="onLogIn"
+        />
 
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <!-- 密碼輸入框 -->
-                <!-- imeActionLabel設置編輯文本“下一步”的顯示內容，imeActionId設置“下一步”的ID， 設置“完成”，設置輸入格式顯示***-->
-                <EditText
-                    android:id="@+id/password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/stringKeyPassword"
-                    android:imeActionId="6"
-                    android:imeActionLabel="@string/action_sign_in_short"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="textPassword"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-                <!--android:textColor="@color/colorWhite"-->
-                <!--android:textColorHint="@color/colorWhite"-->
-
-
-            </android.support.design.widget.TextInputLayout>
-            <!-- 提交按鈕 -->
-            <!--paddingLeft設置左邊距  -->
-            <Button
-                android:id="@+id/email_sign_in_button"
-                style="?android:textAppearanceSmall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/stringLogin"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/sign_in_button"
-                style="?android:textAppearanceSmall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="註冊新會員"
-                android:textStyle="bold" />
-            <Button
-                android:id="@+id/fast_button"
-                style="?android:textAppearanceSmall"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="^^"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-    </ScrollView>
+    <Button
+        android:id="@+id/sign_in_button"
+        style="?android:textAppearanceSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="註冊新會員"
+        android:textStyle="bold"
+        />
+    <Button
+        android:id="@+id/fast_button"
+        style="?android:textAppearanceSmall"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="^^"
+        android:textStyle="bold" />
 </LinearLayout>
-<!--登入專區（Android版本）-->

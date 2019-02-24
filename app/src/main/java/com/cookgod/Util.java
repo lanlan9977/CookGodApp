@@ -1,7 +1,9 @@
 package com.cookgod;
 
 public class Util {
-    public final static String URL = "http://10.120.25.16:8081/CookGodTest/menuOrder/menuOrder.do";
+    public final static String MenuOrder_Servlet_URL= "http://10.0.2.2:8081/CookGodTest/MenuOrderServlet";
+    public final static String Cust_Servlet_URL= "http://10.0.2.2:8081//CookGodTest/CustServlet";
+//    public final static String URL = "http://192.168.1.108:8081/CookGodTest/MenuOrderServlet";
 }
 
 

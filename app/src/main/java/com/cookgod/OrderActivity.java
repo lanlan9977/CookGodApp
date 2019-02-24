@@ -53,7 +53,6 @@ public class OrderActivity extends AppCompatActivity {
 
     private class RetrieveMenuOrderTask extends AsyncTask<String, String, List<MenuOrderVO>> {
         private ProgressDialog progressDialog;
-        private final static String TAG = "OrderActivity";
 
         @Override
         protected void onPreExecute() {
@@ -69,22 +68,25 @@ public class OrderActivity extends AppCompatActivity {
             String url = params[0];
             String jsonIn;
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("param", "menuOredrList");
+            jsonObject.addProperty("selectMenuOrder", "menuOredrList");
             jsonIn = getRemoteData(url, jsonObject.toString());
             Gson gson = new Gson();
             Type listType = new TypeToken<List<MenuOrderVO>>() {
             }.getType();
+
             return gson.fromJson(jsonIn, listType);
         }
 
         @Override
         protected void onPostExecute(List<MenuOrderVO> items) {
             menuOrderVOList = items;
-            ViewPager viewPager = findViewById(R.id.viewPager);
-            viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));//頁面手勢滑動
-            TabLayout tabLayout = findViewById(R.id.tabLayout);//訂單種類滑動列表
-            viewPager.isFakeDragging();
-            tabLayout.setupWithViewPager(viewPager);
+            if(menuOrderVOList!=null) {
+                ViewPager viewPager = findViewById(R.id.viewPager);
+                viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));//頁面手勢滑動
+                TabLayout tabLayout = findViewById(R.id.tabLayout);//訂單種類滑動列表
+                viewPager.isFakeDragging();
+                tabLayout.setupWithViewPager(viewPager);
+            }
             progressDialog.cancel();
         }
 
@@ -133,7 +135,7 @@ public class OrderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
         if (networkConnected()) {
-            retrieveMenuOrderTask = new RetrieveMenuOrderTask().execute(Util.URL);
+            retrieveMenuOrderTask = new RetrieveMenuOrderTask().execute(Util.MenuOrder_Servlet_URL);
         } else {
             Toast.makeText(OrderActivity.this, "網路連線錯誤", Toast.LENGTH_SHORT).show();
         }

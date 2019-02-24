@@ -2,18 +2,22 @@ package com.cookgod;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.cookgod.cust.CustVO;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
@@ -27,20 +31,24 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class LoginActivity extends AppCompatActivity {
-    public static CustVO custVO;
-    private ProgressDialog progressDialog;
     private final static String TAG = "LoginActivity";
+    private ProgressDialog progressDialog;
     private RetrieveCustTask retrieveCustTask;
-    private AutoCompleteTextView idCust_Acc,idCust_Pwd;
+    private AutoCompleteTextView idCust_acc;
+    private EditText idCust_pwd;
+    private CustVO cust_account;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        idCust_Acc=findViewById(R.id.idCust_Acc);
-        idCust_Pwd=findViewById(R.id.idCust_Pwd);
-        custVO = new CustVO();
+        findViews();
+    }
+
+    private void findViews() {
+        idCust_acc = findViewById(R.id.idCust_Acc);
+        idCust_pwd = findViewById(R.id.idCust_Pwd);
     }
 
     private boolean networkConnected() {
@@ -50,17 +58,32 @@ public class LoginActivity extends AppCompatActivity {
         return info != null && info.isConnected();
     }
 
-    public void onLogIn(View view) {
-        String Cust_Acc=idCust_Acc.getText().toString();
+    public void onLogInClick(View view) {
+        idCust_acc.setError(null);
+        idCust_pwd.setError(null);
+        String cust_acc = idCust_acc.getText().toString().trim();
+        String cust_pwd = idCust_pwd.getText().toString().trim();
+        if(cust_acc.isEmpty()){
+            idCust_acc.setError("帳號不得為空");
+        }
+        if(cust_pwd.isEmpty()){
+            idCust_pwd.setError("密碼不得為空");
+        }
 
         if (networkConnected()) {
-            retrieveCustTask= new RetrieveCustTask().execute(Util.URL,Cust_Acc);
+            retrieveCustTask = (RetrieveCustTask) new RetrieveCustTask().execute(Util.Cust_Servlet_URL, cust_acc, cust_pwd);
+        } else {
+            Toast.makeText(LoginActivity.this, "網路連線錯誤", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void onSimpleInputClick(View view) {
+        idCust_acc.setText("ABC");
+        idCust_pwd.setText("123");
 
     }
 
-
-    private class RetrieveCustTask extends AsyncTask<String, Integer, String> {
+    private class RetrieveCustTask extends AsyncTask<String, Integer, CustVO> {
 
         @Override
         protected void onPreExecute() {
@@ -71,24 +94,38 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         @Override
-        protected String doInBackground(String... strings) {
+        protected CustVO doInBackground(String... strings) {
             String url = strings[0];
+            String cust_Acc = strings[1];
+            String cust_Pwd = strings[2];
+            cust_account = new CustVO(cust_Acc, cust_Pwd);
+            Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
             String jsonIn;
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("selectCust", "cust");
+            jsonObject.addProperty("selectCust", gson.toJson(cust_account));
             jsonIn = getRemoteData(url, jsonObject.toString());
-            Gson gson = new Gson();
             Type custType = new TypeToken<CustVO>() {
             }.getType();
             return gson.fromJson(jsonIn, custType);
         }
 
         @Override
-        protected void onPostExecute(String cust_acc) {
-            super.onPostExecute(custVO);
+        protected void onPostExecute(CustVO cust_account) {
+            if (cust_account != null) {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("cust_account", cust_account);
+                intent.putExtras(bundle);
+                progressDialog.setMessage("登入中");
+                progressDialog.cancel();
+                startActivity(intent);
+                finish();
+            } else {
+                Toast.makeText(LoginActivity.this, "帳號密碼輸入錯誤", Toast.LENGTH_SHORT).show();
+            }
+            progressDialog.cancel();
         }
     }
-
 
     private String getRemoteData(String url, String outStr) {
         HttpURLConnection connection = null;//產生連線物件
@@ -97,19 +134,15 @@ public class LoginActivity extends AppCompatActivity {
             connection = (HttpURLConnection) new URL(url).openConnection();//取得連線物件，需做例外處理
             connection.setDoInput(true);//是否向HttpURLConnection讀入
             connection.setDoOutput(true);//是否向HttpURLConnection輸出
-            connection.setChunkedStreamingMode(0);
-            //不知道請求內容大小時可以呼叫此方法將請求內容分端傳輸，設定0代表預設長度
+            connection.setChunkedStreamingMode(0);//不知道請求內容大小時可以呼叫此方法將請求內容分端傳輸，設定0代表預設長度
             connection.setUseCaches(false);//是否設定暫存，預設為true
             connection.setRequestMethod("POST");//設定請求類型
             connection.setRequestProperty("charset", "UTF-8");//設定編碼類型信息
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
-            //字串輸出流(從位元轉換)
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream())); //字串輸出流(從位元轉換)
             bw.write(outStr);
             Log.d(TAG, "outStr：" + outStr);//blue(debug)
             bw.close();//關水管
-
-            int responseCode = connection.getResponseCode();
-            //判斷是否連線成功
+            int responseCode = connection.getResponseCode(); //判斷是否連線成功
             if (responseCode == 200) {
                 BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 String line;

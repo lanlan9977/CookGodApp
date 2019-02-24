@@ -15,7 +15,5 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorBlackWhite"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
-
     <!--自定Toolbar-->
-
 </LinearLayout><!--主頁面-->

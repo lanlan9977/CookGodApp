@@ -2,6 +2,7 @@ package com.cookgod.order;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -23,11 +24,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cookgod.R;
+import com.cookgod.cust.CustVO;
 import com.cookgod.main.Page;
 import com.cookgod.main.Util;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -44,6 +47,7 @@ import java.util.List;
 
 //(訂單專區)
 public class OrderActivity extends AppCompatActivity {
+    private CustVO cust_account;
     public static List<MenuOrderVO> menuOrderVOList;
     private final static String TAG = "OrderActivity";
     private BottomSheetBehavior bottomSheetBehavior;
@@ -52,6 +56,21 @@ public class OrderActivity extends AppCompatActivity {
     private Spinner reviewStauts;
     private AsyncTask retrieveMenuOrderTask;
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Intent intent=getIntent();
+        if(intent!=null){
+            cust_account=(CustVO) intent.getExtras().getSerializable("cust_account");
+            Toast.makeText(OrderActivity.this,"小熊維尼",Toast.LENGTH_SHORT).show();
+
+        }else{
+            Toast.makeText(OrderActivity.this,"FUCK",Toast.LENGTH_SHORT).show();
+        }
+
+
+
+    }
 
     private class RetrieveMenuOrderTask extends AsyncTask<String, String, List<MenuOrderVO>> {
         private ProgressDialog progressDialog;
@@ -68,9 +87,10 @@ public class OrderActivity extends AppCompatActivity {
         @Override
         protected List<MenuOrderVO> doInBackground(String... params) {
             String url = params[0];
+            String cust_ID = params[1];
             String jsonIn;
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("selectMenuOrder", "menuOredrList");
+            jsonObject.addProperty("selectMenuOrder", cust_ID);
             jsonIn = getRemoteData(url, jsonObject.toString());
             Gson gson = new Gson();
             Type listType = new TypeToken<List<MenuOrderVO>>() {
@@ -137,7 +157,7 @@ public class OrderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
         if (networkConnected()) {
-            retrieveMenuOrderTask = new RetrieveMenuOrderTask().execute(Util.MenuOrder_Servlet_URL);
+            retrieveMenuOrderTask = new RetrieveMenuOrderTask().execute(Util.MenuOrder_Servlet_URL,"C00009");
         } else {
             Toast.makeText(OrderActivity.this, "網路連線錯誤", Toast.LENGTH_SHORT).show();
         }

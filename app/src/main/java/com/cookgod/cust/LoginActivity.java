@@ -3,6 +3,7 @@ package com.cookgod.cust;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -48,16 +49,42 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+//        SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
+//                MODE_PRIVATE);
+//        boolean login = preferences.getBoolean("login", false);
+//        if (login) {
+//            String cust_acc = preferences.getString("custAcc", "");
+//            String cust_pwd = preferences.getString("custPwd", "");
+//            retrieveCustTask = (RetrieveCustTask) new RetrieveCustTask().execute(Util.Cust_Servlet_URL, cust_acc, cust_pwd);
+//            setResult(RESULT_OK);
+//            finish();
+//        }
+
+
+    }
+
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode ==RESULT_OK ) {
-            Log.d(TAG,"成功");
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
-        } else {
-            Log.d(TAG,"失敗");
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+//                case REQUEST_LOGIN:
+//                    SharedPreferences preferences =
+//                            getSharedPreferences(Util.PREF_FILE, MODE_PRIVATE);
+//                    boolean login = preferences.getBoolean("login", false);
+//                    if (!login) {
+//                        Util.showToast(MemberShipActivity.this, "login failed");
+//                        onLogin();
+//                    }
+//
+//
+            }
         }
     }
+
 
     private void findViews() {
         idCust_acc = findViewById(R.id.idCust_Acc);
@@ -72,6 +99,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onLogInClick(View view) {
+        SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
+                MODE_PRIVATE);
         idCust_acc.setError(null);
         idCust_pwd.setError(null);
         String cust_acc = idCust_acc.getText().toString().trim();
@@ -83,6 +112,9 @@ public class LoginActivity extends AppCompatActivity {
         } else if (!networkConnected()) {
             Toast.makeText(LoginActivity.this, "網路連線錯誤", Toast.LENGTH_SHORT).show();
         } else {
+            preferences.edit().putBoolean("login", true)
+                    .putString("custAcc", cust_acc)
+                    .putString("custPwd", cust_pwd).apply();
             retrieveCustTask = (RetrieveCustTask) new RetrieveCustTask().execute(Util.Cust_Servlet_URL, cust_acc, cust_pwd);
         }
     }
@@ -125,11 +157,12 @@ public class LoginActivity extends AppCompatActivity {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("cust_account", cust_account);
-                intent.putExtras(bundle);
+
                 progressDialog.setMessage("登入中");
                 progressDialog.cancel();
-                setResult(RESULT_OK);
-                startActivity(intent);
+                intent.putExtras(bundle);
+                setResult(RESULT_OK, intent);
+//                startActivity(intent);
                 finish();
             } else {
                 Toast.makeText(LoginActivity.this, "帳號密碼錯誤，請重新登入", Toast.LENGTH_SHORT).show();

@@ -15,16 +15,16 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cookgod.R;
+import com.cookgod.cust.CustVO;
+import com.cookgod.cust.LoginActivity;
+import com.cookgod.order.MemberActivity;
+import com.cookgod.order.OrderActivity;
 import com.cookgod.other.CustomerServiceActivity;
 import com.cookgod.other.ForumActivity;
 import com.cookgod.other.LivesActivity;
-import com.cookgod.cust.LoginActivity;
 import com.cookgod.other.MallActivity;
-import com.cookgod.order.MemberActivity;
 import com.cookgod.other.NewsActivity;
-import com.cookgod.order.OrderActivity;
-import com.cookgod.R;
-import com.cookgod.cust.CustVO;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -43,13 +43,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
     };
+    private final int  REQUEST_LOGIN = 1;
+    private final int  REQUEST_ORDER = 2;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQUEST_LOGIN:
+                if (resultCode == RESULT_OK) {
+                    Bundle bundle = data.getExtras();
+                    if (!bundle.isEmpty()) {
+                        cust_account = (CustVO) bundle.getSerializable("cust_account");
+                        idCust_name.setText(cust_account.getCust_name());
+                        idHeaderText.setText("歡迎");
+                    }
+                }
+                break;
+            case REQUEST_ORDER:
+
+                break;
+
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_drawer);//設定主畫面為activity_navigation_drawer
         findViews();
-        showAccount();
     }
 
     private void findViews() {
@@ -57,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar); //使用自定toolbar為ActionBar
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
-
         navigationView.setNavigationItemSelectedListener(this);//將此activity設定監聽器
         View header = navigationView.inflateHeaderView(R.layout.nav_header_navigation_drawer);//設定Navigation上的HEADER元件
         idCust_name = (TextView) header.findViewById(R.id.idCust_name);
@@ -67,15 +88,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();//將drawerLayout和toolbar整合，會出現'三'選單
     }
 
-    public void showAccount() {
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        if (bundle != null) {
-            cust_account = (CustVO) bundle.getSerializable("cust_account");
-            idCust_name.setText(cust_account.getCust_name());
-            idHeaderText.setText("歡迎");
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -92,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (item.getItemId()) {
             case R.id.idLogin://(登入專區)
 //                if(cust_account==null){
-                onItemSelectedTo(R.string.stringLoginM, LoginActivity.class);
+                onItemSelectedTo(R.string.stringLoginM, LoginActivity.class,REQUEST_LOGIN);
 //                }else{
 //                    Toast.makeText(MainActivity.this,"您已經登入",Toast.LENGTH_SHORT).show();
 //                }
@@ -108,25 +120,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //設定Navigation側滑Item轉至該Activity
         switch (item.getItemId()) {
             case R.id.itemNews://(廣告專區)
-                onItemSelectedTo(R.string.stringNews, NewsActivity.class);
+                onItemSelectedTo(R.string.stringNews, NewsActivity.class,0);
                 break;
             case R.id.itemMember://(會員專區)
-                onItemSelectedTo(R.string.stringMember, MemberActivity.class);
+                onItemSelectedTo(R.string.stringMember, MemberActivity.class,0);
                 break;
             case R.id.itemMall://(商城專區)
-                onItemSelectedTo(R.string.stringMall, MallActivity.class);
+                onItemSelectedTo(R.string.stringMall, MallActivity.class,0);
                 break;
             case R.id.itemOrder://(訂單專區)
-                onItemSelectedTo(R.string.stringOrder, OrderActivity.class);
+                onItemSelectedTo(R.string.stringOrder, OrderActivity.class,REQUEST_ORDER);
                 break;
             case R.id.itemForums://(論壇專區)
-                onItemSelectedTo(R.string.stringForum, ForumActivity.class);
+                onItemSelectedTo(R.string.stringForum, ForumActivity.class,0);
                 break;
             case R.id.itemLives://(直播專區)
-                onItemSelectedTo(R.string.stringLives, LivesActivity.class);
+                onItemSelectedTo(R.string.stringLives, LivesActivity.class,0);
                 break;
             case R.id.itemCustomerService://(客服專區)
-                onItemSelectedTo(R.string.stringCustomerService, CustomerServiceActivity.class);
+                onItemSelectedTo(R.string.stringCustomerService, CustomerServiceActivity.class,0);
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -134,13 +146,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    public void onItemSelectedTo(int toastString, Class toClass) {
-        Intent intent = new Intent();//設定要跳轉的Activity&動畫
-        intent.setClass(MainActivity.this, toClass);
+    public void onItemSelectedTo(int toastString, Class toClass,int requestCode) {
+        Intent intent = new Intent(MainActivity.this, toClass);
+        if(cust_account!=null){
+            Bundle bundle=new Bundle();
+            bundle.putSerializable("cust_account",cust_account);
+            intent.putExtras(bundle);
+        }
         Toast.makeText(getApplicationContext(), toastString, Toast.LENGTH_LONG).show();
-        setResult(RESULT_OK, intent);
-        startActivity(intent);
-
+        startActivityForResult(intent, requestCode);
         overridePendingTransition(R.anim.in, R.anim.out);
     }
 

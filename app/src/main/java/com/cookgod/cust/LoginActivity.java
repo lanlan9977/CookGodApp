@@ -1,4 +1,4 @@
-package com.cookgod;
+package com.cookgod.cust;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -14,7 +14,9 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.cookgod.cust.CustVO;
+import com.cookgod.R;
+import com.cookgod.main.MainActivity;
+import com.cookgod.main.Util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -43,6 +45,18 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         findViews();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode ==RESULT_OK ) {
+            Log.d(TAG,"成功");
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+        } else {
+            Log.d(TAG,"失敗");
+        }
     }
 
     private void findViews() {
@@ -94,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
             String url = strings[0];
             String cust_Acc = strings[1];
             String cust_Pwd = strings[2];
-            cust_account = new CustVO(cust_Acc, cust_Pwd);
+            cust_account = new CustVO(cust_Acc, cust_Pwd);//顧客輸入的帳號密碼(CustVO)
             Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
             String jsonIn;
             JsonObject jsonObject = new JsonObject();
@@ -114,6 +128,7 @@ public class LoginActivity extends AppCompatActivity {
                 intent.putExtras(bundle);
                 progressDialog.setMessage("登入中");
                 progressDialog.cancel();
+                setResult(RESULT_OK);
                 startActivity(intent);
                 finish();
             } else {

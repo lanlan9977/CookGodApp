@@ -1,4 +1,4 @@
-package com.cookgod;
+package com.cookgod.main;
 
 public class Util {
     public final static String MenuOrder_Servlet_URL= "http://10.0.2.2:8081/CookGodTest/MenuOrderServlet";

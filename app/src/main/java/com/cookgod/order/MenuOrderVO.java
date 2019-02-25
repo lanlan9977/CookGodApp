@@ -1,4 +1,4 @@
-package com.cookgod.menuOrder;
+package com.cookgod.order;
 
 import java.io.Serializable;
 import java.sql.Timestamp;

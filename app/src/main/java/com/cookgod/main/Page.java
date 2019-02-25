@@ -1,4 +1,4 @@
-package com.cookgod;
+package com.cookgod.main;
 
 import android.support.v4.app.Fragment;
 

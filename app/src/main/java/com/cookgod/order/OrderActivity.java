@@ -1,4 +1,4 @@
-package com.cookgod;
+package com.cookgod.order;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -22,7 +22,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.cookgod.menuOrder.MenuOrderVO;
+import com.cookgod.R;
+import com.cookgod.main.Page;
+import com.cookgod.main.Util;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;

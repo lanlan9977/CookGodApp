@@ -1,9 +1,11 @@
-package com.cookgod;
+package com.cookgod.main;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+
+import com.cookgod.R;
 
 public class WelcomeActivity extends Activity {
 
@@ -15,7 +17,7 @@ public class WelcomeActivity extends Activity {
         setContentView(R.layout.activity_welcome);
         mHandler.sendEmptyMessageDelayed(GOTO_MAIN_ACTIVITY, 1000);
         //Android提供sendMessage的機制
-        //用Handler延遲傳送一個訊息，這樣Handler在2秒後收到訊息後再去執行跳轉程式碼
+        //用Handler延遲傳送一個訊息，這樣Handler在1秒後收到訊息後再去執行跳轉程式碼
     }
 
     private Handler mHandler = new Handler() {//Handler負責派送訊息

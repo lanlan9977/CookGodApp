@@ -1,7 +1,6 @@
-package com.cookgod;
+package com.cookgod.main;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.MenuItemCompat;
@@ -13,10 +12,18 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cookgod.other.CustomerServiceActivity;
+import com.cookgod.other.ForumActivity;
+import com.cookgod.other.LivesActivity;
+import com.cookgod.cust.LoginActivity;
+import com.cookgod.other.MallActivity;
+import com.cookgod.order.MemberActivity;
+import com.cookgod.other.NewsActivity;
+import com.cookgod.order.OrderActivity;
+import com.cookgod.R;
 import com.cookgod.cust.CustVO;
 
 
@@ -25,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-    private TextView idCust_name,idHeaderText;
+    private TextView idCust_name, idHeaderText;
     private BadgeActionProvider provider;
     private BadgeActionProvider.OnClickListener onClickListener = new BadgeActionProvider.OnClickListener() {
         @Override
@@ -52,9 +59,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView = findViewById(R.id.navigation_view);
 
         navigationView.setNavigationItemSelectedListener(this);//將此activity設定監聽器
-        View header =navigationView.inflateHeaderView(R.layout.nav_header_navigation_drawer);//設定Navigation上的HEADER元件
-        idCust_name =(TextView) header.findViewById(R.id.idCust_name);
-        idHeaderText =(TextView) header.findViewById(R.id.idHeaderText);
+        View header = navigationView.inflateHeaderView(R.layout.nav_header_navigation_drawer);//設定Navigation上的HEADER元件
+        idCust_name = (TextView) header.findViewById(R.id.idCust_name);
+        idHeaderText = (TextView) header.findViewById(R.id.idHeaderText);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_drawer, R.string.close_drawer);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();//將drawerLayout和toolbar整合，會出現'三'選單
@@ -63,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void showAccount() {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        if (bundle!=null){
+        if (bundle != null) {
             cust_account = (CustVO) bundle.getSerializable("cust_account");
             idCust_name.setText(cust_account.getCust_name());
             idHeaderText.setText("歡迎");
@@ -84,11 +91,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.idLogin://(登入專區)
-                if(cust_account==null){
-                    onItemSelectedTo(R.string.stringLoginM, LoginActivity.class);
-                }else{
-                    Toast.makeText(MainActivity.this,"您已經登入",Toast.LENGTH_SHORT).show();
-                }
+//                if(cust_account==null){
+                onItemSelectedTo(R.string.stringLoginM, LoginActivity.class);
+//                }else{
+//                    Toast.makeText(MainActivity.this,"您已經登入",Toast.LENGTH_SHORT).show();
+//                }
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -131,7 +138,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Intent intent = new Intent();//設定要跳轉的Activity&動畫
         intent.setClass(MainActivity.this, toClass);
         Toast.makeText(getApplicationContext(), toastString, Toast.LENGTH_LONG).show();
+        setResult(RESULT_OK, intent);
         startActivity(intent);
+
         overridePendingTransition(R.anim.in, R.anim.out);
     }
 

@@ -1,4 +1,4 @@
-package com.cookgod;
+package com.cookgod.order;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.cookgod.menuOrder.MenuOrderVO;
 import com.cookgod.R;
+import com.cookgod.order.MenuOrderVO;
 
 public class FoodOrderFragment extends Fragment {
     private List<MenuOrderVO> menuOrderVOList;

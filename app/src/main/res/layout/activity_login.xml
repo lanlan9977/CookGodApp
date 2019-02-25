@@ -5,15 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="150dp"
-    tools:context=".LoginActivity">
+
+    tools:context=".cust.LoginActivity">
 
     <android.support.design.widget.TextInputLayout
+        android:paddingTop="100dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <AutoCompleteTextView
-
             android:id="@+id/idCust_Acc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

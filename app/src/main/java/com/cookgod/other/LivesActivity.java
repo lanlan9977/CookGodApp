@@ -1,10 +1,12 @@
-package com.cookgod;
+package com.cookgod.other;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
+import com.cookgod.R;
 
 //直播專區
 public class LivesActivity extends AppCompatActivity {

@@ -9,7 +9,6 @@
     tools:context=".LoginActivity">
 
     <android.support.design.widget.TextInputLayout
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -18,7 +17,6 @@
             android:id="@+id/idCust_Acc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:digits="15"
             android:hint="@string/stringKeyId"
             android:singleLine="true" />
     </android.support.design.widget.TextInputLayout>
@@ -31,7 +29,6 @@
             android:id="@+id/idCust_Pwd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:digits="15"
             android:hint="@string/stringKeyPassword"
             android:inputType="textPassword"
             android:singleLine="true" />

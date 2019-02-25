@@ -8,7 +8,6 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
@@ -63,17 +62,14 @@ public class LoginActivity extends AppCompatActivity {
         idCust_pwd.setError(null);
         String cust_acc = idCust_acc.getText().toString().trim();
         String cust_pwd = idCust_pwd.getText().toString().trim();
-        if(cust_acc.isEmpty()){
+        if (cust_acc.isEmpty()) {
             idCust_acc.setError("帳號不得為空");
-        }
-        if(cust_pwd.isEmpty()){
+        } else if (cust_pwd.isEmpty()) {
             idCust_pwd.setError("密碼不得為空");
-        }
-
-        if (networkConnected()) {
-            retrieveCustTask = (RetrieveCustTask) new RetrieveCustTask().execute(Util.Cust_Servlet_URL, cust_acc, cust_pwd);
-        } else {
+        } else if (!networkConnected()) {
             Toast.makeText(LoginActivity.this, "網路連線錯誤", Toast.LENGTH_SHORT).show();
+        } else {
+            retrieveCustTask = (RetrieveCustTask) new RetrieveCustTask().execute(Util.Cust_Servlet_URL, cust_acc, cust_pwd);
         }
     }
 
@@ -121,7 +117,7 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             } else {
-                Toast.makeText(LoginActivity.this, "帳號密碼輸入錯誤", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "帳號密碼錯誤，請重新登入", Toast.LENGTH_SHORT).show();
             }
             progressDialog.cancel();
         }

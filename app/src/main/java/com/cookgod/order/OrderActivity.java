@@ -54,10 +54,7 @@ public class OrderActivity extends AppCompatActivity {
     private CustVO cust_account;
     public static List<MenuOrderVO> menuOrderVOList;
     private final static String TAG = "OrderActivity";
-    private BottomSheetBehavior bottomSheetBehavior;
-    private TextView textView;
-    private boolean isOnClick;
-    private Spinner reviewStauts;
+
     private AsyncTask retrieveMenuOrderTask;
 
 
@@ -109,9 +106,12 @@ public class OrderActivity extends AppCompatActivity {
             if(menuOrderVOList!=null) {
                 ViewPager viewPager = findViewById(R.id.viewPager);
                 viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));//頁面手勢滑動
+
                 TabLayout tabLayout = findViewById(R.id.tabLayout);//訂單種類滑動列表
                 viewPager.isFakeDragging();
                 tabLayout.setupWithViewPager(viewPager);
+
+
 
             }
             progressDialog.cancel();
@@ -165,49 +165,23 @@ public class OrderActivity extends AppCompatActivity {
     }
 
     private void findViews() {
-        reviewStauts = findViewById(R.id.idReviewStatus);
-        View bottomSheet = findViewById(R.id.bottom_sheet);
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-
-
     }
 
 
 
-    private void MenuOrderDisplay() {
-        textView = findViewById(R.id.idMenu_Order_msg);
-        MenuOrderVO menuOrderVO = new MenuOrderVO("M02091", "M1", new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()), new Date(), 0, "", "C00001", "C00001", "M00001");
-        String status = menuOrderVO.getMenu_od_status();
-        if ("M1".equals(status)) {
-            status = "審核通過";
-        } else if ("M0".equals(status)) {
-            status = "審核未通過";
-        }
-        StringBuilder sb = new StringBuilder();
-        sb.append("嚴選套餐訂單編號:" + menuOrderVO.getMenu_od_ID() + "\r\n")
-                .append("訂單狀態:" + status + "\r\n")
-                .append("下單日期:" + menuOrderVO.getMenu_od_start() + "\r\n")
-                .append("預約日期:" + menuOrderVO.getMenu_od_book() + "\r\n")
-                .append("完成日期:" + menuOrderVO.getMenu_od_end() + "\r\n")
-                .append("訂單評價:" + menuOrderVO.getMenu_od_rate() + "\r\n")
-                .append("訂單評價留言:" + menuOrderVO.getMenu_od_msg() + "\r\n")
-                .append("顧客編號:" + menuOrderVO.getCust_ID() + "\r\n")
-                .append("主廚編號:" + menuOrderVO.getChef_ID() + "\r\n")
-                .append("套餐編號:" + menuOrderVO.getMenu_ID() + "\r\n");
-        textView.setText(sb);
-    }
 
-    public void onOrderClick(View view ) {
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        bottomSheetBehavior.setPeekHeight(985);
-        if (!isOnClick) {
-            isOnClick = true;
-        } else {
-            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-            isOnClick = false;
-        }
-        MenuOrderDisplay();//展示下方訂單內容方法
-    }
+
+//    public void onOrderClick(View view ) {
+//        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+//        bottomSheetBehavior.setPeekHeight(985);
+//        if (!isOnClick) {
+//            isOnClick = true;
+//        } else {
+//            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+//            isOnClick = false;
+//        }
+//        MenuOrderDisplay();//展示下方訂單內容方法
+//    }
 
     private class MyPagerAdapter extends FragmentPagerAdapter {
         List<Page> pageList;
@@ -222,7 +196,6 @@ public class OrderActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
             return pageList.get(position).getFragment();
         }
 

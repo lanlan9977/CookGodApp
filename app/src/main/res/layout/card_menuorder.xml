@@ -14,7 +14,7 @@
     card_view:cardCornerRadius="4dp"
     android:id="@+id/idMenu_Order_CardView"
     card_view:cardElevation="@dimen/cardview_default_elevation"
-    android:onClick="onOrderClick">
+ >
 
     <LinearLayout
         android:id="@+id/idMenu_Order_Layout"

@@ -1,13 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.design.widget.CoordinatorLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.cookgod.order.FoodOrderFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/foodOrderView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        />
 
-</FrameLayout>
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:background="@android:color/holo_orange_light"
+        android:clipToPadding="true"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="0dp"
+        app:layout_behavior="@string/bottom_sheet_behavior">
+        <!-- 容器需加上layout_behavior這個設定，才會是系統認定的Bottom Sheets -->
+        <!-- 並把此容器(不一定得是NestedScrollView，RelativeLayout, LinearLayout都可以)放置於CoordinatorLayout裡 -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/idFood_Order_msg"
+                android:layout_width="wrap_content"
+                android:layout_height="300dp"
+                android:padding="10dp"
+                android:paddingBottom="20dp"
+                android:textSize="17sp" />
+
+            <Button
+                android:id="@+id/idOrderQRCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_toRightOf="@id/idReviewStatus"
+                android:text="@string/stringOrderQRCode" />
+
+            <Spinner
+                android:id="@+id/idReviewStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="left"
+                android:spinnerMode="dialog" />
+        </RelativeLayout>
+    </android.support.v4.widget.NestedScrollView>
+    <!--設定訂單下方ScrollView-->
+
+
+</android.support.design.widget.CoordinatorLayout>

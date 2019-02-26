@@ -1,30 +1,19 @@
 package com.cookgod.order;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cookgod.R;
@@ -43,34 +32,38 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
 //(訂單專區)
 public class OrderActivity extends AppCompatActivity {
     private CustVO cust_account;
-    public static List<MenuOrderVO> menuOrderVOList;
+    public List<MenuOrderVO> menuOrderList;
+    public List<FoodOrderVO> foodOrderList;
     private final static String TAG = "OrderActivity";
-
     private AsyncTask retrieveMenuOrderTask;
 
-
+    public List<MenuOrderVO> getMenuOrderList() {
+        return menuOrderList;
+    }
+    public List<FoodOrderVO> getFoodOrderList() {
+        return foodOrderList;
+    }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Intent intent=getIntent();
-        if(intent!=null){
-            cust_account=(CustVO) intent.getExtras().getSerializable("cust_account");
+        Intent intent = getIntent();
+        if (intent != null) {
+            cust_account = (CustVO) intent.getExtras().getSerializable("cust_account");
             if (Util.networkConnected(this)) {
-                retrieveMenuOrderTask = new RetrieveMenuOrderTask().execute(Util.MenuOrder_Servlet_URL,cust_account.getCust_ID());
+                retrieveMenuOrderTask = new RetrieveMenuOrderTask().execute(Util.MenuOrder_Servlet_URL, cust_account.getCust_ID());
             } else {
                 Toast.makeText(OrderActivity.this, "網路連線錯誤", Toast.LENGTH_SHORT).show();
             }
-       }
+        }
+
     }
 
     private class RetrieveMenuOrderTask extends AsyncTask<String, String, List<MenuOrderVO>> {
@@ -79,7 +72,7 @@ public class OrderActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            menuOrderVOList = new ArrayList<>();
+            menuOrderList = new ArrayList<>();
             progressDialog = new ProgressDialog(OrderActivity.this);
             progressDialog.setMessage("Loading...");
             progressDialog.show();
@@ -102,17 +95,14 @@ public class OrderActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<MenuOrderVO> items) {
-            menuOrderVOList = items;
-            if(menuOrderVOList!=null) {
+            menuOrderList = items;
+            if (menuOrderList != null) {
                 ViewPager viewPager = findViewById(R.id.viewPager);
                 viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));//頁面手勢滑動
 
                 TabLayout tabLayout = findViewById(R.id.tabLayout);//訂單種類滑動列表
                 viewPager.isFakeDragging();
                 tabLayout.setupWithViewPager(viewPager);
-
-
-
             }
             progressDialog.cancel();
         }
@@ -167,21 +157,6 @@ public class OrderActivity extends AppCompatActivity {
     private void findViews() {
     }
 
-
-
-
-
-//    public void onOrderClick(View view ) {
-//        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-//        bottomSheetBehavior.setPeekHeight(985);
-//        if (!isOnClick) {
-//            isOnClick = true;
-//        } else {
-//            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-//            isOnClick = false;
-//        }
-//        MenuOrderDisplay();//展示下方訂單內容方法
-//    }
 
     private class MyPagerAdapter extends FragmentPagerAdapter {
         List<Page> pageList;

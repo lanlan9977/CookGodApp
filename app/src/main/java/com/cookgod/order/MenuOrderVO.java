@@ -1,10 +1,9 @@
 package com.cookgod.order;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 
-public class MenuOrderVO implements Serializable {
+public class MenuOrderVO implements java.io.Serializable {
     private String menu_od_ID;
     private String menu_od_status;
     private Timestamp menu_od_start;

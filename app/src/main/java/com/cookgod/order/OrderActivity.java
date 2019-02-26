@@ -3,6 +3,7 @@ package com.cookgod.order;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -14,11 +15,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,20 +60,20 @@ public class OrderActivity extends AppCompatActivity {
     private Spinner reviewStauts;
     private AsyncTask retrieveMenuOrderTask;
 
+
+
     @Override
     protected void onStart() {
         super.onStart();
         Intent intent=getIntent();
         if(intent!=null){
             cust_account=(CustVO) intent.getExtras().getSerializable("cust_account");
-            Toast.makeText(OrderActivity.this,"小熊維尼",Toast.LENGTH_SHORT).show();
-
-        }else{
-            Toast.makeText(OrderActivity.this,"FUCK",Toast.LENGTH_SHORT).show();
-        }
-
-
-
+            if (Util.networkConnected(this)) {
+                retrieveMenuOrderTask = new RetrieveMenuOrderTask().execute(Util.MenuOrder_Servlet_URL,cust_account.getCust_ID());
+            } else {
+                Toast.makeText(OrderActivity.this, "網路連線錯誤", Toast.LENGTH_SHORT).show();
+            }
+       }
     }
 
     private class RetrieveMenuOrderTask extends AsyncTask<String, String, List<MenuOrderVO>> {
@@ -108,6 +112,7 @@ public class OrderActivity extends AppCompatActivity {
                 TabLayout tabLayout = findViewById(R.id.tabLayout);//訂單種類滑動列表
                 viewPager.isFakeDragging();
                 tabLayout.setupWithViewPager(viewPager);
+
             }
             progressDialog.cancel();
         }
@@ -156,11 +161,6 @@ public class OrderActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
-        if (networkConnected()) {
-            retrieveMenuOrderTask = new RetrieveMenuOrderTask().execute(Util.MenuOrder_Servlet_URL,"C00009");
-        } else {
-            Toast.makeText(OrderActivity.this, "網路連線錯誤", Toast.LENGTH_SHORT).show();
-        }
         findViews();
     }
 
@@ -168,13 +168,11 @@ public class OrderActivity extends AppCompatActivity {
         reviewStauts = findViewById(R.id.idReviewStatus);
         View bottomSheet = findViewById(R.id.bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+
+
     }
 
-    private boolean networkConnected() {
-        ConnectivityManager conManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = conManager.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnected();
-    }
+
 
     private void MenuOrderDisplay() {
         textView = findViewById(R.id.idMenu_Order_msg);

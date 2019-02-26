@@ -91,13 +91,6 @@ public class LoginActivity extends AppCompatActivity {
         idCust_pwd = findViewById(R.id.idCust_Pwd);
     }
 
-    private boolean networkConnected() {
-        ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        //判斷網路功能是否可用
-        NetworkInfo info = manager.getActiveNetworkInfo();//獲取網路連接的訊息
-        return info != null && info.isConnected();
-    }
-
     public void onLogInClick(View view) {
         SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
                 MODE_PRIVATE);
@@ -109,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
             idCust_acc.setError("帳號不得為空");
         } else if (cust_pwd.isEmpty()) {
             idCust_pwd.setError("密碼不得為空");
-        } else if (!networkConnected()) {
+        } else if (!Util.networkConnected(this)) {
             Toast.makeText(LoginActivity.this, "網路連線錯誤", Toast.LENGTH_SHORT).show();
         } else {
             preferences.edit().putBoolean("login", true)
@@ -122,7 +115,6 @@ public class LoginActivity extends AppCompatActivity {
     public void onSimpleInputClick(View view) {
         idCust_acc.setText("ABC");
         idCust_pwd.setText("123");
-
     }
 
     private class RetrieveCustTask extends AsyncTask<String, Integer, CustVO> {

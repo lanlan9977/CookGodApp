@@ -12,7 +12,9 @@
     android:foreground="?android:attr/selectableItemBackground"
     android:orientation="vertical"
     card_view:cardCornerRadius="4dp"
-    card_view:cardElevation="@dimen/cardview_default_elevation">
+    android:id="@+id/idMenu_Order_CardView"
+    card_view:cardElevation="@dimen/cardview_default_elevation"
+    android:onClick="onOrderClick">
 
     <LinearLayout
         android:id="@+id/idMenu_Order_Layout"
@@ -20,7 +22,7 @@
         android:layout_height="wrap_content"
         android:background="#13a629"
         android:gravity="center_vertical"
-        android:onClick="onOrderClick"
+
         android:orientation="vertical"
         android:paddingLeft="8dp"
         android:paddingTop="8dp"

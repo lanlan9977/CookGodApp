@@ -24,7 +24,7 @@
         android:background="@drawable/badge_background"
         android:gravity="center"
         android:visibility="invisible"
-        android:textColor="@android:color/white"
+        android:textColor="@color/colorWhite"
         android:textSize="12sp" />
 
 </RelativeLayout>

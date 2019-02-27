@@ -9,6 +9,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cookgod.R;
+import com.cookgod.broadcast.BroadcastVO;
 import com.cookgod.cust.CustVO;
 import com.cookgod.cust.LoginActivity;
 import com.cookgod.order.MemberActivity;
@@ -26,10 +28,21 @@ import com.cookgod.other.ForumActivity;
 import com.cookgod.other.LivesActivity;
 import com.cookgod.other.MallActivity;
 import com.cookgod.other.NewsActivity;
+import com.cookgod.task.RetrieveCustTask;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    private final static String TAG = "MainActivity";
+    private RetrieveCustTask retrieveCustTask;
     private CustVO cust_account;
+    private List<BroadcastVO> broadcastList;
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -44,6 +57,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
     };
+
+
+
     private final int  REQUEST_LOGIN = 1;
     private final int  REQUEST_ORDER = 2;
 
@@ -56,6 +72,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if(login){
             idCust_name.setText(preferences.getString("cust_name",""));
             idHeaderText.setText("歡迎");
+            retrieveCustTask = new RetrieveCustTask(Util.Cust_Servlet_URL, preferences.getString("cust_acc",""), preferences.getString("cust_pwd",""));
+            Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+            String jsonIn = null;
+            try {
+                jsonIn = retrieveCustTask.execute().get();
+                Type listType = new TypeToken<List<String>>() {
+                }.getType();
+                Type custType = new TypeToken<CustVO>() {
+                }.getType();
+                Type broadcastType = new TypeToken<List<BroadcastVO>>() {
+                }.getType();
+                List<String> list = gson.fromJson(jsonIn, listType);
+                String custJsonIn = list.get(0);
+                String broadcastJsonIn=list.get(1);
+                cust_account = gson.fromJson(custJsonIn, custType);
+                broadcastList=gson.fromJson(broadcastJsonIn,broadcastType);
+
+
+
+
+//                Util.showToast(this,);
+            } catch (Exception e) {
+                Log.e(TAG, e.toString());
+            }
+
         }
     }
 
@@ -179,5 +220,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         provider.setIcon(R.drawable.ic_broadcast_icon);//推播icon
+        int readStatus=0;
+        if(!broadcastList.isEmpty()) {
+            for (int i = 0; i < broadcastList.size(); i++) {
+                if (broadcastList.get(i).getBroadcast_status().equals("B0")) {
+                    readStatus++;
+                }
+            }
+            provider.setBadge(readStatus);
+        }
     }
 }

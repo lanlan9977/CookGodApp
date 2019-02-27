@@ -29,6 +29,7 @@ public class LoginActivity extends AppCompatActivity {
     private AutoCompleteTextView idCust_acc;
     private EditText idCust_pwd;
     private CustVO cust_account;
+    private List<BroadcastVO> broadcastList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +75,6 @@ public class LoginActivity extends AppCompatActivity {
         }
         if (isMember(cust_acc, cust_pwd)) {
             finish();
-        } else {
-//            Toast.makeText(LoginActivity.this, "帳號密碼錯誤，請重新登入", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -86,17 +85,18 @@ public class LoginActivity extends AppCompatActivity {
             retrieveCustTask = new RetrieveCustTask(Util.Cust_Servlet_URL, cust_acc, cust_pwd);
             Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
             String jsonIn = retrieveCustTask.execute().get();
-            Type mapType = new TypeToken<Map<String, List<BroadcastVO>>>() {
+            Type listType = new TypeToken<List<String>>() {
             }.getType();
             Type custType = new TypeToken<CustVO>() {
             }.getType();
-            Map<String, List<BroadcastVO>> map = gson.fromJson(jsonIn, mapType);
-            for (String key : map.keySet()) {
-                cust_account = gson.fromJson(key, custType);
-                List<BroadcastVO> broadcastList = map.get(key);
-            }
+            Type broadcastType = new TypeToken<List<BroadcastVO>>() {
+            }.getType();
+            List<String> list = gson.fromJson(jsonIn, listType);
+            String custJsonIn = list.get(0);
+            String broadcastJsonIn=list.get(1);
+            cust_account = gson.fromJson(custJsonIn, custType);
+            broadcastList=gson.fromJson(broadcastJsonIn,broadcastType);
         } catch (Exception e) {
-            Util.showToast(LoginActivity.this, "FUCK");
             Log.e(TAG, e.toString());
         }
         if (cust_account != null) {

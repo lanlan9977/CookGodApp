@@ -18,7 +18,10 @@ public class Util {
         NetworkInfo networkInfo = conManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
     }
-//    Toast.makeText(MainActivity.this,"小熊維尼",Toast.LENGTH_SHORT).show();
+    public static void showToast(Context context,String text){
+        Toast.makeText(context,text,Toast.LENGTH_SHORT).show();
+    }
+//
 //    Toast.makeText(MainActivity.this,"FUCK",Toast.LENGTH_SHORT).show();
 
 }

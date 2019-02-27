@@ -8,9 +8,20 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import com.cookgod.R;
+import com.cookgod.broadcast.BroadcastVO;
+import com.cookgod.main.MainActivity;
 import com.cookgod.main.Util;
 import com.cookgod.task.RetrieveCustTask;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
     private final static String TAG = "LoginActivity";
@@ -38,12 +49,10 @@ public class LoginActivity extends AppCompatActivity {
                 MODE_PRIVATE);
         boolean login = preferences.getBoolean("login", false);
         if (login) {
-            String cust_acc = preferences.getString("custAcc", "");
-            String cust_pwd = preferences.getString("custPwd", "");
+            String cust_acc = preferences.getString("cust_acc", "");
+            String cust_pwd = preferences.getString("cust_pwd", "");
             if (isMember(cust_acc, cust_pwd)) {
                 finish();
-            } else{
-                Toast.makeText(LoginActivity.this, "帳號密碼錯誤，請重新登入", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -61,11 +70,12 @@ public class LoginActivity extends AppCompatActivity {
             return;
         } else if (!Util.networkConnected(this)) {
             Toast.makeText(LoginActivity.this, "網路連線錯誤", Toast.LENGTH_SHORT).show();
+            return;
         }
         if (isMember(cust_acc, cust_pwd)) {
             finish();
         } else {
-            Toast.makeText(LoginActivity.this, "帳號密碼錯誤，請重新登入", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(LoginActivity.this, "帳號密碼錯誤，請重新登入", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -74,25 +84,36 @@ public class LoginActivity extends AppCompatActivity {
                 MODE_PRIVATE);
         try {
             retrieveCustTask = new RetrieveCustTask(Util.Cust_Servlet_URL, cust_acc, cust_pwd);
-            cust_account = retrieveCustTask.execute().get();
+            Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+            String jsonIn = retrieveCustTask.execute().get();
+            Type mapType = new TypeToken<Map<String, List<BroadcastVO>>>() {
+            }.getType();
+            Type custType = new TypeToken<CustVO>() {
+            }.getType();
+            Map<String, List<BroadcastVO>> map = gson.fromJson(jsonIn, mapType);
+            for (String key : map.keySet()) {
+                cust_account = gson.fromJson(key, custType);
+                List<BroadcastVO> broadcastList = map.get(key);
+            }
         } catch (Exception e) {
+            Util.showToast(LoginActivity.this, "FUCK");
             Log.e(TAG, e.toString());
         }
         if (cust_account != null) {
             preferences.edit().putBoolean("login", true)
-                    .putString("cust_ID",cust_account.getCust_ID())
+                    .putString("cust_ID", cust_account.getCust_ID())
                     .putString("cust_acc", cust_account.getCust_acc())
                     .putString("cust_pwd", cust_account.getCust_pwd())
-                    .putString("cust_name",cust_account.getCust_name())
-                    .putString("cust_sex",cust_account.getCust_sex())
-                    .putString("cust_tel",cust_account.getCust_tel())
-                    .putString("cust_addr",cust_account.getCust_addr())
-                    .putString("cust_pid",cust_account.getCust_pid())
-                    .putString("cust_mail",cust_account.getCust_mail())
-                    .putString("cust_brd",cust_account.getCust_brd().toString())
-                    .putString("cust_reg",cust_account.getCust_reg().toString())
-                    .putString("cust_status",cust_account.getCust_status())
-                    .putString("cust_niname",cust_account.getCust_niname())
+                    .putString("cust_name", cust_account.getCust_name())
+                    .putString("cust_sex", cust_account.getCust_sex())
+                    .putString("cust_tel", cust_account.getCust_tel())
+                    .putString("cust_addr", cust_account.getCust_addr())
+                    .putString("cust_pid", cust_account.getCust_pid())
+                    .putString("cust_mail", cust_account.getCust_mail())
+                    .putString("cust_brd", cust_account.getCust_brd().toString())
+                    .putString("cust_reg", cust_account.getCust_reg().toString())
+                    .putString("cust_status", cust_account.getCust_status())
+                    .putString("cust_niname", cust_account.getCust_niname())
                     .apply();
             setResult(RESULT_OK);
         }

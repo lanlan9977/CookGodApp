@@ -154,6 +154,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.itemCustomerService://(客服專區)
                 onItemSelectedTo(R.string.stringCustomerService, CustomerServiceActivity.class,0);
                 break;
+            case R.id.logout://(登出)
+                SharedPreferences pref = getSharedPreferences(Util.PREF_FILE,
+                        MODE_PRIVATE);
+                pref.edit().putBoolean("login", false).apply();
+//                view.setVisibility(View.INVISIBLE);
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -20,7 +20,7 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class RetrieveCustTask extends AsyncTask<String, Integer, CustVO> {
+public class RetrieveCustTask extends AsyncTask<String, Integer, String> {
     private final static String TAG = "LoginActivity";
     String cust_servlet_url, cust_acc, cust_pwd;
     CustVO cust_account;
@@ -32,19 +32,15 @@ public class RetrieveCustTask extends AsyncTask<String, Integer, CustVO> {
     }
 
     @Override
-    protected CustVO doInBackground(String... strings) {
+    protected String doInBackground(String... strings) {
         String url = cust_servlet_url;
         String cust_Acc = cust_acc;
         String cust_Pwd = cust_pwd;
         cust_account = new CustVO(cust_Acc, cust_Pwd);//顧客輸入的帳號密碼(CustVO)
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-        String jsonIn;
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("selectCust", gson.toJson(cust_account));
-        jsonIn = getRemoteData(url, jsonObject.toString());
-        Type custType = new TypeToken<CustVO>() {
-        }.getType();
-        return gson.fromJson(jsonIn, custType);
+        return getRemoteData(url, jsonObject.toString());
     }
 
 

@@ -72,28 +72,30 @@ public class FoodOrderFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-            final FoodOrderVO foodOrderVO = foodOrderVOList.get(position);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy 年 MM 月 dd 日 HH : mm ");
-            viewHolder.idFood_or_id.setText("訂單編號：" + foodOrderVO.getFood_or_ID());
-            viewHolder.idFood_or_appt.setText("預約日期：" + sdf.format(foodOrderVO.getFood_or_start()));
-            if ("o0".equals(foodOrderVO.getFood_or_status())) {
-                idFood_Order_Layout.setBackgroundColor(getResources().getColor(R.color.colorRed));
-            }
-
-            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (isOnClick) {
-                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                        bottomSheetBehavior.setPeekHeight(985);
-                        displayFoodOrder(position);
-                        isOnClick = false;
-                    } else {
-                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                        isOnClick = true;
-                    }
+            if(!foodOrderVOList.isEmpty()) {
+                final FoodOrderVO foodOrderVO = foodOrderVOList.get(position);
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy 年 MM 月 dd 日 HH : mm ");
+                viewHolder.idFood_or_id.setText("訂單編號：" + foodOrderVO.getFood_or_ID());
+                viewHolder.idFood_or_appt.setText("預約日期：" + sdf.format(foodOrderVO.getFood_or_start()));
+                if ("o0".equals(foodOrderVO.getFood_or_status())) {
+                    idFood_Order_Layout.setBackgroundColor(getResources().getColor(R.color.colorRed));
                 }
-            });
+
+                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (isOnClick) {
+                            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                            bottomSheetBehavior.setPeekHeight(985);
+                            displayFoodOrder(position);
+                            isOnClick = false;
+                        } else {
+                            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                            isOnClick = true;
+                        }
+                    }
+                });
+            }
         }
 
         @Override

@@ -49,47 +49,26 @@ public class LoginActivity extends AppCompatActivity {
         findViews();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-//        SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
-//                MODE_PRIVATE);
-//        boolean login = preferences.getBoolean("login", false);
-//        if (login) {
-//            String cust_acc = preferences.getString("custAcc", "");
-//            String cust_pwd = preferences.getString("custPwd", "");
-//            retrieveCustTask = (RetrieveCustTask) new RetrieveCustTask().execute(Util.Cust_Servlet_URL, cust_acc, cust_pwd);
-//            setResult(RESULT_OK);
-//            finish();
-//        }
-
-
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-//                case REQUEST_LOGIN:
-//                    SharedPreferences preferences =
-//                            getSharedPreferences(Util.PREF_FILE, MODE_PRIVATE);
-//                    boolean login = preferences.getBoolean("login", false);
-//                    if (!login) {
-//                        Util.showToast(MemberShipActivity.this, "login failed");
-//                        onLogin();
-//                    }
-//
-//
-            }
-        }
-    }
-
-
     private void findViews() {
         idCust_acc = findViewById(R.id.idCust_Acc);
         idCust_pwd = findViewById(R.id.idCust_Pwd);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
+                MODE_PRIVATE);
+        boolean login = preferences.getBoolean("login", false);
+        if (login) {
+            String cust_acc = preferences.getString("custAcc", "");
+            String cust_pwd = preferences.getString("custPwd", "");
+            if (isMember(cust_acc, cust_pwd)) {
+                finish();
+            } else{
+                Toast.makeText(LoginActivity.this, "帳號密碼錯誤，請重新登入", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     public void onLogInClick(View view) {
@@ -101,37 +80,44 @@ public class LoginActivity extends AppCompatActivity {
         String cust_pwd = idCust_pwd.getText().toString().trim();
         if (cust_acc.isEmpty()) {
             idCust_acc.setError("帳號不得為空");
+            return;
         } else if (cust_pwd.isEmpty()) {
             idCust_pwd.setError("密碼不得為空");
+            return;
         } else if (!Util.networkConnected(this)) {
             Toast.makeText(LoginActivity.this, "網路連線錯誤", Toast.LENGTH_SHORT).show();
         } else {
             preferences.edit().putBoolean("login", true)
                     .putString("custAcc", cust_acc)
                     .putString("custPwd", cust_pwd).apply();
-            try {
-                retrieveCustTask = new RetrieveCustTask(Util.Cust_Servlet_URL, cust_acc, cust_pwd);
-                cust_account = retrieveCustTask.execute().get();
-            } catch (Exception e) {
-                Log.e(TAG, e.toString());
-            }
-            if (cust_account != null) {
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("cust_account", cust_account);
-                intent.putExtras(bundle);
-                setResult(RESULT_OK, intent);
-                finish();
-            } else {
-                Toast.makeText(LoginActivity.this, "帳號密碼錯誤，請重新登入", Toast.LENGTH_SHORT).show();
-            }
         }
+        if (isMember(cust_acc, cust_pwd)) {
+            finish();
+        } else {
+            Toast.makeText(LoginActivity.this, "帳號密碼錯誤，請重新登入", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public boolean isMember(String cust_acc, String cust_pwd) {
+        try {
+            retrieveCustTask = new RetrieveCustTask(Util.Cust_Servlet_URL, cust_acc, cust_pwd);
+            cust_account = retrieveCustTask.execute().get();
+        } catch (Exception e) {
+            Log.e(TAG, e.toString());
+        }
+        if (cust_account != null) {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("cust_account", cust_account);
+            intent.putExtras(bundle);
+            setResult(RESULT_OK, intent);
+        }
+        return cust_account != null;
     }
 
     public void onSimpleInputClick(View view) {
         idCust_acc.setText("ABC");
         idCust_pwd.setText("123");
-
     }
 
 

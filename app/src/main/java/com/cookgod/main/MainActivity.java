@@ -49,9 +49,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case REQUEST_LOGIN:
-                if (resultCode == RESULT_OK) {
+        switch (resultCode) {
+            case RESULT_OK:
+                if (requestCode == REQUEST_LOGIN) {
                     Bundle bundle = data.getExtras();
                     if (!bundle.isEmpty()) {
                         cust_account = (CustVO) bundle.getSerializable("cust_account");
@@ -62,9 +62,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 }
                 break;
-            case REQUEST_ORDER:
 
-                break;
 
         }
     }

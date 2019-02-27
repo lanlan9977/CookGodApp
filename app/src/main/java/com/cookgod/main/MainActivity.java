@@ -57,6 +57,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         cust_account = (CustVO) bundle.getSerializable("cust_account");
                         idCust_name.setText(cust_account.getCust_name());
                         idHeaderText.setText("歡迎");
+                    }else{
+                        Toast.makeText(MainActivity.this,"Fuck",Toast.LENGTH_SHORT).show();
                     }
                 }
                 break;

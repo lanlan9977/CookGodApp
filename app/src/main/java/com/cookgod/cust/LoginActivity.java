@@ -1,12 +1,6 @@
 package com.cookgod.cust;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -14,25 +8,9 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.cookgod.R;
-import com.cookgod.main.MainActivity;
 import com.cookgod.main.Util;
 import com.cookgod.task.RetrieveCustTask;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.lang.reflect.Type;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.concurrent.ExecutionException;
 
 public class LoginActivity extends AppCompatActivity {
     private final static String TAG = "LoginActivity";
@@ -40,7 +18,6 @@ public class LoginActivity extends AppCompatActivity {
     private AutoCompleteTextView idCust_acc;
     private EditText idCust_pwd;
     private CustVO cust_account;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +49,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onLogInClick(View view) {
-        SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
-                MODE_PRIVATE);
         idCust_acc.setError(null);
         idCust_pwd.setError(null);
         String cust_acc = idCust_acc.getText().toString().trim();
@@ -86,10 +61,6 @@ public class LoginActivity extends AppCompatActivity {
             return;
         } else if (!Util.networkConnected(this)) {
             Toast.makeText(LoginActivity.this, "網路連線錯誤", Toast.LENGTH_SHORT).show();
-        } else {
-            preferences.edit().putBoolean("login", true)
-                    .putString("custAcc", cust_acc)
-                    .putString("custPwd", cust_pwd).apply();
         }
         if (isMember(cust_acc, cust_pwd)) {
             finish();
@@ -99,6 +70,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public boolean isMember(String cust_acc, String cust_pwd) {
+        SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
+                MODE_PRIVATE);
         try {
             retrieveCustTask = new RetrieveCustTask(Util.Cust_Servlet_URL, cust_acc, cust_pwd);
             cust_account = retrieveCustTask.execute().get();
@@ -106,11 +79,22 @@ public class LoginActivity extends AppCompatActivity {
             Log.e(TAG, e.toString());
         }
         if (cust_account != null) {
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("cust_account", cust_account);
-            intent.putExtras(bundle);
-            setResult(RESULT_OK, intent);
+            preferences.edit().putBoolean("login", true)
+                    .putString("cust_ID",cust_account.getCust_ID())
+                    .putString("cust_acc", cust_account.getCust_acc())
+                    .putString("cust_pwd", cust_account.getCust_pwd())
+                    .putString("cust_name",cust_account.getCust_name())
+                    .putString("cust_sex",cust_account.getCust_sex())
+                    .putString("cust_tel",cust_account.getCust_tel())
+                    .putString("cust_addr",cust_account.getCust_addr())
+                    .putString("cust_pid",cust_account.getCust_pid())
+                    .putString("cust_mail",cust_account.getCust_mail())
+                    .putString("cust_brd",cust_account.getCust_brd().toString())
+                    .putString("cust_reg",cust_account.getCust_reg().toString())
+                    .putString("cust_status",cust_account.getCust_status())
+                    .putString("cust_niname",cust_account.getCust_niname())
+                    .apply();
+            setResult(RESULT_OK);
         }
         return cust_account != null;
     }
@@ -119,6 +103,5 @@ public class LoginActivity extends AppCompatActivity {
         idCust_acc.setText("ABC");
         idCust_pwd.setText("123");
     }
-
 
 }

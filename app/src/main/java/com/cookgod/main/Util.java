@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.widget.Toast;
 
 public class Util {
     public final static String MenuOrder_Servlet_URL = "http://10.0.2.2:8081/CookGodTest/MenuOrderServlet";
@@ -17,6 +18,9 @@ public class Util {
         NetworkInfo networkInfo = conManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
     }
+//    Toast.makeText(MainActivity.this,"小熊維尼",Toast.LENGTH_SHORT).show();
+//    Toast.makeText(MainActivity.this,"FUCK",Toast.LENGTH_SHORT).show();
+
 }
 
 

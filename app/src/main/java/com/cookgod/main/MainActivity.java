@@ -1,6 +1,7 @@
 package com.cookgod.main;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.MenuItemCompat;
@@ -47,25 +48,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private final int  REQUEST_ORDER = 2;
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (resultCode) {
-            case RESULT_OK:
-                if (requestCode == REQUEST_LOGIN) {
-                    Bundle bundle = data.getExtras();
-                    if (!bundle.isEmpty()) {
-                        cust_account = (CustVO) bundle.getSerializable("cust_account");
-                        idCust_name.setText(cust_account.getCust_name());
-                        idHeaderText.setText("歡迎");
-                    }else{
-                        Toast.makeText(MainActivity.this,"Fuck",Toast.LENGTH_SHORT).show();
-                    }
-                }
-                break;
-
-
+    protected void onStart() {
+        super.onStart();
+        SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
+                MODE_PRIVATE);
+        boolean login = preferences.getBoolean("login", false);
+        if(login){
+            idCust_name.setText(preferences.getString("cust_name",""));
+            idHeaderText.setText("歡迎");
         }
     }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//
+//        switch (resultCode) {
+//            case RESULT_OK:
+//                if (requestCode == REQUEST_LOGIN) {
+//                    Bundle bundle = data.getExtras();
+//                    if (!bundle.isEmpty()) {
+//                        cust_account = (CustVO) bundle.getSerializable("cust_account");
+//
+//                    }else{
+//                        Toast.makeText(MainActivity.this,"Fuck",Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//                break;
+//
+//
+//        }
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,11 +162,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void onItemSelectedTo(int toastString, Class toClass,int requestCode) {
         Intent intent = new Intent(MainActivity.this, toClass);
-        if(cust_account!=null){
-            Bundle bundle=new Bundle();
-            bundle.putSerializable("cust_account",cust_account);
-            intent.putExtras(bundle);
-        }
         Toast.makeText(getApplicationContext(), toastString, Toast.LENGTH_LONG).show();
         startActivityForResult(intent, requestCode);
         overridePendingTransition(R.anim.in, R.anim.out);

@@ -2,6 +2,7 @@ package com.cookgod.order;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -47,6 +48,7 @@ public class OrderActivity extends AppCompatActivity {
     public List<MenuOrderVO> getMenuOrderList() {
         return menuOrderList;
     }
+
     public List<FoodOrderVO> getFoodOrderList() {
         return foodOrderList;
     }
@@ -54,16 +56,16 @@ public class OrderActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Intent intent = getIntent();
-        if (intent != null) {
-            cust_account = (CustVO) intent.getExtras().getSerializable("cust_account");
+        SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
+                MODE_PRIVATE);
+        boolean login = preferences.getBoolean("login", false);
+        if (login) {
             if (Util.networkConnected(this)) {
-                retrieveMenuOrderTask = new RetrieveMenuOrderTask().execute(Util.MenuOrder_Servlet_URL, cust_account.getCust_ID());
+                retrieveMenuOrderTask = new RetrieveMenuOrderTask().execute(Util.MenuOrder_Servlet_URL, preferences.getString("cust_ID", ""));
             } else {
-                Toast.makeText(OrderActivity.this, "網路連線錯誤", Toast.LENGTH_SHORT).show();
+
             }
         }
-
     }
 
     private class RetrieveMenuOrderTask extends AsyncTask<String, String, List<MenuOrderVO>> {
@@ -156,7 +158,6 @@ public class OrderActivity extends AppCompatActivity {
 
     private void findViews() {
     }
-
 
     private class MyPagerAdapter extends FragmentPagerAdapter {
         List<Page> pageList;

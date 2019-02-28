@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import com.cookgod.cust.CustVO;
 import com.cookgod.cust.LoginActivity;
+import com.cookgod.main.Util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -22,8 +23,8 @@ import java.net.URL;
 
 public class RetrieveCustTask extends AsyncTask<String, Integer, String> {
     private final static String TAG = "LoginActivity";
-    String cust_servlet_url, cust_acc, cust_pwd;
-    CustVO cust_account;
+    private String cust_servlet_url, cust_acc, cust_pwd;
+    private CustVO cust_account;
 
     public RetrieveCustTask(String cust_servlet_url, String cust_acc, String cust_pwd) {
         this.cust_servlet_url = cust_servlet_url;

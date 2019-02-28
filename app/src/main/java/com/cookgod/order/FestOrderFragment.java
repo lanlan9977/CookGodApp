@@ -76,14 +76,15 @@ public class FestOrderFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-            final FestOrderVO festOrderVO = festOrderVOList.get(position);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy 年 MM 月 dd 日 HH : mm ");
-            viewHolder.idFest_or_id.setText("訂單編號：" + festOrderVO.getFest_or_ID());
+            if(!festOrderVOList.isEmpty()) {
+                FestOrderVO festOrderVO = festOrderVOList.get(position);
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy 年 MM 月 dd 日 HH : mm ");
+                viewHolder.idFest_or_id.setText("訂單編號：" + festOrderVO.getFest_or_ID());
 //            viewHolder.idFest_or_appt.setText("預約日期：" + sdf.format(festOrderVO.getFest_or_start()));
-            if ("o0".equals(festOrderVO.getFest_or_status())) {
-                idFest_Order_Layout.setBackgroundColor(getResources().getColor(R.color.colorRed));
+                if ("o0".equals(festOrderVO.getFest_or_status())) {
+                    idFest_Order_Layout.setBackgroundColor(getResources().getColor(R.color.colorRed));
+                }
             }
-
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

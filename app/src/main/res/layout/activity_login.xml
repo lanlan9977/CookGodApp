@@ -56,17 +56,21 @@
     <Button
         android:id="@+id/fast_button"
         style="?android:textAppearanceSmall"
-        android:layout_width="50dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:onClick="onSimpleInputClick"
-        android:text="^^"
+        android:text="顧客"
         android:textStyle="bold"
         tools:ignore="OnClick" />
-
-    <TextView
-        android:id="@+id/idTest"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/fast_chefbutton"
+        style="?android:textAppearanceSmall"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorWhite" />
+        android:layout_marginTop="16dp"
+        android:onClick="onSimpleInputChefClick"
+        android:text="主廚"
+        android:textStyle="bold"
+        tools:ignore="OnClick" />
 </LinearLayout>

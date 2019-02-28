@@ -10,15 +10,18 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cookgod.R;
 import com.cookgod.broadcast.BroadcastVO;
+import com.cookgod.cust.ChefVO;
 import com.cookgod.cust.CustVO;
 import com.cookgod.cust.LoginActivity;
 import com.cookgod.order.MemberActivity;
@@ -35,6 +38,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 
@@ -47,7 +51,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private TextView idCust_name, idHeaderText;
+    private Boolean isChef=false;
+    private Boolean login;
+
     private BadgeActionProvider provider;
+    private ImageView idPicView;
     private BadgeActionProvider.OnClickListener onClickListener = new BadgeActionProvider.OnClickListener() {
         @Override
         public void onClick(int what) {
@@ -57,49 +65,46 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
     };
-
-
-
-    private final int  REQUEST_LOGIN = 1;
-    private final int  REQUEST_ORDER = 2;
+    private final int REQUEST_LOGIN = 1;
+    private final int REQUEST_ORDER = 2;
 
     @Override
     protected void onStart() {
         super.onStart();
         SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
                 MODE_PRIVATE);
-        boolean login = preferences.getBoolean("login", false);
-        if(login){
-            idCust_name.setText(preferences.getString("cust_name",""));
-            idHeaderText.setText("歡迎");
-            retrieveCustTask = new RetrieveCustTask(Util.Cust_Servlet_URL, preferences.getString("cust_acc",""), preferences.getString("cust_pwd",""));
-            Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-            String jsonIn = null;
+        login = preferences.getBoolean("login", false);
+        isChef = preferences.getBoolean("isChef", false);
+        if (login) {
+
+            idCust_name.setText(preferences.getString("cust_name", ""));
+
+            retrieveCustTask = new RetrieveCustTask(Util.Cust_Servlet_URL, preferences.getString("cust_acc", ""), preferences.getString("cust_pwd", ""));
             try {
-                jsonIn = retrieveCustTask.execute().get();
-                Type listType = new TypeToken<List<String>>() {
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+                String jsonIn = retrieveCustTask.execute().get();
+                Type listType = new TypeToken<Map<String, String>>() {
                 }.getType();
                 Type custType = new TypeToken<CustVO>() {
                 }.getType();
                 Type broadcastType = new TypeToken<List<BroadcastVO>>() {
                 }.getType();
-                List<String> list = gson.fromJson(jsonIn, listType);
-                String custJsonIn = list.get(0);
-                String broadcastJsonIn=list.get(1);
+                Type chefType = new TypeToken<ChefVO>() {
+                }.getType();
+                String custJsonIn = "";
+                String broadcastJsonIn = "";
+                Map<String, String> map = gson.fromJson(jsonIn, listType);
+                for (String key : map.keySet()) {
+                    custJsonIn = key;
+                    broadcastJsonIn = map.get(key);
+                }
                 cust_account = gson.fromJson(custJsonIn, custType);
-                broadcastList=gson.fromJson(broadcastJsonIn,broadcastType);
-
-
-
-
-//                Util.showToast(this,);
+                broadcastList = gson.fromJson(broadcastJsonIn, broadcastType);
             } catch (Exception e) {
                 Log.e(TAG, e.toString());
             }
-
         }
     }
-
 //    @Override
 //    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 //        super.onActivityResult(requestCode, resultCode, data);
@@ -136,11 +141,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);//將此activity設定監聽器
         View header = navigationView.inflateHeaderView(R.layout.nav_header_navigation_drawer);//設定Navigation上的HEADER元件
-        idCust_name = (TextView) header.findViewById(R.id.idCust_name);
-        idHeaderText = (TextView) header.findViewById(R.id.idHeaderText);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_drawer, R.string.close_drawer);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();//將drawerLayout和toolbar整合，會出現'三'選單
+        idCust_name = header.findViewById(R.id.idCust_name);
+        idHeaderText = header.findViewById(R.id.idHeaderText);
+        idPicView=header.findViewById(R.id.idPicView);
+
     }
 
 
@@ -156,13 +163,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         switch (item.getItemId()) {
             case R.id.idLogin://(登入專區)
-//                if(cust_account==null){
-                onItemSelectedTo(R.string.stringLoginM, LoginActivity.class,REQUEST_LOGIN);
-//                }else{
-//                    Toast.makeText(MainActivity.this,"您已經登入",Toast.LENGTH_SHORT).show();
-//                }
+                if(cust_account==null){
+                onItemSelectedTo(R.string.stringLoginM, LoginActivity.class, REQUEST_LOGIN);
+                }else{
+                    Toast.makeText(MainActivity.this,"您已經登入",Toast.LENGTH_SHORT).show();
+                }
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -172,33 +180,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+
         //設定Navigation側滑Item轉至該Activity
         switch (item.getItemId()) {
             case R.id.itemNews://(廣告專區)
-                onItemSelectedTo(R.string.stringNews, NewsActivity.class,0);
+                onItemSelectedTo(R.string.stringNews, NewsActivity.class, 0);
                 break;
             case R.id.itemMember://(會員專區)
-                onItemSelectedTo(R.string.stringMember, MemberActivity.class,0);
+                onItemSelectedTo(R.string.stringMember, MemberActivity.class, 0);
                 break;
             case R.id.itemMall://(商城專區)
-                onItemSelectedTo(R.string.stringMall, MallActivity.class,0);
+                onItemSelectedTo(R.string.stringMall, MallActivity.class, 0);
                 break;
             case R.id.itemOrder://(訂單專區)
-                onItemSelectedTo(R.string.stringOrder, OrderActivity.class,REQUEST_ORDER);
+                onItemSelectedTo(R.string.stringOrder, OrderActivity.class, REQUEST_ORDER);
                 break;
             case R.id.itemForums://(論壇專區)
-                onItemSelectedTo(R.string.stringForum, ForumActivity.class,0);
+                onItemSelectedTo(R.string.stringForum, ForumActivity.class, 0);
                 break;
             case R.id.itemLives://(直播專區)
-                onItemSelectedTo(R.string.stringLives, LivesActivity.class,0);
+                onItemSelectedTo(R.string.stringLives, LivesActivity.class, 0);
                 break;
             case R.id.itemCustomerService://(客服專區)
-                onItemSelectedTo(R.string.stringCustomerService, CustomerServiceActivity.class,0);
+                onItemSelectedTo(R.string.stringCustomerService, CustomerServiceActivity.class, 0);
                 break;
             case R.id.logout://(登出)
                 SharedPreferences pref = getSharedPreferences(Util.PREF_FILE,
                         MODE_PRIVATE);
-                pref.edit().putBoolean("login", false).apply();
+                pref.edit().putBoolean("login", false).putBoolean("isChef", false).apply();
 //                view.setVisibility(View.INVISIBLE);
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
@@ -209,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    public void onItemSelectedTo(int toastString, Class toClass,int requestCode) {
+    public void onItemSelectedTo(int toastString, Class toClass, int requestCode) {
         Intent intent = new Intent(MainActivity.this, toClass);
         Toast.makeText(getApplicationContext(), toastString, Toast.LENGTH_LONG).show();
         startActivityForResult(intent, requestCode);
@@ -220,14 +229,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         provider.setIcon(R.drawable.ic_broadcast_icon);//推播icon
-        int readStatus=0;
-        if(!broadcastList.isEmpty()) {
+        int readStatus = 0;
+        if (broadcastList != null && !broadcastList.isEmpty()) {
             for (int i = 0; i < broadcastList.size(); i++) {
                 if (broadcastList.get(i).getBroadcast_status().equals("B0")) {
                     readStatus++;
                 }
             }
-            provider.setBadge(readStatus);
+        }
+        provider.setBadge(readStatus);
+        if(login) {
+            if (isChef) {
+                idPicView.setImageDrawable(getResources().getDrawable(R.drawable.ic_chef_icon));
+                idHeaderText.setText("主廚");
+            } else {
+                idHeaderText.setText("顧客");
+            }
+            Menu menu = navigationView.getMenu();
+            menu.findItem(R.id.logout).setVisible(true);
         }
     }
 }

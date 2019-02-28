@@ -73,12 +73,14 @@ public class MenuOrderFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-            MenuOrderVO menuOrderVO = menuOrderList.get(position);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy 年 MM 月 dd 日 HH : mm ");
-            viewHolder.idMenu_or_id.setText("訂單編號：" + menuOrderVO.getMenu_od_ID());
-            viewHolder.idMenu_or_appt.setText("預約日期：" + sdf.format(menuOrderVO.getMenu_od_book()));
-            if ("g0".equals(menuOrderVO.getMenu_od_status())) {
-                idMenu_Order_Layout.setBackgroundColor(getResources().getColor(R.color.colorRed));
+            if(!menuOrderList.isEmpty()) {
+                MenuOrderVO menuOrderVO = menuOrderList.get(position);
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy 年 MM 月 dd 日 HH : mm ");
+                viewHolder.idMenu_or_id.setText("訂單編號：" + menuOrderVO.getMenu_od_ID());
+                viewHolder.idMenu_or_appt.setText("預約日期：" + sdf.format(menuOrderVO.getMenu_od_book()));
+                if ("g0".equals(menuOrderVO.getMenu_od_status())) {
+                    idMenu_Order_Layout.setBackgroundColor(getResources().getColor(R.color.colorRed));
+                }
             }
 
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {

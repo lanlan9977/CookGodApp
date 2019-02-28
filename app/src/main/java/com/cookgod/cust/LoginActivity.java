@@ -19,6 +19,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -29,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     private AutoCompleteTextView idCust_acc;
     private EditText idCust_pwd;
     private CustVO cust_account;
+    private ChefVO chef_account;
     private List<BroadcastVO> broadcastList;
 
     @Override
@@ -74,48 +76,82 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
         if (isMember(cust_acc, cust_pwd)) {
+            custShared();
             finish();
+        } else {
+            Util.showToast(LoginActivity.this, "帳號密碼輸入錯誤");
         }
     }
 
-    public boolean isMember(String cust_acc, String cust_pwd) {
+    private void custShared() {
         SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
                 MODE_PRIVATE);
+        preferences.edit().putBoolean("login", true)
+                .putString("cust_ID", cust_account.getCust_ID())
+                .putString("cust_acc", cust_account.getCust_acc())
+                .putString("cust_pwd", cust_account.getCust_pwd())
+                .putString("cust_name", cust_account.getCust_name())
+                .putString("cust_sex", cust_account.getCust_sex())
+                .putString("cust_tel", cust_account.getCust_tel())
+                .putString("cust_addr", cust_account.getCust_addr())
+                .putString("cust_pid", cust_account.getCust_pid())
+                .putString("cust_mail", cust_account.getCust_mail())
+                .putString("cust_brd", cust_account.getCust_brd().toString())
+                .putString("cust_reg", cust_account.getCust_reg().toString())
+                .putString("cust_status", cust_account.getCust_status())
+                .putString("cust_niname", cust_account.getCust_niname())
+                .apply();
+        if (chef_account != null) {
+            preferences.edit().putBoolean("isChef", true)
+                    .putString("chef_ID",chef_account.getChef_ID())
+                    .putString("chef_name",chef_account.getChef_name())
+                    .putString("chef_tel",chef_account.getChef_tel())
+                    .putString("chef_addr",chef_account.getChef_addr())
+                    .putString("chef_area",chef_account.getChef_area())
+                    .putString("chef_status",chef_account.getChef_status())
+                    .putString("chef_channel",chef_account.getChef_channel())
+                    .putString("chef_resume",chef_account.getChef_resume()).apply();
+        }
+
+        setResult(RESULT_OK);
+    }
+
+    public boolean isMember(String cust_acc, String cust_pwd) {
         try {
+            Util.showToast(LoginActivity.this, cust_acc);
             retrieveCustTask = new RetrieveCustTask(Util.Cust_Servlet_URL, cust_acc, cust_pwd);
             Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
             String jsonIn = retrieveCustTask.execute().get();
-            Type listType = new TypeToken<List<String>>() {
+            Type listType = new TypeToken<Map<String, String>>() {
             }.getType();
             Type custType = new TypeToken<CustVO>() {
             }.getType();
             Type broadcastType = new TypeToken<List<BroadcastVO>>() {
             }.getType();
-            List<String> list = gson.fromJson(jsonIn, listType);
-            String custJsonIn = list.get(0);
-            String broadcastJsonIn=list.get(1);
+            Type chefType = new TypeToken<ChefVO>() {
+            }.getType();
+
+            String custJsonIn = "";
+            String broadcastJsonIn = "";
+            String chefJsonIn = "";
+
+            Map<String, String> map = gson.fromJson(jsonIn, listType);
+
+            List<String> list = new ArrayList<>();
+            for (String key : map.keySet()) {
+                list.add(key);
+            }
+            custJsonIn = list.get(0);
+            broadcastJsonIn = map.get(custJsonIn);
             cust_account = gson.fromJson(custJsonIn, custType);
-            broadcastList=gson.fromJson(broadcastJsonIn,broadcastType);
+            broadcastList = gson.fromJson(broadcastJsonIn, broadcastType);
+            if (!list.get(1).isEmpty()) {
+                chefJsonIn = map.get(list.get(1));
+                chef_account = gson.fromJson(chefJsonIn, chefType);
+            }
+
         } catch (Exception e) {
             Log.e(TAG, e.toString());
-        }
-        if (cust_account != null) {
-            preferences.edit().putBoolean("login", true)
-                    .putString("cust_ID", cust_account.getCust_ID())
-                    .putString("cust_acc", cust_account.getCust_acc())
-                    .putString("cust_pwd", cust_account.getCust_pwd())
-                    .putString("cust_name", cust_account.getCust_name())
-                    .putString("cust_sex", cust_account.getCust_sex())
-                    .putString("cust_tel", cust_account.getCust_tel())
-                    .putString("cust_addr", cust_account.getCust_addr())
-                    .putString("cust_pid", cust_account.getCust_pid())
-                    .putString("cust_mail", cust_account.getCust_mail())
-                    .putString("cust_brd", cust_account.getCust_brd().toString())
-                    .putString("cust_reg", cust_account.getCust_reg().toString())
-                    .putString("cust_status", cust_account.getCust_status())
-                    .putString("cust_niname", cust_account.getCust_niname())
-                    .apply();
-            setResult(RESULT_OK);
         }
         return cust_account != null;
     }
@@ -125,4 +161,9 @@ public class LoginActivity extends AppCompatActivity {
         idCust_pwd.setText("123");
     }
 
+
+    public void onSimpleInputChefClick(View view) {
+        idCust_acc.setText("FOOD_SUP");
+        idCust_pwd.setText("123456");
+    }
 }

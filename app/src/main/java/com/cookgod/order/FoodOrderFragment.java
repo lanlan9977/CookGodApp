@@ -34,7 +34,7 @@ public class FoodOrderFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_menuorder, container, false);
+        View view = inflater.inflate(R.layout.fragment_foodorder, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.foodOrderView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));//設定recyclerView
         recyclerView.setAdapter(new FoodOrderAdapter(inflater));
@@ -64,15 +64,15 @@ public class FoodOrderFragment extends Fragment {
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View itemView = inflater.inflate(R.layout.card_menuorder, parent, false);
+            View itemView = inflater.inflate(R.layout.card_foodorder, parent, false);
             ViewHolder viewHolder = new ViewHolder(itemView);
-            idFood_Order_Layout = itemView.findViewById(R.id.idMenu_Order_Layout);
+            idFood_Order_Layout = itemView.findViewById(R.id.idFood_Order_Layout);
             return viewHolder;
         }
 
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-            if(!foodOrderVOList.isEmpty()) {
+            if (!foodOrderVOList.isEmpty()) {
                 final FoodOrderVO foodOrderVO = foodOrderVOList.get(position);
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy 年 MM 月 dd 日 HH : mm ");
                 viewHolder.idFood_or_id.setText("訂單編號：" + foodOrderVO.getFood_or_ID());
@@ -105,25 +105,25 @@ public class FoodOrderFragment extends Fragment {
     }
 
     private void displayFoodOrder(int position) {
-//        FoodOrderVO menuOrder = menuOrderVOList.get(position);
-//        String status = menuOrder.getMenu_od_status();
-//        if ("g1".equals(status)) {
-//            status = "審核通過";
-//        } else if ("g0".equals(status)) {
-//            status = "審核未通過";
-//        }
-//        StringBuilder sb = new StringBuilder();
-//        sb.append("嚴選套餐訂單編號:" + menuOrder.getMenu_od_ID() + "\r\n")
-//                .append("訂單狀態:" + status + "\r\n")
-//                .append("下單日期:" + menuOrder.getMenu_od_start() + "\r\n")
-//                .append("預約日期:" + menuOrder.getMenu_od_book() + "\r\n")
-//                .append("完成日期:" + menuOrder.getMenu_od_end() + "\r\n")
-//                .append("訂單評價:" + menuOrder.getMenu_od_rate() + "\r\n")
-//                .append("訂單評價留言:" + menuOrder.getMenu_od_msg() + "\r\n")
-//                .append("顧客編號:" + menuOrder.getCust_ID() + "\r\n")
-//                .append("主廚編號:" + menuOrder.getChef_ID() + "\r\n")
-//                .append("套餐編號:" + menuOrder.getMenu_ID() + "\r\n");
-//        idFood_Order_msg.setText(sb);
+        FoodOrderVO foodOrder = foodOrderVOList.get(position);
+        String status = foodOrder.getFood_or_status();
+        if ("O1".equals(status)) {
+            status = "審核通過";
+        } else if ("g0".equals(status)) {
+            status = "審核未通過";
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("食材訂單編號:" + foodOrder.getFood_or_ID() + "\r\n")
+                .append("訂單狀態:" + status + "\r\n")
+                .append("下單日期:" + foodOrder.getFood_or_start() + "\r\n")
+                .append("出貨日期:" + foodOrder.getFood_or_send() + "\r\n")
+                .append("到貨日期:" + foodOrder.getFood_or_rcv() + "\r\n")
+                .append("完成日期:" + foodOrder.getFood_or_end() + "\r\n")
+                .append("收件人姓名:" + foodOrder.getFood_or_name() + "\r\n")
+                .append("收件人地址:" + foodOrder.getFood_or_addr() + "\r\n")
+                .append("收件人電話:" + foodOrder.getFood_or_tel() + "\r\n")
+                .append("顧客編號:" + foodOrder.getCust_ID() + "\r\n");
+        idFood_Order_msg.setText(sb);
     }
 
 

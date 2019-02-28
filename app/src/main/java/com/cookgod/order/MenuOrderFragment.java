@@ -19,7 +19,7 @@ import java.util.List;
 
 public class MenuOrderFragment extends Fragment {
 
-    private List<MenuOrderVO> menuOrderVOList;
+    private List<MenuOrderVO> menuOrderList;
     private LinearLayout idMenu_Order_Layout;
     private BottomSheetBehavior bottomSheetBehavior;
     private TextView idMenu_Order_msg;
@@ -29,7 +29,7 @@ public class MenuOrderFragment extends Fragment {
     @Override
     public void onAttach(Context context) {//從OrderActivity取得物件資料
         super.onAttach(context);
-        menuOrderVOList = ((OrderActivity) context).getMenuOrderList();
+        menuOrderList = ((OrderActivity) context).getMenuOrderList();
     }
 
     @Override
@@ -73,7 +73,7 @@ public class MenuOrderFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-            final MenuOrderVO menuOrderVO = menuOrderVOList.get(position);
+            MenuOrderVO menuOrderVO = menuOrderList.get(position);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy 年 MM 月 dd 日 HH : mm ");
             viewHolder.idMenu_or_id.setText("訂單編號：" + menuOrderVO.getMenu_od_ID());
             viewHolder.idMenu_or_appt.setText("預約日期：" + sdf.format(menuOrderVO.getMenu_od_book()));
@@ -99,12 +99,12 @@ public class MenuOrderFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return menuOrderVOList.size();
+            return menuOrderList.size();
         }
     }
 
     private void displayMenuOrder(int position) {
-        MenuOrderVO menuOrder = menuOrderVOList.get(position);
+        MenuOrderVO menuOrder = menuOrderList.get(position);
         String status = menuOrder.getMenu_od_status();
         if ("g1".equals(status)) {
             status = "審核通過";

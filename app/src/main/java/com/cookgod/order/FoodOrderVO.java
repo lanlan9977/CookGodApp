@@ -2,7 +2,7 @@ package com.cookgod.order;
 
 import java.sql.Date;
 
-public class FoodOrderVO {
+public class FoodOrderVO implements java.io.Serializable  {
 
     private static final long serialVersionUID = 3L;
     private String food_or_ID;

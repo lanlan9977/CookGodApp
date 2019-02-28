@@ -21,7 +21,9 @@ import com.cookgod.R;
 import com.cookgod.cust.CustVO;
 import com.cookgod.main.Page;
 import com.cookgod.main.Util;
+import com.cookgod.task.RetrieveOrderTask;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
@@ -35,118 +37,27 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 //(訂單專區)
 public class OrderActivity extends AppCompatActivity {
-    private CustVO cust_account;
-    public List<MenuOrderVO> menuOrderList;
-    public List<FoodOrderVO> foodOrderList;
     private final static String TAG = "OrderActivity";
-    private AsyncTask retrieveMenuOrderTask;
+    public List<MenuOrderVO> menuOrderList;
+    public List<FestOrderVO> festOrderList;
+    public List<FoodOrderVO> foodOrderList;
+    private RetrieveOrderTask retrieveOrderTask;
 
     public List<MenuOrderVO> getMenuOrderList() {
         return menuOrderList;
     }
 
+    public List<FestOrderVO> getFestOrderList() {
+        return festOrderList;
+    }
+
     public List<FoodOrderVO> getFoodOrderList() {
         return foodOrderList;
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
-                MODE_PRIVATE);
-        boolean login = preferences.getBoolean("login", false);
-        if (login) {
-            if (Util.networkConnected(this)) {
-                retrieveMenuOrderTask = new RetrieveMenuOrderTask().execute(Util.MenuOrder_Servlet_URL, preferences.getString("cust_ID", ""));
-            } else {
-
-            }
-        }
-    }
-
-    private class RetrieveMenuOrderTask extends AsyncTask<String, String, List<MenuOrderVO>> {
-        private ProgressDialog progressDialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            menuOrderList = new ArrayList<>();
-            progressDialog = new ProgressDialog(OrderActivity.this);
-            progressDialog.setMessage("Loading...");
-            progressDialog.show();
-        }
-
-        @Override
-        protected List<MenuOrderVO> doInBackground(String... params) {
-            String url = params[0];
-            String cust_ID = params[1];
-            String jsonIn;
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("selectMenuOrder", cust_ID);
-            jsonIn = getRemoteData(url, jsonObject.toString());
-            Gson gson = new Gson();
-            Type listType = new TypeToken<List<MenuOrderVO>>() {
-            }.getType();
-
-            return gson.fromJson(jsonIn, listType);
-        }
-
-        @Override
-        protected void onPostExecute(List<MenuOrderVO> items) {
-            menuOrderList = items;
-            if (menuOrderList != null) {
-                ViewPager viewPager = findViewById(R.id.viewPager);
-                viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));//頁面手勢滑動
-
-                TabLayout tabLayout = findViewById(R.id.tabLayout);//訂單種類滑動列表
-                viewPager.isFakeDragging();
-                tabLayout.setupWithViewPager(viewPager);
-            }
-            progressDialog.cancel();
-        }
-
-
-    }
-
-    private String getRemoteData(String url, String outStr) {
-        HttpURLConnection connection = null;
-        StringBuilder inStr = new StringBuilder();
-        try {
-            connection = (HttpURLConnection) new URL(url).openConnection();
-            connection.setDoInput(true);
-            connection.setDoOutput(true);
-            connection.setChunkedStreamingMode(0);
-            connection.setUseCaches(false);
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("charset", "UTF-8");
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
-            bw.write(outStr);
-            Log.d(TAG, "output: " + outStr);
-            bw.close();
-
-            int responseCode = connection.getResponseCode();
-            if (responseCode == 200) {
-                BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String line;
-                while ((line = br.readLine()) != null) {
-                    inStr.append(line);
-                }
-            } else {
-                Log.d(TAG, "response code: " + responseCode);
-            }
-        } catch (IOException e) {
-            Log.e(TAG, e.toString());
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
-        }
-        Log.d(TAG, "input: " + inStr);
-        return inStr.toString();
     }
 
     @Override
@@ -158,6 +69,60 @@ public class OrderActivity extends AppCompatActivity {
 
     private void findViews() {
     }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
+                MODE_PRIVATE);
+        boolean login = preferences.getBoolean("login", false);
+        if (login) {
+            if (Util.networkConnected(this)) {
+
+                try {
+                    retrieveOrderTask = new RetrieveOrderTask(Util.MenuOrder_Servlet_URL, preferences.getString("cust_ID", ""));
+                    String OrderListJsonIn = retrieveOrderTask.execute().get();
+
+                    Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+                    Type orderType = new TypeToken<List<String>>() {
+                    }.getType();
+                    List<String> orderList = gson.fromJson(OrderListJsonIn, orderType);
+
+                    String menuOrderJsonIn = orderList.get(0);
+                    Type menuOrderType = new TypeToken<List<MenuOrderVO>>() {
+                    }.getType();
+                    menuOrderList = gson.fromJson(menuOrderJsonIn, menuOrderType);
+
+                    String festOrderJsonIn = orderList.get(0);
+                    Type festOrderType = new TypeToken<List<FestOrderVO>>() {
+                    }.getType();
+                    festOrderList = gson.fromJson(festOrderJsonIn, festOrderType);
+
+                    String foodOrderJsonIn = orderList.get(2);
+                    Type foodOrderType = new TypeToken<List<FoodOrderVO>>() {
+                    }.getType();
+                    foodOrderList = gson.fromJson(foodOrderJsonIn, foodOrderType);
+                    Util.showToast(OrderActivity.this, foodOrderList.get(0).getFood_or_name());
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+                if (menuOrderList != null) {
+                    ViewPager viewPager = findViewById(R.id.viewPager);
+                    viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));//頁面手勢滑動
+
+                    TabLayout tabLayout = findViewById(R.id.tabLayout);//訂單種類滑動列表
+                    viewPager.isFakeDragging();
+                    tabLayout.setupWithViewPager(viewPager);
+                }
+            }
+        }
+    }
+
 
     private class MyPagerAdapter extends FragmentPagerAdapter {
         List<Page> pageList;

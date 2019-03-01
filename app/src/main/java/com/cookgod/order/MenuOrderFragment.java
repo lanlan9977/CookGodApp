@@ -1,6 +1,7 @@
 package com.cookgod.order;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -18,12 +20,14 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class MenuOrderFragment extends Fragment {
-
+    private final static String TAG = "OrderActivity";
     private List<MenuOrderVO> menuOrderList;
     private LinearLayout idMenu_Order_Layout;
     private BottomSheetBehavior bottomSheetBehavior;
     private TextView idMenu_Order_msg;
     private Boolean isOnClick = true;
+    private Button btnMenuOrder;
+    private String menu_ID;
 
 
     @Override
@@ -42,6 +46,7 @@ public class MenuOrderFragment extends Fragment {
         View bottomSheet = view.findViewById(R.id.bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);//設定bottomSheetBehavior
         idMenu_Order_msg = view.findViewById(R.id.idMenu_Order_msg);//設定bottomSheetBehavior中的TextView(顯示訂單內容)
+        btnMenuOrder=view.findViewById(R.id.idMenuOrderButton);
         return view;
     }
 
@@ -59,6 +64,7 @@ public class MenuOrderFragment extends Fragment {
                 super(itemView);
                 idMenu_or_id = itemView.findViewById(R.id.idMenu_or_id);
                 idMenu_or_appt = itemView.findViewById(R.id.idMenu_or_appt);
+
             }
 
         }
@@ -84,19 +90,23 @@ public class MenuOrderFragment extends Fragment {
             }
 
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+
                 @Override
                 public void onClick(View v) {
+                    displayMenuOrder(position);
+                    menu_ID= menuOrderList.get(position).getMenu_ID();
                     if (isOnClick) {
                         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                         bottomSheetBehavior.setPeekHeight(985);
-                        displayMenuOrder(position);
                         isOnClick = false;
                     } else {
                         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         isOnClick = true;
                     }
                 }
-            });
+            }
+            );
+
         }
 
         @Override
@@ -125,6 +135,14 @@ public class MenuOrderFragment extends Fragment {
                 .append("主廚編號:" + menuOrder.getChef_ID() + "\r\n")
                 .append("套餐編號:" + menuOrder.getMenu_ID() + "\r\n");
         idMenu_Order_msg.setText(sb);
+        btnMenuOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(getContext(),MenuOrderDetail.class);
+                intent.putExtra("menu_ID",menu_ID);
+                startActivity(intent);
+            }
+        });
     }
 
 

@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import com.cookgod.R;
 import com.cookgod.broadcast.BroadcastVO;
-import com.cookgod.main.MainActivity;
 import com.cookgod.main.Util;
 import com.cookgod.task.RetrieveCustTask;
 import com.google.gson.Gson;
@@ -22,7 +21,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
     private final static String TAG = "LoginActivity";
@@ -118,7 +116,6 @@ public class LoginActivity extends AppCompatActivity {
 
     public boolean isMember(String cust_acc, String cust_pwd) {
         try {
-            Util.showToast(LoginActivity.this, cust_acc);
             retrieveCustTask = new RetrieveCustTask(Util.Cust_Servlet_URL, cust_acc, cust_pwd);
             Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
             String jsonIn = retrieveCustTask.execute().get();

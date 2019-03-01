@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <ImageView
+        android:id="@+id/idMenuBlobView"
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:scaleType="centerCrop"
+        />
+
+    <TextView
+        android:id="@+id/idMenuName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/idMenuBlobView"
+        android:layout_marginTop="-1dp"
+        android:paddingLeft="20dp"
+        android:paddingTop="5dp"
+        android:textColor="@color/colorBlack"
+        android:textSize="18dp" />
+
+    <TextView
+        android:id="@+id/idMenuPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/idMenuName"
+        android:layout_marginTop="3dp"
+        android:paddingLeft="340dp"
+        android:paddingTop="5dp"
+        android:textColor="@color/colorRed"
+        android:textSize="12dp" />
+
+    <TextView
+        android:id="@+id/idMenuClob"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@+id/idMenuName"
+        android:layout_alignBottom="@+id/idMenuName"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="-94dp"
+        android:paddingLeft="20dp"
+        android:paddingTop="5dp"
+        android:paddingRight="20dp"
+        android:textColor="@color/colorGary"
+        android:textSize="12dp"
+        android:background="#E9DE6C"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/idMenuDish"
+        android:layout_width="match_parent"
+        android:layout_height="492dp"
+        android:layout_below="@+id/idMenuBlobView"
+        android:layout_alignLeft="@+id/idMenuBlobView"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="129dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="16dp" />
+
+</RelativeLayout>

@@ -30,6 +30,9 @@
     <!--訂單專區-->
     <string name="stringCameraQRCode">開啟相機功能</string>
     <string name="stringOrderQRCode">顯示訂單QRCode</string>
+    <!--套餐訂單專區-->
+    <string name="stringMenuOrderDetail">嚴選套餐訂單</string>
+    <string name="stringMenuOrderButton">訂單詳細資料</string>
     <!--主廚食材訂單-->
     <string name="stringChefOrder">選擇訂單所需食材</string>
     <!--訂單審核選單-->

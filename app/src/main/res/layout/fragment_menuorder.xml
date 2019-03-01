@@ -16,7 +16,7 @@
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/bottom_sheet"
             android:layout_width="match_parent"
-            android:layout_height="350dp"
+            android:layout_height="1000dp"
             android:background="@android:color/holo_orange_light"
             android:clipToPadding="true"
             app:behavior_hideable="true"
@@ -37,21 +37,20 @@
                     android:paddingBottom="20dp"
                     android:textSize="17sp" />
 
-                <Button
-                    android:id="@+id/idOrderQRCode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_toRightOf="@id/idReviewStatus"
-                    android:text="@string/stringOrderQRCode" />
+                <!--<Button-->
+                    <!--android:id="@+id/idOrderQRCode"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="@string/stringOrderQRCode"-->
+                    <!--android:layout_alignBottom="@id/idMenu_Order_msg" />-->
 
-                <Spinner
-                    android:id="@+id/idReviewStatus"
+                <Button
+                    android:id="@+id/idMenuOrderButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_gravity="left"
-                    android:spinnerMode="dialog" />
+                    android:layout_alignBottom="@id/idOrderQRCode"
+                    android:text="@string/stringMenuOrderButton" />
             </RelativeLayout>
         </android.support.v4.widget.NestedScrollView>
         <!--設定訂單下方ScrollView-->

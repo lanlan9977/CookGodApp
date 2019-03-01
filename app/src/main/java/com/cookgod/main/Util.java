@@ -8,8 +8,9 @@ import android.widget.Toast;
 
 public class Util {
     public final static String MenuOrder_Servlet_URL = "http://10.0.2.2:8081/CookGodTest/MenuOrderServlet";
-    public final static String Cust_Servlet_URL = "http://10.0.2.2:8081//CookGodTest/CustServlet";
-    //    public final static String URL = "http://192.168.1.108:8081/CookGodTest/MenuOrderServlet";
+    public final static String Cust_Servlet_URL = "http://10.0.2.2:8081/CookGodTest/CustServlet";
+    public final static String MenuDish_Servlet_URL = "http://10.0.2.2:8081/CookGodTest/MenuDishServlet";
+    public final static String Menu_Servlet_URL = "http://10.0.2.2:8081/CookGodTest/MenuServlet";
     public final static String PREF_FILE = "preference";
 
 
@@ -21,9 +22,6 @@ public class Util {
     public static void showToast(Context context,String text){
         Toast.makeText(context,text,Toast.LENGTH_SHORT).show();
     }
-//
-//    Toast.makeText(MainActivity.this,"FUCK",Toast.LENGTH_SHORT).show();
-
 }
 
 

@@ -1,9 +1,6 @@
 package com.cookgod.order;
 
-import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -11,33 +8,22 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.cookgod.R;
-import com.cookgod.cust.CustVO;
 import com.cookgod.main.Page;
 import com.cookgod.main.Util;
 import com.cookgod.task.RetrieveOrderTask;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.lang.reflect.Type;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 
 //(訂單專區)
@@ -103,8 +89,6 @@ public class OrderActivity extends AppCompatActivity {
                     Type foodOrderType = new TypeToken<List<FoodOrderVO>>() {
                     }.getType();
                     foodOrderList = gson.fromJson(foodOrderJsonIn, foodOrderType);
-                    Util.showToast(OrderActivity.this, foodOrderList.get(0).getFood_or_name());
-
 
                 } catch (Exception e) {
                     e.printStackTrace();

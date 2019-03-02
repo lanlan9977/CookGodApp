@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@drawable/main_bg"
-    tools:context=".main.MainActivity">
+    tools:context=".main.MainActivity"
+    >
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -15,5 +14,26 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorBlackWhite"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <include layout="@layout/content_main" />
+
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="617dp"
+        android:layout_marginTop="56dp" />
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        android:background="?android:attr/windowBackground"
+        app:itemTextColor="@color/colorBlack"
+        app:menu="@menu/navigation" />
     <!--自定Toolbar-->
-</LinearLayout><!--主頁面-->
+
+
+</android.support.design.widget.CoordinatorLayout><!--主頁面-->

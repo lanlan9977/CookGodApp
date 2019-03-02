@@ -8,45 +8,47 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/itemNews"
+            android:icon="@drawable/ic_news"
             android:title="@string/stringNews" />
         <item
             android:id="@+id/itemMember"
+            android:icon="@drawable/ic_login_icon"
             android:title="@string/stringMember" />
         <item
             android:id="@+id/itemMall"
+            android:icon="@drawable/ic_plate_fork_and_knife"
             android:title="@string/stringMall" />
         <item
             android:id="@+id/itemOrder"
+            android:icon="@drawable/ic_order"
             android:title="@string/stringOrder" />
         <item
             android:id="@+id/itemForums"
+            android:icon="@drawable/ic_chef"
             android:title="@string/stringForum" />
         <item
             android:id="@+id/itemLives"
+            android:icon="@drawable/ic_live"
             android:title="@string/stringLives" />
         <item
             android:id="@+id/itemCustomerService"
+            android:icon="@drawable/ic_support"
             android:title="@string/stringCustomerService" />
     </group>
 
     <item android:title="Communicate">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
-            <item
                 android:id="@+id/homepage"
+                android:icon="@drawable/ic_home_black_24dp"
                 android:title="首頁" />
             <item
                 android:id="@+id/settings"
+                android:icon="@drawable/ic_menu_manage"
                 android:title="設定" />
             <item
                 android:id="@+id/logout"
+                android:icon="@drawable/ic_login_button"
                 android:visible="false"
                 android:title="登出" />
         </menu>

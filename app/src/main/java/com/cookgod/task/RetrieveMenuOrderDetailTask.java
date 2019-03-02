@@ -16,7 +16,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class RetrieveMenuOrderDetailTask extends AsyncTask<String, String, String> {
-    private final static String TAG = "MenuOrderDetail";
+    private final static String TAG = "MenuOrderDetailActivity";
     private String menuDish_servlet_url, menu_id;
 
     public RetrieveMenuOrderDetailTask(String menuDish_servlet_url, String menu_id) {

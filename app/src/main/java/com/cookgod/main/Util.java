@@ -11,6 +11,7 @@ public class Util {
     public final static String Cust_Servlet_URL = "http://10.0.2.2:8081/CookGodTest/CustServlet";
     public final static String MenuDish_Servlet_URL = "http://10.0.2.2:8081/CookGodTest/MenuDishServlet";
     public final static String Menu_Servlet_URL = "http://10.0.2.2:8081/CookGodTest/MenuServlet";
+    public final static String Dish_Servlet_URL = "http://10.0.2.2:8081/CookGodTest/DishServlet";
     public final static String PREF_FILE = "preference";
 
 
@@ -22,6 +23,28 @@ public class Util {
     public static void showToast(Context context,String text){
         Toast.makeText(context,text,Toast.LENGTH_SHORT).show();
     }
+
+    //    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//
+//        switch (resultCode) {
+//            case RESULT_OK:
+//                if (requestCode == REQUEST_LOGIN) {
+//                    Bundle bundle = data.getExtras();
+//                    if (!bundle.isEmpty()) {
+//                        cust_account = (CustVO) bundle.getSerializable("cust_account");
+//
+//                    }else{
+//                        Toast.makeText(MainActivity.this,"Fuck",Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//                break;
+//
+//
+//        }
+//    }
 }
 
 

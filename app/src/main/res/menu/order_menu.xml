@@ -4,8 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".main.MainActivity">
     <item
-        android:id="@+id/idCameraQRCode"
-        android:icon="@drawable/ic_menu_camera"
-        android:title="Camera"
+        android:id="@+id/idOrderQRCode"
+        android:icon="@drawable/ic_qr_code"
+        android:title="QRCode"
         app:showAsAction="always" />
+    <item
+    android:id="@+id/idCameraQRCode"
+    android:icon="@drawable/ic_menu_camera"
+    android:title="Camera"
+    app:showAsAction="always" />
 </menu>

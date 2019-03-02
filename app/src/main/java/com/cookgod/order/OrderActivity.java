@@ -93,8 +93,6 @@ public class OrderActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-
                 if (menuOrderList != null) {
                     ViewPager viewPager = findViewById(R.id.viewPager);
                     viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));//頁面手勢滑動
@@ -149,6 +147,9 @@ public class OrderActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.idCameraQRCode:
                 Toast.makeText(OrderActivity.this, getResources().getText(R.string.stringCameraQRCode), Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.idOrderQRCode:
+                Toast.makeText(OrderActivity.this, getResources().getText(R.string.stringOrderQRCode), Toast.LENGTH_SHORT).show();
                 break;
         }
         return false;

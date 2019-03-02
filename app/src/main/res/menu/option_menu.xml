@@ -5,13 +5,13 @@
     tools:context=".main.MainActivity">
     <item
         android:id="@+id/idLogin"
-        android:icon="@drawable/ic_login_icon"
+ android:icon="@drawable/ic_login_icon_white"
         android:title="Pos"
         app:showAsAction="always" />
     <item
         android:id="@+id/myBadge"
         android:title="Alarm"
-        app:actionProviderClass="com.cookgod.main.BadgeActionProvider"
+        app:actionProviderClass="com.cookgod.broadcast.BadgeActionProvider"
         app:showAsAction="always" />
 
     <!-- actionProviderClass用來配置icon-->

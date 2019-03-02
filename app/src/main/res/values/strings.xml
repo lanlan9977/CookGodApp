@@ -19,6 +19,10 @@
     <string name="error_invalid_password">密碼的長度太短</string>
     <string name="error_field_required">這是必填的欄位</string>
     <string name="error_incorrect_password">此密碼無法識別</string>
+    <!--登出-->
+    <string name="stringLogout">真的要登出?</string>
+    <string name="stringLogoutYes">登出</string>
+    <string name="stringLogoutNo">取消</string>
     <!--側欄-->
     <string name="open_drawer">打開側欄</string>
     <string name="close_drawer">關閉側欄</string>
@@ -41,6 +45,12 @@
         <item name="stringArrayStatusOK">審核通過</item>
         <item name="stringArrayStatusNO">審核不通過</item>
     </string-array>
+
+
+    nbar-->下方navigationbar
+    <string name="title_home">主畫面</string>
+    <string name="title_dashboard">功能選單</string>
+    <string name="title_notifications">推播通知</string>
 
 
     <string name="title_activity_navigation_drawer">NavigationDrawerActivity</string>

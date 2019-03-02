@@ -1,4 +1,4 @@
-package com.cookgod.main;
+package com.cookgod.broadcast;
 
 
 import android.content.Context;

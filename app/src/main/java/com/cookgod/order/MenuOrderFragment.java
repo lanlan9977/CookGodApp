@@ -2,22 +2,32 @@ package com.cookgod.order;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cookgod.R;
+import com.cookgod.other.Contents;
+import com.cookgod.other.QRCodeEncoder;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+
+import static android.content.Context.WINDOW_SERVICE;
 
 public class MenuOrderFragment extends Fragment {
     private final static String TAG = "OrderActivity";
@@ -28,6 +38,8 @@ public class MenuOrderFragment extends Fragment {
     private Boolean isOnClick = true;
     private Button btnMenuOrder;
     private String menu_ID;
+    private ImageView ivCode;
+
 
 
     @Override
@@ -46,7 +58,9 @@ public class MenuOrderFragment extends Fragment {
         View bottomSheet = view.findViewById(R.id.bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);//設定bottomSheetBehavior
         idMenu_Order_msg = view.findViewById(R.id.idMenu_Order_msg);//設定bottomSheetBehavior中的TextView(顯示訂單內容)
-        btnMenuOrder=view.findViewById(R.id.idMenuOrderButton);
+        btnMenuOrder = view.findViewById(R.id.idMenuOrderButton);
+        ivCode = view.findViewById(R.id.ivCode);
+
         return view;
     }
 
@@ -64,7 +78,6 @@ public class MenuOrderFragment extends Fragment {
                 super(itemView);
                 idMenu_or_id = itemView.findViewById(R.id.idMenu_or_id);
                 idMenu_or_appt = itemView.findViewById(R.id.idMenu_or_appt);
-
             }
 
         }
@@ -79,7 +92,7 @@ public class MenuOrderFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-            if(!menuOrderList.isEmpty()) {
+            if (!menuOrderList.isEmpty()) {
                 MenuOrderVO menuOrderVO = menuOrderList.get(position);
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy 年 MM 月 dd 日 HH : mm ");
                 viewHolder.idMenu_or_id.setText("訂單編號：" + menuOrderVO.getMenu_od_ID());
@@ -90,23 +103,31 @@ public class MenuOrderFragment extends Fragment {
             }
 
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-
                 @Override
                 public void onClick(View v) {
                     displayMenuOrder(position);
-                    menu_ID= menuOrderList.get(position).getMenu_ID();
+                    menu_ID = menuOrderList.get(position).getMenu_ID();
                     if (isOnClick) {
                         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                        bottomSheetBehavior.setPeekHeight(985);
+                        bottomSheetBehavior.setPeekHeight(815);
                         isOnClick = false;
                     } else {
                         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         isOnClick = true;
                     }
                 }
+            });
+            String qrCodeText=menuOrderList.get(position).getMenu_od_ID();
+            int smallerDimension = getDimension();
+            QRCodeEncoder qrCodeEncoder = new QRCodeEncoder(qrCodeText, null,
+                    Contents.Type.TEXT, BarcodeFormat.QR_CODE.toString(),
+                    smallerDimension);
+            try {
+                Bitmap bitmap = qrCodeEncoder.encodeAsBitmap();
+                ivCode.setImageBitmap(bitmap);
+            } catch (WriterException e) {
+                e.printStackTrace();
             }
-            );
-
         }
 
         @Override
@@ -131,19 +152,40 @@ public class MenuOrderFragment extends Fragment {
                 .append("完成日期:" + menuOrder.getMenu_od_end() + "\r\n")
                 .append("訂單評價:" + menuOrder.getMenu_od_rate() + "\r\n")
                 .append("訂單評價留言:" + menuOrder.getMenu_od_msg() + "\r\n")
-                .append("顧客編號:" + menuOrder.getCust_ID() + "\r\n")
-                .append("主廚編號:" + menuOrder.getChef_ID() + "\r\n")
-                .append("套餐編號:" + menuOrder.getMenu_ID() + "\r\n");
+                ;
         idMenu_Order_msg.setText(sb);
         btnMenuOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(getContext(),MenuOrderDetail.class);
-                intent.putExtra("menu_ID",menu_ID);
+                Intent intent = new Intent(getContext(), MenuOrderDetailActivity.class);
+                intent.putExtra("menu_ID", menu_ID);
                 startActivity(intent);
             }
         });
     }
+    private int getDimension() {
+        WindowManager manager = (WindowManager) getContext().getSystemService(WINDOW_SERVICE);
+        // 取得螢幕尺寸
+        Display display = manager.getDefaultDisplay();
+        // API 13列為deprecated，但為了支援舊版手機仍採用
+        int width = display.getWidth();
+        int height = display.getHeight();
+
+        // 產生的QR code圖形尺寸(正方形)為螢幕較短一邊的1/2長度
+        int smallerDimension = width < height ? width : height;
+        smallerDimension = smallerDimension / 2;
+
+        // API 13開始支援
+//                Display display = manager.getDefaultDisplay();
+//                Point point = new Point();
+//                display.getSize(point);
+//                int width = point.x;
+//                int height = point.y;
+//                int smallerDimension = width < height ? width : height;
+//                smallerDimension = smallerDimension / 2;
+        return smallerDimension;
+    }
+
 
 
 }

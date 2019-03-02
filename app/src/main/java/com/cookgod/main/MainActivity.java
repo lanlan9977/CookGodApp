@@ -1,16 +1,22 @@
 package com.cookgod.main;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,6 +26,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cookgod.R;
+import com.cookgod.broadcast.BadgeActionProvider;
+import com.cookgod.broadcast.BroadcastFragment;
 import com.cookgod.broadcast.BroadcastVO;
 import com.cookgod.cust.ChefVO;
 import com.cookgod.cust.CustVO;
@@ -36,25 +44,27 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private final static String TAG = "MainActivity";
     private RetrieveCustTask retrieveCustTask;
     private CustVO cust_account;
-    private List<BroadcastVO> broadcastList;
+    public List<BroadcastVO> broadcastList;
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private TextView idCust_name, idHeaderText;
-    private Boolean isChef=false;
+    private Boolean isChef = false;
     private Boolean login;
-
+    private TextView mTextMessage;
+    private BroadcastFragment broadcastFragment;
     private BadgeActionProvider provider;
+    private FragmentManager manager;
     private ImageView idPicView;
     private BadgeActionProvider.OnClickListener onClickListener = new BadgeActionProvider.OnClickListener() {
         @Override
@@ -65,6 +75,59 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
     };
+
+    public List<BroadcastVO> getBroadcastList() {
+        return broadcastList;
+    }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(MenuItem item) {
+            manager = getSupportFragmentManager();
+            switch (item.getItemId()) {
+                case R.id.navigation_home:
+                    mTextMessage.setText(R.string.title_home);
+                    showFragment(item);
+                    return true;
+                case R.id.navigation_dashboard:
+                    mTextMessage.setText(R.string.title_dashboard);
+                    showFragment(item);
+                    return true;
+                case R.id.navigation_notifications:
+                    showFragment(item);
+                    return true;
+            }
+            return false;
+        }
+    };
+
+    private void showFragment(MenuItem item) {
+        FragmentTransaction transaction = manager.beginTransaction();
+        hideFragment(transaction);
+        Bundle bundle = new Bundle();
+        switch (item.getItemId()) {
+            case R.id.navigation_notifications:
+                if (broadcastFragment == null) {
+                    broadcastFragment = new BroadcastFragment();
+                    bundle.putSerializable("broadcast_con", (Serializable) broadcastList);
+                    broadcastFragment.setArguments(bundle);
+                    transaction.add(R.id.frameLayout, broadcastFragment).setCustomAnimations(R.anim.in, R.anim.out).show(broadcastFragment);
+                } else {
+                    transaction.setCustomAnimations(R.anim.in, R.anim.out).show(broadcastFragment);
+                }
+        }
+        transaction.commit();
+    }
+
+    private void hideFragment(FragmentTransaction fragmentTransaction) {
+        if (broadcastFragment != null) {
+            fragmentTransaction.hide(broadcastFragment);
+        } else {
+        }
+
+    }
+
     private final int REQUEST_LOGIN = 1;
     private final int REQUEST_ORDER = 2;
 
@@ -76,9 +139,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         login = preferences.getBoolean("login", false);
         isChef = preferences.getBoolean("isChef", false);
         if (login) {
-
             idCust_name.setText(preferences.getString("cust_name", ""));
-
             retrieveCustTask = new RetrieveCustTask(Util.Cust_Servlet_URL, preferences.getString("cust_acc", ""), preferences.getString("cust_pwd", ""));
             try {
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
@@ -105,27 +166,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
     }
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//
-//        switch (resultCode) {
-//            case RESULT_OK:
-//                if (requestCode == REQUEST_LOGIN) {
-//                    Bundle bundle = data.getExtras();
-//                    if (!bundle.isEmpty()) {
-//                        cust_account = (CustVO) bundle.getSerializable("cust_account");
-//
-//                    }else{
-//                        Toast.makeText(MainActivity.this,"Fuck",Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//                break;
-//
-//
-//        }
-//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,15 +181,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);//將此activity設定監聽器
         View header = navigationView.inflateHeaderView(R.layout.nav_header_navigation_drawer);//設定Navigation上的HEADER元件
+        BottomNavigationView navigation = findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        mTextMessage = findViewById(R.id.message);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_drawer, R.string.close_drawer);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();//將drawerLayout和toolbar整合，會出現'三'選單
         idCust_name = header.findViewById(R.id.idCust_name);
         idHeaderText = header.findViewById(R.id.idHeaderText);
-        idPicView=header.findViewById(R.id.idPicView);
-
+        idPicView = header.findViewById(R.id.idPicView);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -163,13 +204,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.idLogin://(登入專區)
-                if(cust_account==null){
-                onItemSelectedTo(R.string.stringLoginM, LoginActivity.class, REQUEST_LOGIN);
-                }else{
-                    Toast.makeText(MainActivity.this,"您已經登入",Toast.LENGTH_SHORT).show();
+                if (cust_account == null) {
+                    onItemSelectedTo(R.string.stringLoginM, LoginActivity.class, REQUEST_LOGIN);
+                } else {
+                    Toast.makeText(MainActivity.this, "您已經登入", Toast.LENGTH_SHORT).show();
                 }
                 break;
             default:
@@ -180,9 +220,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-
-        //設定Navigation側滑Item轉至該Activity
-        switch (item.getItemId()) {
+        switch (item.getItemId()) {//設定Navigation側滑Item轉至該Activity
             case R.id.itemNews://(廣告專區)
                 onItemSelectedTo(R.string.stringNews, NewsActivity.class, 0);
                 break;
@@ -208,9 +246,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 SharedPreferences pref = getSharedPreferences(Util.PREF_FILE,
                         MODE_PRIVATE);
                 pref.edit().putBoolean("login", false).putBoolean("isChef", false).apply();
-//                view.setVisibility(View.INVISIBLE);
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
+                logout();
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -238,7 +274,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
         provider.setBadge(readStatus);
-        if(login) {
+        if (login) {
             if (isChef) {
                 idPicView.setImageDrawable(getResources().getDrawable(R.drawable.ic_chef_icon));
                 idHeaderText.setText("主廚");
@@ -247,6 +283,49 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             Menu menu = navigationView.getMenu();
             menu.findItem(R.id.logout).setVisible(true);
+        }
+    }
+
+    public void logout() {
+
+        AlertFragment alertFragment = new AlertFragment();
+        FragmentManager fm = getSupportFragmentManager();
+        alertFragment.show(fm, "alert");
+
+
+    }
+
+    public static class AlertFragment extends DialogFragment implements DialogInterface.OnClickListener {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
+                    //設定圖示
+                    .setTitle("登出")
+                    .setIcon(R.drawable.ic_login_button)
+                    //設定訊息內容
+                    .setMessage(R.string.stringLogout)
+                    //設定確認鍵 (positive用於確認)
+                    .setPositiveButton(R.string.stringLogoutNo, this)
+                    //設定取消鍵 (negative用於取消)
+                    .setNegativeButton(R.string.stringLogoutYes, this)
+                    .create();
+            return alertDialog;
+        }
+
+        @Override
+        public void onClick(DialogInterface dialogInterface, int i) {
+            switch (i) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    dialogInterface.cancel();
+                    break;
+                case DialogInterface.BUTTON_NEGATIVE:
+                  Intent intent = new Intent(getContext(), MainActivity.class);
+                    startActivity(intent);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

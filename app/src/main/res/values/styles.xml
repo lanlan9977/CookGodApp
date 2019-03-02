@@ -7,4 +7,6 @@
         <item name="android:itemBackground">@color/colorBlack</item><!-- menu背景顏色-->
         <item name="android:textColor">@color/colorWhite</item> <!-- menu字體顏色-->
     </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 </resources>

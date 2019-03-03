@@ -109,7 +109,7 @@ public class MenuOrderFragment extends Fragment {
                     menu_ID = menuOrderList.get(position).getMenu_ID();
                     if (isOnClick) {
                         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                        bottomSheetBehavior.setPeekHeight(815);
+                        bottomSheetBehavior.setPeekHeight(755);
                         isOnClick = false;
                     } else {
                         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);

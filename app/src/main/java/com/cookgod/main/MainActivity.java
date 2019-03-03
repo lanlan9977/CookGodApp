@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private final static String TAG = "MainActivity";
     private RetrieveCustTask retrieveCustTask;
     private CustVO cust_account;
+    private ChefVO chef_account;
     public List<BroadcastVO> broadcastList;
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
@@ -161,6 +162,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 cust_account = gson.fromJson(custJsonIn, custType);
                 broadcastList = gson.fromJson(broadcastJsonIn, broadcastType);
+//                if (!list.get(1).isEmpty()) {
+//                    chefJsonIn = map.get(list.get(1));
+//                    chef_account = gson.fromJson(chefJsonIn, chefType);
+//                }
             } catch (Exception e) {
                 Log.e(TAG, e.toString());
             }
@@ -207,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (item.getItemId()) {
             case R.id.idLogin://(登入專區)
                 if (cust_account == null) {
-                    onItemSelectedTo(R.string.stringLoginM, LoginActivity.class, REQUEST_LOGIN);
+                    onItemSelectedTo(R.string.stringLoginM, LoginActivity.class);
                 } else {
                     Toast.makeText(MainActivity.this, "您已經登入", Toast.LENGTH_SHORT).show();
                 }
@@ -222,25 +227,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()) {//設定Navigation側滑Item轉至該Activity
             case R.id.itemNews://(廣告專區)
-                onItemSelectedTo(R.string.stringNews, NewsActivity.class, 0);
+                onItemSelectedTo(R.string.stringNews, NewsActivity.class);
                 break;
             case R.id.itemMember://(會員專區)
-                onItemSelectedTo(R.string.stringMember, MemberActivity.class, 0);
+                onItemSelectedTo(R.string.stringMember, MemberActivity.class);
                 break;
             case R.id.itemMall://(商城專區)
-                onItemSelectedTo(R.string.stringMall, MallActivity.class, 0);
+                onItemSelectedTo(R.string.stringMall, MallActivity.class);
                 break;
             case R.id.itemOrder://(訂單專區)
-                onItemSelectedTo(R.string.stringOrder, OrderActivity.class, REQUEST_ORDER);
+                onItemSelectedTo(R.string.stringOrder, OrderActivity.class);
+                Intent intent = new Intent(MainActivity.this, OrderActivity.class);
+                Toast.makeText(getApplicationContext(), R.string.stringOrder, Toast.LENGTH_LONG).show();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("isChef",isChef);
+                bundle.putString("Cust_id",cust_account.getCust_ID());
+                startActivity(intent);
+                overridePendingTransition(R.anim.in, R.anim.out);
                 break;
             case R.id.itemForums://(論壇專區)
-                onItemSelectedTo(R.string.stringForum, ForumActivity.class, 0);
+                onItemSelectedTo(R.string.stringForum, ForumActivity.class);
                 break;
             case R.id.itemLives://(直播專區)
-                onItemSelectedTo(R.string.stringLives, LivesActivity.class, 0);
+                onItemSelectedTo(R.string.stringLives, LivesActivity.class);
                 break;
             case R.id.itemCustomerService://(客服專區)
-                onItemSelectedTo(R.string.stringCustomerService, CustomerServiceActivity.class, 0);
+                onItemSelectedTo(R.string.stringCustomerService, CustomerServiceActivity.class);
                 break;
             case R.id.logout://(登出)
                 SharedPreferences pref = getSharedPreferences(Util.PREF_FILE,
@@ -254,10 +266,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    public void onItemSelectedTo(int toastString, Class toClass, int requestCode) {
-        Intent intent = new Intent(MainActivity.this, toClass);
+    public void onItemSelectedTo(int toastString, Class toClas) {
+        Intent intent = new Intent(MainActivity.this, toClas);
         Toast.makeText(getApplicationContext(), toastString, Toast.LENGTH_LONG).show();
-        startActivityForResult(intent, requestCode);
+        startActivity(intent);
         overridePendingTransition(R.anim.in, R.anim.out);
     }
 
@@ -274,20 +286,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
         provider.setBadge(readStatus);
+        Menu menu = navigationView.getMenu();
         if (login) {
             if (isChef) {
                 idPicView.setImageDrawable(getResources().getDrawable(R.drawable.ic_chef_icon));
                 idHeaderText.setText("主廚");
+
             } else {
                 idHeaderText.setText("顧客");
+                menu.findItem(R.id.itemForums).setVisible(true);
+//                menu.findItem(R.id.itemForums).setVisible(true);
             }
-            Menu menu = navigationView.getMenu();
             menu.findItem(R.id.logout).setVisible(true);
         }
     }
 
     public void logout() {
-
         AlertFragment alertFragment = new AlertFragment();
         FragmentManager fm = getSupportFragmentManager();
         alertFragment.show(fm, "alert");
@@ -320,7 +334,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     dialogInterface.cancel();
                     break;
                 case DialogInterface.BUTTON_NEGATIVE:
-                  Intent intent = new Intent(getContext(), MainActivity.class);
+                    Intent intent = new Intent(getContext(), MainActivity.class);
                     startActivity(intent);
                     break;
                 default:

@@ -1,6 +1,11 @@
 package com.cookgod.order;
 
+import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -8,6 +13,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,21 +35,30 @@ import java.util.List;
 //(訂單專區)
 public class OrderActivity extends AppCompatActivity {
     private final static String TAG = "OrderActivity";
+    private final static String PACKAGE = "com.google.zxing.client.android";
     public List<MenuOrderVO> menuOrderList;
     public List<FestOrderVO> festOrderList;
     public List<FoodOrderVO> foodOrderList;
     private RetrieveOrderTask retrieveOrderTask;
-
     public List<MenuOrderVO> getMenuOrderList() {
         return menuOrderList;
     }
-
     public List<FestOrderVO> getFestOrderList() {
         return festOrderList;
     }
-
     public List<FoodOrderVO> getFoodOrderList() {
         return foodOrderList;
+    }
+
+
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == 0) {
+            if (resultCode == RESULT_OK) {
+                String contents = intent.getStringExtra("SCAN_RESULT");
+            } else if (resultCode == RESULT_CANCELED) {
+            }
+//            tvMessage.setText(message);
+        }
     }
 
     @Override
@@ -147,12 +162,51 @@ public class OrderActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.idCameraQRCode:
                 Toast.makeText(OrderActivity.this, getResources().getText(R.string.stringCameraQRCode), Toast.LENGTH_SHORT).show();
+//                MenuOrderFragment menuOrderFragment = (MenuOrderFragment) getFragmentManager().findFragmentById(R.id.example_fragment);
+                scanQRCode();
                 break;
             case R.id.idOrderQRCode:
                 Toast.makeText(OrderActivity.this, getResources().getText(R.string.stringOrderQRCode), Toast.LENGTH_SHORT).show();
                 break;
         }
         return false;
+    }
+
+    private void scanQRCode() {
+        Intent intent = new Intent("com.google.zxing.client.android.SCAN");
+        try {
+            startActivityForResult(intent, 0);
+        }
+        // 如果沒有安裝Barcode Scanner，就跳出對話視窗請user安裝
+        catch (ActivityNotFoundException ex) {
+            showDownloadDialog();
+        }
+    }
+
+    private void showDownloadDialog() {
+        AlertDialog.Builder downloadDialog = new AlertDialog.Builder(this);
+        downloadDialog.setTitle("沒有找到QRCode掃描軟體");
+        downloadDialog.setMessage("請下載並安裝掃描軟體!");
+        downloadDialog.setNegativeButton("前往",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Uri uri = Uri.parse("market://search?q=pname:" + PACKAGE);
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        try {
+                            startActivity(intent);
+                        } catch (ActivityNotFoundException ex) {
+                            Log.e(ex.toString(),
+                                    "Play Store is not installed; cannot install Barcode Scanner");
+                        }
+                    }
+                });
+        downloadDialog.setPositiveButton("返回",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+        downloadDialog.show();
     }
 
 

@@ -24,6 +24,10 @@ public class Util {
         Toast.makeText(context,text,Toast.LENGTH_SHORT).show();
     }
 
+
+//    private final int REQUEST_LOGIN = 1;
+//    private final int REQUEST_ORDER = 2;
+
     //    @Override
 //    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 //        super.onActivityResult(requestCode, resultCode, data);

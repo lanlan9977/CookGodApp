@@ -11,22 +11,40 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.cookgod.R;
-import com.cookgod.main.DateFormatBack;
+import com.cookgod.other.DateFormatBack;
 import com.cookgod.main.MainActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class BroadcastFragment extends Fragment {
     private final static String TAG = "MainActivity";
-    private RecyclerView broadcastView;
+    private RecyclerView broadcastView,broadcastReadView;
     private List<BroadcastVO> broadcastList;
+    private List<BroadcastVO> broadcastNoReadList;
 
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         broadcastList = ((MainActivity) context).getBroadcastList();
+        isRead();
+    }
+
+    private void isRead() {
+        broadcastNoReadList=new  ArrayList<>();
+        for(int i=0;i<broadcastList.size();i++){
+            if("B0".equals(broadcastList.get(i).getBroadcast_status())){
+                broadcastNoReadList.add(broadcastList.get(i));
+                broadcastList.remove(i);
+                i--;
+            }else{
+
+
+            }
+
+        }
     }
 
     @Override
@@ -35,7 +53,13 @@ public class BroadcastFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_broadcast, container, false);
         broadcastView = view.findViewById(R.id.idBroadcastView);
         broadcastView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        broadcastView.setAdapter(new BroadcastListAdapter(getActivity(), broadcastList));
+        broadcastView.setAdapter(new BroadcastListAdapter(getActivity(), broadcastNoReadList));
+
+        broadcastReadView=view.findViewById(R.id.idBroadcastReadView);
+        broadcastReadView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        broadcastReadView.setAdapter(new BroadcastListAdapter(getActivity(),broadcastList));
+
+
 
 
         return view;

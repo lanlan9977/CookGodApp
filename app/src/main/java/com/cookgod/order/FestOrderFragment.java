@@ -8,19 +8,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import com.cookgod.R;
-import com.cookgod.order.FestOrderVO;
+
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 public class FestOrderFragment extends Fragment {
     private List<FestOrderVO> festOrderVOList;

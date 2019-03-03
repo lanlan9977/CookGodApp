@@ -29,13 +29,13 @@ import com.cookgod.R;
 import com.cookgod.broadcast.BadgeActionProvider;
 import com.cookgod.broadcast.BroadcastFragment;
 import com.cookgod.broadcast.BroadcastVO;
-import com.cookgod.cust.ChefVO;
+import com.cookgod.chef.ChefVO;
 import com.cookgod.cust.CustVO;
 import com.cookgod.cust.LoginActivity;
 import com.cookgod.order.MemberActivity;
 import com.cookgod.order.OrderActivity;
 import com.cookgod.other.CustomerServiceActivity;
-import com.cookgod.other.ForumActivity;
+import com.cookgod.chef.ChefZoneActivity;
 import com.cookgod.other.LivesActivity;
 import com.cookgod.other.MallActivity;
 import com.cookgod.other.NewsActivity;
@@ -46,23 +46,22 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    public List<BroadcastVO> broadcastList;
     private final static String TAG = "MainActivity";
     private RetrieveCustTask retrieveCustTask;
     private CustVO cust_account;
     private ChefVO chef_account;
-    public List<BroadcastVO> broadcastList;
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-    private TextView idCust_name, idHeaderText;
-    private Boolean isChef = false;
-    private Boolean login;
-    private TextView mTextMessage;
+    private TextView idCust_name, idHeaderText, mTextMessage;
+    private Boolean isChef, login;
     private BroadcastFragment broadcastFragment;
     private BadgeActionProvider provider;
     private FragmentManager manager;
@@ -129,9 +128,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    private final int REQUEST_LOGIN = 1;
-    private final int REQUEST_ORDER = 2;
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -147,25 +143,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 String jsonIn = retrieveCustTask.execute().get();
                 Type listType = new TypeToken<Map<String, String>>() {
                 }.getType();
-                Type custType = new TypeToken<CustVO>() {
-                }.getType();
                 Type broadcastType = new TypeToken<List<BroadcastVO>>() {
                 }.getType();
-                Type chefType = new TypeToken<ChefVO>() {
-                }.getType();
-                String custJsonIn = "";
-                String broadcastJsonIn = "";
                 Map<String, String> map = gson.fromJson(jsonIn, listType);
+                List<String> list = new ArrayList<>();
                 for (String key : map.keySet()) {
-                    custJsonIn = key;
-                    broadcastJsonIn = map.get(key);
+                    list.add(key);
                 }
-                cust_account = gson.fromJson(custJsonIn, custType);
-                broadcastList = gson.fromJson(broadcastJsonIn, broadcastType);
-//                if (!list.get(1).isEmpty()) {
-//                    chefJsonIn = map.get(list.get(1));
-//                    chef_account = gson.fromJson(chefJsonIn, chefType);
-//                }
+                cust_account = gson.fromJson(list.get(0), CustVO.class);
+                broadcastList = gson.fromJson(map.get(list.get(0)), broadcastType);
+                if (!list.get(1).isEmpty()) {
+                    chef_account = gson.fromJson(map.get(list.get(1)), ChefVO.class);
+                }
             } catch (Exception e) {
                 Log.e(TAG, e.toString());
             }
@@ -225,6 +214,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+
         switch (item.getItemId()) {//設定Navigation側滑Item轉至該Activity
             case R.id.itemNews://(廣告專區)
                 onItemSelectedTo(R.string.stringNews, NewsActivity.class);
@@ -240,13 +230,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Intent intent = new Intent(MainActivity.this, OrderActivity.class);
                 Toast.makeText(getApplicationContext(), R.string.stringOrder, Toast.LENGTH_LONG).show();
                 Bundle bundle = new Bundle();
-                bundle.putBoolean("isChef",isChef);
-                bundle.putString("Cust_id",cust_account.getCust_ID());
+                bundle.putBoolean("isChef", isChef);
+                bundle.putString("Cust_id", cust_account.getCust_ID());
                 startActivity(intent);
                 overridePendingTransition(R.anim.in, R.anim.out);
                 break;
             case R.id.itemForums://(論壇專區)
-                onItemSelectedTo(R.string.stringForum, ForumActivity.class);
+                onItemSelectedTo(R.string.stringForum, ChefZoneActivity.class);
                 break;
             case R.id.itemLives://(直播專區)
                 onItemSelectedTo(R.string.stringLives, LivesActivity.class);
@@ -305,8 +295,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         AlertFragment alertFragment = new AlertFragment();
         FragmentManager fm = getSupportFragmentManager();
         alertFragment.show(fm, "alert");
-
-
     }
 
     public static class AlertFragment extends DialogFragment implements DialogInterface.OnClickListener {

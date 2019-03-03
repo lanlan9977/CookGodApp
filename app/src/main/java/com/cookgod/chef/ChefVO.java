@@ -1,4 +1,4 @@
-package com.cookgod.cust;
+package com.cookgod.chef;
 
 public class ChefVO implements java.io.Serializable {
 

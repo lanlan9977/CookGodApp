@@ -43,7 +43,7 @@
             android:label="@string/stringCustomerService"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity
-            android:name="com.cookgod.other.ForumActivity"
+            android:name="com.cookgod.chef.ChefZoneActivity"
             android:label="@string/stringForum"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity

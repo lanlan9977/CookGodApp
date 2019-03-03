@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.cookgod.R;
-import com.cookgod.broadcast.BroadcastVO;
+import com.cookgod.chef.ChefVO;
 import com.cookgod.main.Util;
 import com.cookgod.task.RetrieveCustTask;
 import com.google.gson.Gson;
@@ -29,7 +29,6 @@ public class LoginActivity extends AppCompatActivity {
     private EditText idCust_pwd;
     private CustVO cust_account;
     private ChefVO chef_account;
-    private List<BroadcastVO> broadcastList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,41 +109,23 @@ public class LoginActivity extends AppCompatActivity {
                     .putString("chef_channel",chef_account.getChef_channel())
                     .putString("chef_resume",chef_account.getChef_resume()).apply();
         }
-
-        setResult(RESULT_OK);
     }
 
     public boolean isMember(String cust_acc, String cust_pwd) {
+        retrieveCustTask = new RetrieveCustTask(Util.Cust_Servlet_URL, cust_acc, cust_pwd);
         try {
-            retrieveCustTask = new RetrieveCustTask(Util.Cust_Servlet_URL, cust_acc, cust_pwd);
             Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
             String jsonIn = retrieveCustTask.execute().get();
             Type listType = new TypeToken<Map<String, String>>() {
             }.getType();
-            Type custType = new TypeToken<CustVO>() {
-            }.getType();
-            Type broadcastType = new TypeToken<List<BroadcastVO>>() {
-            }.getType();
-            Type chefType = new TypeToken<ChefVO>() {
-            }.getType();
-
-            String custJsonIn = "";
-            String broadcastJsonIn = "";
-            String chefJsonIn = "";
-
             Map<String, String> map = gson.fromJson(jsonIn, listType);
-
             List<String> list = new ArrayList<>();
             for (String key : map.keySet()) {
                 list.add(key);
             }
-            custJsonIn = list.get(0);
-            broadcastJsonIn = map.get(custJsonIn);
-            cust_account = gson.fromJson(custJsonIn, custType);
-            broadcastList = gson.fromJson(broadcastJsonIn, broadcastType);
+            cust_account = gson.fromJson(list.get(0), CustVO.class);
             if (!list.get(1).isEmpty()) {
-                chefJsonIn = map.get(list.get(1));
-                chef_account = gson.fromJson(chefJsonIn, chefType);
+                chef_account = gson.fromJson(map.get(list.get(1)), ChefVO.class);
             }
 
         } catch (Exception e) {
@@ -157,7 +138,6 @@ public class LoginActivity extends AppCompatActivity {
         idCust_acc.setText("ABC");
         idCust_pwd.setText("123");
     }
-
 
     public void onSimpleInputChefClick(View view) {
         idCust_acc.setText("FOOD_SUP");

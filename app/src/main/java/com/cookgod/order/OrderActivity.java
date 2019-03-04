@@ -51,6 +51,9 @@ public class OrderActivity extends AppCompatActivity {
     public List<FoodOrderVO> getFoodOrderList() {
         return foodOrderList;
     }
+    public Boolean getIsChef() {
+        return isChef;
+    }
 
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {

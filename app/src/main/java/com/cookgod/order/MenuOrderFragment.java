@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cookgod.R;
+import com.cookgod.chef.ChefOrderActivity;
 import com.cookgod.other.Contents;
 import com.cookgod.other.QRCodeEncoder;
 import com.google.zxing.BarcodeFormat;
@@ -37,9 +38,10 @@ public class MenuOrderFragment extends Fragment {
     private BottomSheetBehavior bottomSheetBehavior;
     private TextView idMenu_Order_ID,idMenu_Order_Status,idMenu_Order_Start,idMenu_Order_Appt,idMenu_Order_End,idMenu_Order_Rate,idMenu_Order_Msg;
     private Boolean isOnClick = true;
-    private Button btnMenuOrder;
+    private Button btnMenuOrder,btnMenu_od_rate,btnMenu_od_Food_Order;
     private String menu_ID;
     private ImageView ivCode;
+    private Boolean isChef;
 
 
 
@@ -47,6 +49,7 @@ public class MenuOrderFragment extends Fragment {
     public void onAttach(Context context) {//從OrderActivity取得物件資料
         super.onAttach(context);
         menuOrderList = ((OrderActivity) context).getMenuOrderList();
+        isChef=((OrderActivity) context).getIsChef();
     }
 
     @Override
@@ -59,7 +62,13 @@ public class MenuOrderFragment extends Fragment {
         View bottomSheet = view.findViewById(R.id.bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);//設定bottomSheetBehavior
         btnMenuOrder = view.findViewById(R.id.idMenuOrderButton); //設定bottomSheetBehavior中的TextView(顯示訂單內容)
-
+        btnMenu_od_rate=view.findViewById(R.id.btnMenu_od_rate);
+        btnMenu_od_Food_Order=view.findViewById(R.id.btnMenu_od_Food_Order);
+        if(isChef) {
+            btnMenu_od_rate.setVisibility(View.GONE);
+        }else {
+            btnMenu_od_Food_Order.setVisibility(View.GONE);
+        }
 
         ivCode = view.findViewById(R.id.ivCode);
         idMenu_Order_ID= view.findViewById(R.id.idMenu_Order_id);
@@ -190,6 +199,20 @@ public class MenuOrderFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        btnMenu_od_rate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        btnMenu_od_Food_Order.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getContext(),ChefOrderActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
     private int getDimension() {
         WindowManager manager = (WindowManager) getContext().getSystemService(WINDOW_SERVICE);

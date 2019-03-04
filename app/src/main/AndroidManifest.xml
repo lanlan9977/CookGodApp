@@ -71,8 +71,12 @@
             android:label="@string/stringLoginM"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity
-            android:name="com.cookgod.order.MenuOrderDetailActivity"
-            android:label="@string/stringMenuOrderDetail"
+        android:name="com.cookgod.order.MenuOrderDetailActivity"
+        android:label="@string/stringMenuOrderDetail"
+        android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+        <activity
+            android:name="com.cookgod.chef.ChefOrderActivity"
+            android:label="@string/stringChefOrder"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
     </application>
 

@@ -20,7 +20,7 @@
         app:behavior_hideable="true"
         app:behavior_peekHeight="0dp"
         app:layout_behavior="@string/bottom_sheet_behavior"
-        >
+  >
         <!--app:layout_behavior="@string/bottom_sheet_behavior"-->
         <!---->
         <!-- 容器需加上layout_behavior這個設定，才會是系統認定的Bottom Sheets -->
@@ -29,8 +29,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:padding="10dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="10dp">
 
             <TextView
                 android:id="@+id/idMenu_Order_id"
@@ -61,11 +61,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="17sp" />
+
             <TextView
                 android:id="@+id/idMenu_Order_rate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="17sp" />
+
             <TextView
                 android:id="@+id/idMenu_Order_msg"
                 android:layout_width="wrap_content"
@@ -82,25 +84,39 @@
                     android:layout_height="wrap_content" />
 
                 <Button
+                    android:id="@+id/btnMenu_od_rate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginEnd="11dp"
                     android:layout_marginRight="11dp"
+                    android:background="#4CAF50"
                     android:text="給予評價"
+                    android:textColor="@color/colorWhite" />
+                <Button
+                    android:id="@+id/btnMenu_od_Food_Order"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginEnd="11dp"
+                    android:layout_marginRight="11dp"
+                    android:text="選擇訂單所需食材"
                     android:textColor="@color/colorWhite"
                     android:background="#4CAF50"/>
 
-            <Button
-                android:id="@+id/idMenuOrderButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/idOrderQRCode"
-                android:layout_alignParentBottom="true"
-                android:text="@string/stringMenuOrderButton" />
+
+                <Button
+                    android:id="@+id/idMenuOrderButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/idOrderQRCode"
+                    android:layout_alignParentBottom="true"
+                    android:text="@string/stringMenuOrderButton" />
 
             </RelativeLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="1000dp"

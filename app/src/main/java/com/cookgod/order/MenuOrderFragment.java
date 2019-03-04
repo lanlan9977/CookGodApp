@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cookgod.R;
@@ -24,6 +24,7 @@ import com.cookgod.other.QRCodeEncoder;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -32,9 +33,9 @@ import static android.content.Context.WINDOW_SERVICE;
 public class MenuOrderFragment extends Fragment {
     private final static String TAG = "OrderActivity";
     private List<MenuOrderVO> menuOrderList;
-    private LinearLayout idMenu_Order_Layout;
+    private RelativeLayout idMenu_Order_Layout;
     private BottomSheetBehavior bottomSheetBehavior;
-    private TextView idMenu_Order_msg;
+    private TextView idMenu_Order_ID,idMenu_Order_Status,idMenu_Order_Start,idMenu_Order_Appt,idMenu_Order_End,idMenu_Order_Rate,idMenu_Order_Msg;
     private Boolean isOnClick = true;
     private Button btnMenuOrder;
     private String menu_ID;
@@ -57,10 +58,17 @@ public class MenuOrderFragment extends Fragment {
         recyclerView.setAdapter(new MenuOrderAdapter(inflater));
         View bottomSheet = view.findViewById(R.id.bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);//設定bottomSheetBehavior
-        idMenu_Order_msg = view.findViewById(R.id.idMenu_Order_msg);//設定bottomSheetBehavior中的TextView(顯示訂單內容)
-        btnMenuOrder = view.findViewById(R.id.idMenuOrderButton);
-        ivCode = view.findViewById(R.id.ivCode);
+        btnMenuOrder = view.findViewById(R.id.idMenuOrderButton); //設定bottomSheetBehavior中的TextView(顯示訂單內容)
 
+
+        ivCode = view.findViewById(R.id.ivCode);
+        idMenu_Order_ID= view.findViewById(R.id.idMenu_Order_id);
+        idMenu_Order_Status= view.findViewById(R.id.idMenu_Order_status);
+        idMenu_Order_Start= view.findViewById(R.id.idMenu_Order_start);
+        idMenu_Order_Appt= view.findViewById(R.id.idMenu_Order_appt);
+        idMenu_Order_End= view.findViewById(R.id.idMenu_Order_end);
+        idMenu_Order_Rate= view.findViewById(R.id.idMenu_Order_rate);
+        idMenu_Order_Msg = view.findViewById(R.id.idMenu_Order_msg);
         return view;
     }
 
@@ -72,12 +80,15 @@ public class MenuOrderFragment extends Fragment {
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            private TextView idMenu_or_id, idMenu_or_appt;
+            private TextView idMenu_or_id, idMenu_or_appt,idMenu_or_status;
+            private ImageView idMenu_or_icon;
 
             public ViewHolder(View itemView) {
                 super(itemView);
                 idMenu_or_id = itemView.findViewById(R.id.idMenu_or_id);
                 idMenu_or_appt = itemView.findViewById(R.id.idMenu_or_appt);
+                idMenu_or_status=itemView.findViewById(R.id.idMenu_or_status);
+                idMenu_or_icon=itemView.findViewById(R.id.idMenu_or_icon);
             }
 
         }
@@ -87,6 +98,7 @@ public class MenuOrderFragment extends Fragment {
             View itemView = inflater.inflate(R.layout.card_menuorder, parent, false);
             ViewHolder viewHolder = new ViewHolder(itemView);
             idMenu_Order_Layout = itemView.findViewById(R.id.idMenu_Order_Layout);
+
             return viewHolder;
         }
 
@@ -97,9 +109,22 @@ public class MenuOrderFragment extends Fragment {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy 年 MM 月 dd 日 HH : mm ");
                 viewHolder.idMenu_or_id.setText("訂單編號：" + menuOrderVO.getMenu_od_ID());
                 viewHolder.idMenu_or_appt.setText("預約日期：" + sdf.format(menuOrderVO.getMenu_od_book()));
-                if ("g0".equals(menuOrderVO.getMenu_od_status())) {
-                    idMenu_Order_Layout.setBackgroundColor(getResources().getColor(R.color.colorRed));
+
+                switch (menuOrderVO.getMenu_od_status()){
+                    case "g0":
+                        viewHolder.idMenu_or_status.setText("未審核訂單");
+                        viewHolder.idMenu_or_icon.setImageResource(R.drawable.ic_question);
+                        break;
+                    case "g1":
+                        viewHolder.idMenu_or_status.setText("進行中訂單");
+                        viewHolder.idMenu_or_icon.setImageResource(R.drawable.ic_wait);
+                        break;
+                    case "g4":
+                        viewHolder.idMenu_or_status.setText("已完成訂單");
+                        viewHolder.idMenu_or_icon.setImageResource(R.drawable.ic_checked);
+                        break;
                 }
+
             }
 
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -139,21 +164,24 @@ public class MenuOrderFragment extends Fragment {
     private void displayMenuOrder(int position) {
         MenuOrderVO menuOrder = menuOrderList.get(position);
         String status = menuOrder.getMenu_od_status();
-        if ("g1".equals(status)) {
-            status = "審核通過";
-        } else if ("g0".equals(status)) {
+        if ("g0".equals(status)) {
             status = "審核未通過";
+        } else {
+            status = "審核通過";
         }
-        StringBuilder sb = new StringBuilder();
-        sb.append("嚴選套餐訂單編號:" + menuOrder.getMenu_od_ID() + "\r\n")
-                .append("訂單狀態:" + status + "\r\n")
-                .append("下單日期:" + menuOrder.getMenu_od_start() + "\r\n")
-                .append("預約日期:" + menuOrder.getMenu_od_book() + "\r\n")
-                .append("完成日期:" + menuOrder.getMenu_od_end() + "\r\n")
-                .append("訂單評價:" + menuOrder.getMenu_od_rate() + "\r\n")
-                .append("訂單評價留言:" + menuOrder.getMenu_od_msg() + "\r\n")
-                ;
-        idMenu_Order_msg.setText(sb);
+        String endDate="";
+        if(menuOrder.getMenu_od_end()==null){
+            endDate="訂單尚未完成";
+        }
+
+        DateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
+        idMenu_Order_ID.setText("嚴選套餐訂單編號:" +menuOrder.getMenu_od_ID());
+        idMenu_Order_Status.setText("訂單狀態:"+status);
+        idMenu_Order_Start.setText("下單日期:"+ sdf.format(menuOrder.getMenu_od_start()));
+        idMenu_Order_Appt.setText("預約日期:" +sdf.format(menuOrder.getMenu_od_book()));
+        idMenu_Order_End.setText("完成日期"+endDate);
+        idMenu_Order_Rate.setText("訂單評價:" + menuOrder.getMenu_od_rate());
+        idMenu_Order_Msg.setText("訂單評價留言:" + menuOrder.getMenu_od_msg());
         btnMenuOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <android.support.design.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        tools:context="com.cookgod.order.MenuOrderFragment">
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.cookgod.order.MenuOrderFragment">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/menuOrderView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-           />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/menuOrderView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/bottom_sheet"
@@ -23,6 +21,7 @@
         app:behavior_peekHeight="0dp"
         app:layout_behavior="@string/bottom_sheet_behavior"
         >
+        <!--app:layout_behavior="@string/bottom_sheet_behavior"-->
         <!---->
         <!-- 容器需加上layout_behavior這個設定，才會是系統認定的Bottom Sheets -->
         <!-- 並把此容器(不一定得是NestedScrollView，RelativeLayout, LinearLayout都可以)放置於CoordinatorLayout裡 -->
@@ -30,25 +29,68 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
+            android:padding="10dp"
             android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/idMenu_Order_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/idMenu_Order_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/idMenu_Order_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/idMenu_Order_appt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/idMenu_Order_end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp" />
+            <TextView
+                android:id="@+id/idMenu_Order_rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp" />
             <TextView
                 android:id="@+id/idMenu_Order_msg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:paddingBottom="20dp"
+                android:paddingBottom="10dp"
                 android:textSize="17sp" />
 
-            <!--<Button-->
-            <!--android:id="@+id/idOrderQRCode"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="@string/stringOrderQRCode"-->
-            <!--android:layout_alignBottom="@id/idMenu_Order_msg" />-->
-            <RatingBar
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="100dp">
+
+                <RatingBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginEnd="11dp"
+                    android:layout_marginRight="11dp"
+                    android:text="給予評價"
+                    android:textColor="@color/colorWhite"
+                    android:background="#4CAF50"/>
 
             <Button
                 android:id="@+id/idMenuOrderButton"
@@ -56,9 +98,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@id/idOrderQRCode"
                 android:layout_alignParentBottom="true"
-                android:text="@string/stringMenuOrderButton"
-                />
+                android:text="@string/stringMenuOrderButton" />
 
+            </RelativeLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="1000dp"
@@ -68,14 +110,14 @@
                     android:id="@+id/ivCode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                   android:layout_marginLeft="95dp"
+                    android:layout_marginLeft="95dp"
                     android:layout_marginTop="150dp"
                     android:scaleType="matrix" />
 
             </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
-        <!--設定訂單下方ScrollView-->
+    <!--設定訂單下方ScrollView-->
 
 
-    </android.support.design.widget.CoordinatorLayout>
+</android.support.design.widget.CoordinatorLayout>

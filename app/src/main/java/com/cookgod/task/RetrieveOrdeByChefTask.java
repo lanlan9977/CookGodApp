@@ -13,12 +13,12 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class RetrieveChefOrderDetailTask extends AsyncTask<String, Integer, String> {
+public class RetrieveOrdeByChefTask extends AsyncTask<String, Integer, String> {
     private final static String TAG = "OrderActivity";
     String FestOrder_Servlet_URL,chef_ID;
 
 
-    public RetrieveChefOrderDetailTask(String FestOrder_Servlet_URL, String chef_ID) {
+    public RetrieveOrdeByChefTask(String FestOrder_Servlet_URL, String chef_ID) {
         this.FestOrder_Servlet_URL=FestOrder_Servlet_URL;
         this.chef_ID=chef_ID;
     }

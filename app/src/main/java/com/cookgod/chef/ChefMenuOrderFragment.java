@@ -1,5 +1,6 @@
 package com.cookgod.chef;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,14 +11,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.cookgod.R;
-import com.cookgod.order.FestOrderVO;
+import com.cookgod.order.MenuOrderVO;
 
-import java.util.Set;
+import java.util.List;
 
 public class ChefMenuOrderFragment extends Fragment {
-    private Set<FestOrderVO> festOrderSet;
+    private List<MenuOrderVO> menuOrderList;
 
-
+    public void onAttach(Context context) {//從OrderActivity取得物件資料
+        super.onAttach(context);
+        menuOrderList = ((ChefZoneActivity) context).getMenuOrderList();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,7 +66,7 @@ public class ChefMenuOrderFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return 0;
+            return menuOrderList.size();
         }
     }
 }

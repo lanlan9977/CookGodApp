@@ -40,9 +40,11 @@ public class OrderActivity extends AppCompatActivity {
     public List<FestOrderVO> festOrderList;
     public List<FoodOrderVO> foodOrderList;
     private RetrieveOrderTask retrieveOrderTask;
+    private Boolean isChef;
     public List<MenuOrderVO> getMenuOrderList() {
         return menuOrderList;
     }
+
     public List<FestOrderVO> getFestOrderList() {
         return festOrderList;
     }
@@ -77,12 +79,18 @@ public class OrderActivity extends AppCompatActivity {
         super.onStart();
         SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
                 MODE_PRIVATE);
+        isChef=preferences.getBoolean("isChef",false);
         boolean login = preferences.getBoolean("login", false);
         if (login) {
             if (Util.networkConnected(this)) {
 
                 try {
-                    retrieveOrderTask = new RetrieveOrderTask(Util.MenuOrder_Servlet_URL, preferences.getString("cust_ID", ""));
+                    if(isChef){
+                        retrieveOrderTask = new RetrieveOrderTask(Util.OrderByChef_Servlet_URL, preferences.getString("chef_ID",""));
+                    }else{
+                        retrieveOrderTask = new RetrieveOrderTask(Util.OrderByCust_Servlet_URL, preferences.getString("cust_ID", ""));
+                    }
+
                     String OrderListJsonIn = retrieveOrderTask.execute().get();
 
                     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
@@ -127,9 +135,13 @@ public class OrderActivity extends AppCompatActivity {
         public MyPagerAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
             pageList = new ArrayList<>();
+            SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
+                    MODE_PRIVATE);
             pageList.add(new Page(new MenuOrderFragment(), "嚴選套餐訂單"));
             pageList.add(new Page(new FestOrderFragment(), "節慶主題訂單"));
-            pageList.add(new Page(new FoodOrderFragment(), "嚴選食材訂單"));
+
+            if(!isChef)
+                pageList.add(new Page(new FoodOrderFragment(), "嚴選食材訂單"));
         }
 
         @Override

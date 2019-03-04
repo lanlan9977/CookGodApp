@@ -10,12 +10,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.cookgod.R;
-import com.cookgod.order.MenuOrderVO;
+import com.cookgod.order.FestOrderVO;
 
-import java.util.Set;
+import java.util.List;
 
 public class ChefFestOrderFragment extends Fragment {
-    private Set<MenuOrderVO> menuOrderSet;
+    private List<FestOrderVO> festOrderList;
 
 
 

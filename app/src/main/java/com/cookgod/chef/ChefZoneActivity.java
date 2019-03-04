@@ -8,28 +8,35 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.cookgod.R;
 import com.cookgod.main.Page;
 import com.cookgod.main.Util;
-import com.cookgod.task.RetrieveChefOrderDetailTask;
+import com.cookgod.order.MenuOrderVO;
+import com.cookgod.task.RetrieveOrdeByChefTask;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 //(論壇專區)
 public class ChefZoneActivity extends AppCompatActivity {
+    private final static String TAG = "ChefZoneActivity";
     private Boolean isChef, login;
-    private RetrieveChefOrderDetailTask retrieveChefOrderDetailTask;
+    private RetrieveOrdeByChefTask retrieveOrdeByChefTask;
+    private List<MenuOrderVO> menuOrderList;
 
-
-
-
+    public List<MenuOrderVO> getMenuOrderList() {
+        return menuOrderList;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chefzone);
-
     }
 
     @Override
@@ -38,11 +45,20 @@ public class ChefZoneActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
                 MODE_PRIVATE);
         String chef_ID=preferences.getString("chef_ID","");
-        retrieveChefOrderDetailTask=new RetrieveChefOrderDetailTask(Util.FestOrder_Servlet_URL,chef_ID);
-        try {
-            String jsonIn=retrieveChefOrderDetailTask.execute().get();
-        }catch (Exception e){
 
+        retrieveOrdeByChefTask =new RetrieveOrdeByChefTask(Util.OrderByChef_Servlet_URL,chef_ID);
+        try {
+            Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+            String jsonIn= retrieveOrdeByChefTask.execute().get();
+            Type listType=new TypeToken<List<String>>() {
+            }.getType();
+            List<String> stringList=gson.fromJson(jsonIn,listType);
+            Type menuOrderType = new TypeToken<List<MenuOrderVO>>() {
+            }.getType();
+            menuOrderList=gson.fromJson(stringList.get(0),menuOrderType);
+
+        }catch (Exception e){
+            Log.e(TAG,e.toString());
         }
 
 

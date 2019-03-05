@@ -13,23 +13,24 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class RetrieveMenuOrderDetailTask extends AsyncTask<String, String, String> {
-    private final static String TAG = "MenuOrderDetailActivity";
-    private String menuDish_servlet_url, menu_id;
+public class RetrieveChefOrderTask extends AsyncTask<String, String, String> {
+    private final static String TAG = "ChefOrderActivity";
+    private String menuDish_servlet_url, chef_ID;
 
-    public RetrieveMenuOrderDetailTask(String menuDish_servlet_url, String menu_id) {
+    public RetrieveChefOrderTask(String menuDish_servlet_url, String chef_ID) {
         this.menuDish_servlet_url = menuDish_servlet_url;
-        this.menu_id = menu_id;
+        this.chef_ID = chef_ID;
     }
 
     @Override
     protected String doInBackground(String... strings) {
         String url = menuDish_servlet_url;
-        String menu_Id = menu_id;
+        String chef_id = chef_ID;
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("selectMenuOrderDetail", menu_Id);
+        jsonObject.addProperty("selectFoodMall", chef_id);
         return getRemoteData(url, jsonObject.toString());
     }
+
 
     private String getRemoteData(String url, String outStr) {
         HttpURLConnection connection = null;//產生連線物件
@@ -67,4 +68,3 @@ public class RetrieveMenuOrderDetailTask extends AsyncTask<String, String, Strin
         return instr.toString();//將輸入進來的資料回傳
     }
 }
-

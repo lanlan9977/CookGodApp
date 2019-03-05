@@ -1,6 +1,5 @@
 package com.cookgod.task;
 
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -18,11 +17,10 @@ import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-
-public class DishImageTask extends AsyncTask<Object, Integer, Bitmap> {
+public class FoodMallImageTask extends AsyncTask<Object, Integer, Bitmap> {
     private final static String TAG = "DishImageTask";
 
-    private String url,dish_ID;
+    private String url,food_id;
     private int imageSize;
     /* ImageTask的屬性strong reference到BookListAdapter內的imageView不好，
      * 會導致BookListAdapter進入背景時imageView被參考到而無法被釋放，
@@ -31,23 +29,25 @@ public class DishImageTask extends AsyncTask<Object, Integer, Bitmap> {
      */
     private WeakReference<ImageView> imageViewWeakReference;
 
+    public FoodMallImageTask(String foodMall_Servlet_URL, String food_id, int imageSize, ImageView idFood_m_pic) {
+        this.url = foodMall_Servlet_URL;
+        this.food_id = food_id;
+        this.imageSize = imageSize;
+        this.imageViewWeakReference = new WeakReference<>(idFood_m_pic);
+    }
+
 //    public ImageTask(String url, String menu_ID, ImageView imageSize) {
 //        this(url, menu_ID, imageSize, null);
 //    }
 
-    public DishImageTask(String url, String dish_id, int imageSize, ImageView imageView) {
-        this.url = url;
-        this.dish_ID = dish_id;
-        this.imageSize = imageSize;
-        this.imageViewWeakReference = new WeakReference<>(imageView);
-    }
+
 
 
     @Override
     protected Bitmap doInBackground(Object... objects) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("action", "getImage");
-        jsonObject.addProperty("dish_ID", dish_ID);
+        jsonObject.addProperty("food_ID", food_id);
         jsonObject.addProperty("imageSize", imageSize);
         return getRemoteImage(url, jsonObject.toString());
     }

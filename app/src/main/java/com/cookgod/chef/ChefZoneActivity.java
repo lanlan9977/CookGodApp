@@ -46,7 +46,7 @@ public class ChefZoneActivity extends AppCompatActivity {
                 MODE_PRIVATE);
         String chef_ID=preferences.getString("chef_ID","");
 
-        retrieveOrdeByChefTask =new RetrieveOrdeByChefTask(Util.OrderByChef_Servlet_URL,chef_ID);
+        retrieveOrdeByChefTask =new RetrieveOrdeByChefTask(Util.Servlet_URL+"OrderByChefServlet",chef_ID);
         try {
             Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
             String jsonIn= retrieveOrdeByChefTask.execute().get();

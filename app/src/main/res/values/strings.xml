@@ -39,6 +39,7 @@
     <string name="stringMenuOrderButton">訂單詳細資料</string>
     <!--主廚食材訂單-->
     <string name="stringChefOrder">選擇訂單所需食材</string>
+    <string name="stringFoodMallOrder">確認訂單食材</string>
     <!--訂單審核選單-->
     <string-array name="stringArrayStatus">
         <item name="stringArrayStatusReady">請審核</item>
@@ -72,4 +73,19 @@
         completions."
     </string>
     <string name="name">NAME</string>
+
+
+    <string-array name="stringFoodMallArray">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+    </string-array>
 </resources>

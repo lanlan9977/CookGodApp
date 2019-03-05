@@ -89,9 +89,9 @@ public class OrderActivity extends AppCompatActivity {
 
                 try {
                     if(isChef){
-                        retrieveOrderTask = new RetrieveOrderTask(Util.OrderByChef_Servlet_URL, preferences.getString("chef_ID",""));
+                        retrieveOrderTask = new RetrieveOrderTask(Util.Servlet_URL+"OrderByChefServlet", preferences.getString("chef_ID",""));
                     }else{
-                        retrieveOrderTask = new RetrieveOrderTask(Util.OrderByCust_Servlet_URL, preferences.getString("cust_ID", ""));
+                        retrieveOrderTask = new RetrieveOrderTask(Util.Servlet_URL+"OrderByCustServlet", preferences.getString("cust_ID", ""));
                     }
 
                     String OrderListJsonIn = retrieveOrderTask.execute().get();

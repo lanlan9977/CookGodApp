@@ -19,7 +19,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorWhite"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:animateLayoutChanges="true">
 
         <ImageView
             android:id="@+id/idFood_M_Pic"
@@ -89,8 +90,9 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:id="@+id/idCheckQua"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
@@ -100,23 +102,12 @@
             android:layout_marginRight="0dp"
             android:background="@drawable/triangle_shape"
             android:rotation="0"
-            android:textSize="12dp"
+            android:visibility="gone"
 
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/idConfirm_Food_Qua"
-            android:layout_width="18dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginEnd="0dp"
-            android:layout_marginRight="0dp"
-            android:text="3"
-            android:textColor="@color/colorWhite"
-            android:visibility="gone" />
+            android:textSize="12dp" />
 
         <Spinner
+            android:id="@+id/idFood_Mall_Qty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -124,7 +115,8 @@
             android:layout_alignParentRight="true"
             android:layout_marginTop="13dp"
             android:layout_marginEnd="35dp"
-            android:layout_marginRight="35dp" />
+            android:layout_marginRight="35dp"
+            />
 
         <TextView
             android:id="@+id/idFood_M_Resume"

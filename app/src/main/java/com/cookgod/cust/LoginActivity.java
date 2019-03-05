@@ -112,7 +112,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public boolean isMember(String cust_acc, String cust_pwd) {
-        retrieveCustTask = new RetrieveCustTask(Util.Cust_Servlet_URL, cust_acc, cust_pwd);
+        retrieveCustTask = new RetrieveCustTask(Util.Servlet_URL+"CustServlet", cust_acc, cust_pwd);
         try {
             Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
             String jsonIn = retrieveCustTask.execute().get();

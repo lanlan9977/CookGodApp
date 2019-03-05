@@ -30,12 +30,12 @@ import com.cookgod.broadcast.BadgeActionProvider;
 import com.cookgod.broadcast.BroadcastFragment;
 import com.cookgod.broadcast.BroadcastVO;
 import com.cookgod.chef.ChefVO;
+import com.cookgod.chef.ChefZoneActivity;
 import com.cookgod.cust.CustVO;
 import com.cookgod.cust.LoginActivity;
 import com.cookgod.order.MemberActivity;
 import com.cookgod.order.OrderActivity;
 import com.cookgod.other.CustomerServiceActivity;
-import com.cookgod.chef.ChefZoneActivity;
 import com.cookgod.other.LivesActivity;
 import com.cookgod.other.MallActivity;
 import com.cookgod.other.NewsActivity;
@@ -44,7 +44,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -105,13 +104,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void showFragment(MenuItem item) {
         FragmentTransaction transaction = manager.beginTransaction();
         hideFragment(transaction);
-        Bundle bundle = new Bundle();
         switch (item.getItemId()) {
             case R.id.navigation_notifications:
                 if (broadcastFragment == null) {
                     broadcastFragment = new BroadcastFragment();
-                    bundle.putSerializable("broadcast_con", (Serializable) broadcastList);
-                    broadcastFragment.setArguments(bundle);
                     transaction.add(R.id.frameLayout, broadcastFragment).setCustomAnimations(R.anim.in, R.anim.out).show(broadcastFragment);
                 } else {
                     transaction.setCustomAnimations(R.anim.in, R.anim.out).show(broadcastFragment);
@@ -137,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         isChef = preferences.getBoolean("isChef", false);
         if (login) {
             idCust_name.setText(preferences.getString("cust_name", ""));
-            retrieveCustTask = new RetrieveCustTask(Util.Cust_Servlet_URL, preferences.getString("cust_acc", ""), preferences.getString("cust_pwd", ""));
+            retrieveCustTask = new RetrieveCustTask(Util.Servlet_URL+"CustServlet", preferences.getString("cust_acc", ""), preferences.getString("cust_pwd", ""));
             try {
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
                 String jsonIn = retrieveCustTask.execute().get();
@@ -285,7 +281,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             } else {
                 idHeaderText.setText("顧客");
                 menu.findItem(R.id.itemForums).setVisible(true);
-//                menu.findItem(R.id.itemForums).setVisible(true);
             }
             menu.findItem(R.id.logout).setVisible(true);
         }

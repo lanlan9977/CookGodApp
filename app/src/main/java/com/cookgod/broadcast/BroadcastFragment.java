@@ -51,6 +51,9 @@ public class BroadcastFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_broadcast, container, false);
+
+
+
         broadcastView = view.findViewById(R.id.idBroadcastView);
         broadcastView.setLayoutManager(new LinearLayoutManager(getActivity()));
         broadcastView.setAdapter(new BroadcastListAdapter(getActivity(), broadcastNoReadList));

@@ -7,16 +7,7 @@ import android.net.NetworkInfo;
 import android.widget.Toast;
 
 public class Util {
-    public final static String OrderByCust_Servlet_URL = "http://10.0.2.2:8081/CookGodTest/OrderByCustServlet";
-    public final static String Cust_Servlet_URL = "http://10.0.2.2:8081/CookGodTest/CustServlet";
-    public final static String MenuDish_Servlet_URL = "http://10.0.2.2:8081/CookGodTest/MenuDishServlet";
-    public final static String Menu_Servlet_URL = "http://10.0.2.2:8081/CookGodTest/MenuServlet";
-    public final static String Dish_Servlet_URL = "http://10.0.2.2:8081/CookGodTest/DishServlet";
-    public final static String OrderByChef_Servlet_URL = "http://10.0.2.2:8081/CookGodTest/OrderByChefServlet";
-    public final static String ChefOrder_Servlet_URL = "http://10.0.2.2:8081/CookGodTest/CherOrderServlet";
-    public final static String FoodMall_Servlet_URL = "http://10.0.2.2:8081/CookGodTest/FoodMallServlet";
-
-
+    public final static String Servlet_URL ="http://10.0.2.2:8081/CookGodTest/";
     public final static String PREF_FILE = "preference";
 
 

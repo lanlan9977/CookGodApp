@@ -63,8 +63,8 @@ public class MenuOrderDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         menu_ID = intent.getStringExtra("menu_ID");
         int imageSize = getResources().getDisplayMetrics().widthPixels / 4;
-        imageTask = new ImageTask(Util.Menu_Servlet_URL, menu_ID, imageSize, imageView);
-        retrieveMenuOrderDetailTask = new RetrieveMenuOrderDetailTask(Util.MenuDish_Servlet_URL, menu_ID);
+        imageTask = new ImageTask(Util.Servlet_URL+"MenuServlet", menu_ID, imageSize, imageView);
+        retrieveMenuOrderDetailTask = new RetrieveMenuOrderDetailTask(Util.Servlet_URL+"MenuDishServlet", menu_ID);
         try {
             Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
             String jsonIn = retrieveMenuOrderDetailTask.execute().get();
@@ -125,7 +125,7 @@ public class MenuOrderDetailActivity extends AppCompatActivity {
             DishVO dishVO = dishList.get(i);
             viewHolder.idDish_name.setText(dishVO.getDish_name());
             int imageSize = getResources().getDisplayMetrics().widthPixels / 4;
-            dishImageTask = new DishImageTask(Util.Dish_Servlet_URL, dishVO.getDish_ID(), imageSize, viewHolder.idDish_View);
+            dishImageTask = new DishImageTask(Util.Servlet_URL+"DishServlet", dishVO.getDish_ID(), imageSize, viewHolder.idDish_View);
             dishImageTask.execute();
         }
 

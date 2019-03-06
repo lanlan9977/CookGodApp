@@ -48,7 +48,7 @@
     </string-array>
 
 
-    nbar-->下方navigationbar
+    <!--nbar&ndash;&gt;下方navigationbar-->
     <string name="title_home">主畫面</string>
     <string name="title_dashboard">功能選單</string>
     <string name="title_notifications">推播通知</string>

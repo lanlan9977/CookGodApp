@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
     android:orientation="vertical"
-    tools:context=".chef.ChefOrderActivity">
+    tools:context=".foodsup.FoodMallActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/idChefOrederRecyclerView"

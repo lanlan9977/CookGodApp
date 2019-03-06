@@ -15,16 +15,32 @@
 
     <TextView
         android:id="@+id/idConfirmFood"
-        android:layout_width="match_parent"
-        android:layout_height="369dp"
-        android:layout_alignParentStart="true"
+        android:layout_width="207dp"
+        android:layout_height="348dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginBottom="88dp"
+        android:layout_marginBottom="110dp"
+        android:padding="10dp"
+        android:letterSpacing="0.3"
+        android:gravity="center"
         android:textColor="@color/colorBlack"
-        android:textSize="27dp"/>
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/idConfirmFoodQua"
+        android:padding="10dp"
+        android:layout_width="207dp"
+        android:layout_height="348dp"
+        android:layout_alignBottom="@+id/idFoodOrderCancel"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:gravity="center"
+        android:letterSpacing="0.3"
+        android:textColor="@color/colorBlack"
+        android:layout_marginBottom="106dp"
+        android:textSize="20dp"/>
 
     <Button
+        android:id="@+id/idFoodOrderCheckOK"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"

@@ -66,6 +66,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             tools:layout_editor_absoluteX="8dp" />
 
+
         <RatingBar
             style="?android:attr/ratingBarStyleSmall"
             android:layout_width="wrap_content"
@@ -77,7 +78,6 @@
             android:layout_marginRight="0dp"
             android:layout_marginBottom="22dp"
             android:numStars="5"
-            android:rating="4.5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             />

@@ -79,9 +79,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="100dp">
 
+                <Button
+                    android:id="@+id/btnCheckChefFoodOrder"
+                    android:layout_width="265dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="11dp"
+                    android:layout_marginRight="11dp"
+                    android:layout_toStartOf="@+id/btnMenu_od_Food_Order"
+                    android:layout_toLeftOf="@+id/btnMenu_od_Food_Order"
+                    android:text="查看食材訂單"
+                    android:background="#2985D3"
+                    android:visibility="gone"
+                    android:textColor="@color/colorWhite"/>
+
                 <RatingBar
+                    android:id="@+id/idMenu_od_ratinggbar"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"/>
 
                 <Button
                     android:id="@+id/btnMenu_od_rate"
@@ -93,6 +108,7 @@
                     android:layout_marginRight="11dp"
                     android:background="#4CAF50"
                     android:text="給予評價"
+                    android:visibility="gone"
                     android:textColor="@color/colorWhite" />
                 <Button
                     android:id="@+id/btnMenu_od_Food_Order"
@@ -104,7 +120,8 @@
                     android:layout_marginRight="11dp"
                     android:text="選擇訂單所需食材"
                     android:textColor="@color/colorWhite"
-                    android:background="#4CAF50"/>
+                    android:background="#4CAF50"
+                    android:visibility="gone"/>
 
 
                 <Button
@@ -113,7 +130,16 @@
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@id/idOrderQRCode"
                     android:layout_alignParentBottom="true"
-                    android:text="@string/stringMenuOrderButton" />
+                    android:text="@string/stringMenuOrderButton"
+                    />
+                <Button
+                    android:id="@+id/idMenu_od_status"
+                    android:text="審核訂單"
+                    android:textColor="@color/colorWhite"
+                    android:background="@color/colorRed"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
             </RelativeLayout>
 

@@ -13,25 +13,22 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class RetrieveChefOrderTask extends AsyncTask<String, String, String>  {
+public class RetrieveFoodMallTask extends AsyncTask<String, String, String> {
     private final static String TAG = "FoodMallActivity";
-    private String chefOdDetailServlet_url,chef_ID,stringMapJsonIn,stringMapQuaJsonIn;
+    private String menuDish_servlet_url, chef_ID;
 
-    public RetrieveChefOrderTask(String chefOdDetailServlet_url,String chef_ID, String stringMapJsonIn, String stringMapQuaJsonIn) {
-        this.chefOdDetailServlet_url=chefOdDetailServlet_url;
-        this.chef_ID=chef_ID;
-        this.stringMapJsonIn=stringMapJsonIn;
-        this.stringMapQuaJsonIn=stringMapQuaJsonIn;
+    public RetrieveFoodMallTask(String menuDish_servlet_url, String chef_ID) {
+        this.menuDish_servlet_url = menuDish_servlet_url;
+        this.chef_ID = chef_ID;
     }
-
 
     @Override
     protected String doInBackground(String... strings) {
+        String url = menuDish_servlet_url;
+        String chef_id = chef_ID;
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("chef_ID", chef_ID);
-//        jsonObject.addProperty("stringMapJsonIn", stringMapJsonIn);
-//        jsonObject.addProperty("stringMapQuaJsonIn", stringMapQuaJsonIn);
-        return getRemoteData(chefOdDetailServlet_url, jsonObject.toString());
+        jsonObject.addProperty("selectFoodMall", chef_id);
+        return getRemoteData(url, jsonObject.toString());
     }
 
 

@@ -121,7 +121,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragmentTransaction.hide(broadcastFragment);
         } else {
         }
-
     }
 
     @Override
@@ -297,15 +296,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
-                    //設定圖示
                     .setTitle("登出")
                     .setIcon(R.drawable.ic_login_button)
-                    //設定訊息內容
                     .setMessage(R.string.stringLogout)
-                    //設定確認鍵 (positive用於確認)
-                    .setPositiveButton(R.string.stringLogoutNo, this)
-                    //設定取消鍵 (negative用於取消)
-                    .setNegativeButton(R.string.stringLogoutYes, this)
+                    .setPositiveButton(R.string.stringLogoutYes, this)
+                    .setNegativeButton(R.string.stringLogoutNo, this)
                     .create();
             return alertDialog;
         }
@@ -313,10 +308,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         public void onClick(DialogInterface dialogInterface, int i) {
             switch (i) {
-                case DialogInterface.BUTTON_POSITIVE:
+                case DialogInterface.BUTTON_NEGATIVE:
                     dialogInterface.cancel();
                     break;
-                case DialogInterface.BUTTON_NEGATIVE:
+                case DialogInterface.BUTTON_POSITIVE:
                     Intent intent = new Intent(getContext(), MainActivity.class);
                     startActivity(intent);
                     break;

@@ -1,10 +1,9 @@
-package com.cookgod.chef;
+package com.cookgod.foodsup;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,16 +24,13 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cookgod.R;
-import com.cookgod.foodsup.ChefFoodFragment;
-import com.cookgod.foodsup.FavFdSupVO;
-import com.cookgod.foodsup.FoodMallVO;
-import com.cookgod.foodsup.FoodSupVO;
+import com.cookgod.chef.ChefOdDetailVO;
 import com.cookgod.main.Util;
 import com.cookgod.task.FoodMallImageTask;
 import com.cookgod.task.RetrieveChefOrderTask;
+import com.cookgod.task.RetrieveFoodMallTask;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -44,39 +40,38 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ChefOrderActivity extends AppCompatActivity {
-    private final static String TAG = "ChefOrderActivity e";
+public class FoodMallActivity extends AppCompatActivity {
+    private final static String TAG = "FoodMallActivity e";
     private RecyclerView idChefOrederRecyclerView;
-    private RetrieveChefOrderTask retrieveChefOrderTask;
+    private RetrieveFoodMallTask retrieveFoodMallTask;
     private List<FavFdSupVO> favSupList;
     private List<FoodMallVO> foodMallList;
     private List<FoodSupVO> foodSupList;
     private FoodMallImageTask foodMallImageTask;
-    private FragmentManager manager;
-    private ChefFoodFragment chefFoodFragment;
     private Dialog dialog;
-    private Map<String, String> stringMap = new LinkedHashMap<>();
+    private Map<FoodMallVO, FoodMallVO> stringMap = new LinkedHashMap<>();
+    private Map<FoodMallVO, ChefOdDetailVO> stringMapQua = new LinkedHashMap<>();
     private Button btnFoodConfitm;
+    private RetrieveChefOrderTask retrieveChefOrderTask;
+    private String chef_ID;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chef_order);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(ChefOrderActivity.this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(FoodMallActivity.this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         idChefOrederRecyclerView = findViewById(R.id.idChefOrederRecyclerView);
         idChefOrederRecyclerView.setLayoutManager(layoutManager);
-        btnFoodConfitm=findViewById(R.id.btnFoodConfitm);
+        btnFoodConfitm = findViewById(R.id.btnFoodConfitm);
         btnFoodConfitm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showFoodOrder();
             }
         });
-
-
-
     }
 
     @Override
@@ -84,11 +79,10 @@ public class ChefOrderActivity extends AppCompatActivity {
         super.onStart();
         SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
                 MODE_PRIVATE);
-        String chef_ID = preferences.getString("chef_ID", "");
-
-        retrieveChefOrderTask = new RetrieveChefOrderTask(Util.Servlet_URL + "CherOrderServlet", chef_ID);
+        chef_ID = preferences.getString("chef_ID", "");
+        retrieveFoodMallTask = new RetrieveFoodMallTask(Util.Servlet_URL + "CherOrderServlet", chef_ID);
         try {
-            String stringJsonIn = retrieveChefOrderTask.execute().get();
+            String stringJsonIn = retrieveFoodMallTask.execute().get();
             Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
             Type stringListType = new TypeToken<List<String>>() {
             }.getType();
@@ -105,9 +99,7 @@ public class ChefOrderActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.e(TAG, e.toString());
         }
-        idChefOrederRecyclerView.setAdapter(new FoodMallListAdapter(ChefOrderActivity.this, foodMallList));
-
-
+        idChefOrederRecyclerView.setAdapter(new FoodMallListAdapter(FoodMallActivity.this, foodMallList));
     }
 
     private class FoodMallListAdapter extends RecyclerView.Adapter<FoodMallListAdapter.ViewHolder> {
@@ -141,11 +133,10 @@ public class ChefOrderActivity extends AppCompatActivity {
                 idFav_Sup = itemView.findViewById(R.id.idFav_Sup);
                 idFood_Mall_Qty = itemView.findViewById(R.id.idFood_Mall_Qty);
                 idCheckQua = itemView.findViewById(R.id.idCheckQua);
-                ArrayAdapter<CharSequence> lunchList = ArrayAdapter.createFromResource(ChefOrderActivity.this,
+                ArrayAdapter<CharSequence> lunchList = ArrayAdapter.createFromResource(FoodMallActivity.this,
                         R.array.stringFoodMallArray,
                         android.R.layout.simple_spinner_dropdown_item);
                 idFood_Mall_Qty.setAdapter(lunchList);
-
 
             }
         }
@@ -188,29 +179,30 @@ public class ChefOrderActivity extends AppCompatActivity {
                 }
             }
 
-            AdapterView.OnItemClickListener listener;
             viewHolder.idFood_Mall_Qty.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    String item = parent.getSelectedItem().toString();
-                    if (Integer.valueOf(item) > 0 && item.trim().length() > 0) {
-                        stringMap.put(foodMallVO.getFood_ID(), foodMallVO.getFood_m_name());
+                    Integer item = Integer.parseInt(parent.getSelectedItem().toString());
+                    ChefOdDetailVO chefOdDetailVO=new ChefOdDetailVO();
+                    chefOdDetailVO.setChef_od_qty(item);
+//                    chefOdDetailVO.
+
+                    if (item > 0) {
+                        stringMap.put(foodMallVO, foodMallVO);
+                        stringMapQua.put(foodMallVO, chefOdDetailVO);
                         viewHolder.idCheckQua.setVisibility(View.VISIBLE);
                     } else {
                         viewHolder.idCheckQua.setVisibility(View.GONE);
                         stringMap.remove(foodMallVO.getFood_ID());
+                        stringMapQua.remove(foodMallVO.getFood_ID());
                     }
                 }
 
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
-
                 }
             });
-
-
         }
-
         @Override
         public int getItemCount() {
             return foodMallList.size();
@@ -248,36 +240,46 @@ public class ChefOrderActivity extends AppCompatActivity {
     }
 
     public void showFoodOrder() {
-
-        dialog = new Dialog(ChefOrderActivity.this);
+        dialog = new Dialog(FoodMallActivity.this);
         dialog.setTitle("確認訂單食材");
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.dialog_cheffood);
-
-
-        // 透過myDialog.getWindow()取得這個對話視窗的Window物件
-        Window dialogWindow = dialog.getWindow();
+        final Window dialogWindow = dialog.getWindow();
         dialogWindow.setGravity(Gravity.CENTER);
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
         lp.width = 1000;
         lp.alpha = 1.0f;
         dialogWindow.setAttributes(lp);
         TextView idConfirmFood = dialog.findViewById(R.id.idConfirmFood);
-        Button idFoodOrderCancel=dialog.findViewById(R.id.idFoodOrderCancel);
+        TextView idConfirmFoodQua = dialog.findViewById(R.id.idConfirmFoodQua);
+        Button idFoodOrderCancel = dialog.findViewById(R.id.idFoodOrderCancel);
+        Button idFoodOrderCheckOK=dialog.findViewById(R.id.idFoodOrderCheckOK);
         StringBuilder stringBuilder = new StringBuilder();
-
-        for (String key : stringMap.keySet()) {
-            stringBuilder.append(stringMap.get(key) + "\n");
+        StringBuilder stringBuilderQua = new StringBuilder();
+        for (FoodMallVO key : stringMap.keySet()) {
+            stringBuilder.append(stringMap.get(key).getFood_m_name() + "\n");
+            stringBuilderQua.append("X" + stringMapQua.get(key).getChef_od_qty() + "\n");
         }
         idConfirmFood.setText(stringBuilder.toString());
+        idConfirmFoodQua.setText(stringBuilderQua.toString());
         idFoodOrderCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.cancel();
             }
         });
-
-        Toast.makeText(ChefOrderActivity.this, getResources().getText(R.string.stringFoodMallOrder), Toast.LENGTH_SHORT).show();
+        idFoodOrderCheckOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+                String stringMapJsonIn=gson.toJson(stringMap);
+                String stringMapQuaJsonIn=gson.toJson(stringMapQua);
+                retrieveChefOrderTask=new RetrieveChefOrderTask(Util.Servlet_URL+"ChefOdDetailServlet",chef_ID,"","");
+                retrieveChefOrderTask.execute();
+                dialog.dismiss();
+                finish();
+            }
+        });
         dialog.show();
     }
 }

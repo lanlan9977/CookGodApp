@@ -41,7 +41,6 @@ public class BroadcastFragment extends Fragment {
                 i--;
             }else{
 
-
             }
 
         }
@@ -49,22 +48,13 @@ public class BroadcastFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_broadcast, container, false);
-
-
-
         broadcastView = view.findViewById(R.id.idBroadcastView);
         broadcastView.setLayoutManager(new LinearLayoutManager(getActivity()));
         broadcastView.setAdapter(new BroadcastListAdapter(getActivity(), broadcastNoReadList));
-
         broadcastReadView=view.findViewById(R.id.idBroadcastReadView);
         broadcastReadView.setLayoutManager(new LinearLayoutManager(getActivity()));
         broadcastReadView.setAdapter(new BroadcastListAdapter(getActivity(),broadcastList));
-
-
-
-
         return view;
     }
 
@@ -101,7 +91,6 @@ public class BroadcastFragment extends Fragment {
             final BroadcastVO broadcastVO = broadcastList.get(i);
             viewHolder.idBoradcast_con.setText(broadcastVO.getBroadcast_con());
             viewHolder.idBoradcast_start.setText(new DateFormatBack().format(broadcastVO.getBroadcast_start().toString()));
-
         }
 
         @Override

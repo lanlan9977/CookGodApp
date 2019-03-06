@@ -124,6 +124,7 @@ public class MenuOrderDetailActivity extends AppCompatActivity {
         public void onBindViewHolder(ViewHolder viewHolder, int i) {
             DishVO dishVO = dishList.get(i);
             viewHolder.idDish_name.setText(dishVO.getDish_name());
+            viewHolder.idDish_Resume.setText(dishVO.getDish_resume());
             int imageSize = getResources().getDisplayMetrics().widthPixels / 4;
             dishImageTask = new DishImageTask(Util.Servlet_URL+"DishServlet", dishVO.getDish_ID(), imageSize, viewHolder.idDish_View);
             dishImageTask.execute();

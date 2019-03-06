@@ -1,8 +1,6 @@
 package com.cookgod.foodsup;
 
-import java.io.Serializable;
-
-public class FoodMallVO implements Serializable {
+public class FoodMallVO implements java.io.Serializable {
 	
 	private static final long serialVersionUID = 2L;
 	private String food_sup_ID;

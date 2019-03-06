@@ -12,8 +12,8 @@ public class DateFormatBack {
         private static final long ONE_WEEK = 604800000L;
 
         private static final String ONE_SECOND_AGO = "秒前";
-        private static final String ONE_MINUTE_AGO = "分钟前";
-        private static final String ONE_HOUR_AGO = "小时前";
+        private static final String ONE_MINUTE_AGO = "分鐘前";
+        private static final String ONE_HOUR_AGO = "小時前";
         private static final String ONE_DAY_AGO = "天前";
         private static final String ONE_MONTH_AGO = "月前";
         private static final String ONE_YEAR_AGO = "年前";

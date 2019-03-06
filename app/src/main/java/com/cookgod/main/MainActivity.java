@@ -181,6 +181,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         idPicView = header.findViewById(R.id.idPicView);
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();//利用MenuInflater建立選單

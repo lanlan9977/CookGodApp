@@ -36,6 +36,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,13 +49,13 @@ public class FoodMallActivity extends AppCompatActivity {
     private List<FoodMallVO> foodMallList;
     private List<FoodSupVO> foodSupList;
     private FoodMallImageTask foodMallImageTask;
-    private Dialog dialog;
+    private Dialog dialog, foodDialog;
     private Map<FoodMallVO, FoodMallVO> stringMap = new LinkedHashMap<>();
     private Map<FoodMallVO, ChefOdDetailVO> stringMapQua = new LinkedHashMap<>();
     private Button btnFoodConfitm;
     private RetrieveChefOrderTask retrieveChefOrderTask;
     private String chef_ID;
-
+    private List<ChefOdDetailVO> chefOdDetailList=new ArrayList<>();
 
 
     @Override
@@ -106,17 +107,15 @@ public class FoodMallActivity extends AppCompatActivity {
         private Context context;
         private LayoutInflater layoutInflater;
         private List<FoodMallVO> foodMallList;
-        private boolean[] foodMallExpanded;
 
         public FoodMallListAdapter(Context context, List<FoodMallVO> foodMallList) {
             this.context = context;
             layoutInflater = LayoutInflater.from(context);
             this.foodMallList = foodMallList;
-            this.foodMallExpanded = new boolean[foodMallList.size()];
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            TextView idFood_M_Name, idFood_M_Place, idFood_M_Price, idFood_M_Resume, idFood_M_Unit, idCheckQua;
+            TextView idFood_M_Name, idFood_M_Place, idFood_M_Price, idFood_M_Unit, idCheckQua;
             ImageView idFood_M_Pic, idFav_Sup;
             RatingBar idFood_M_Rate;
             Spinner idFood_Mall_Qty;
@@ -127,7 +126,6 @@ public class FoodMallActivity extends AppCompatActivity {
                 idFood_M_Place = itemView.findViewById(R.id.idFood_M_Place);
                 idFood_M_Price = itemView.findViewById(R.id.idFood_M_Price);
                 idFood_M_Pic = itemView.findViewById(R.id.idFood_M_Pic);
-                idFood_M_Resume = itemView.findViewById(R.id.idFood_M_Resume);
                 idFood_M_Rate = itemView.findViewById(R.id.idFood_M_Rate);
                 idFood_M_Unit = itemView.findViewById(R.id.idFood_M_Unit);
                 idFav_Sup = itemView.findViewById(R.id.idFav_Sup);
@@ -156,19 +154,31 @@ public class FoodMallActivity extends AppCompatActivity {
             viewHolder.idFood_M_Name.setText(foodMallVO.getFood_m_name());
             viewHolder.idFood_M_Place.setText(foodMallVO.getFood_m_place());
             viewHolder.idFood_M_Price.setText("$" + foodMallVO.getFood_m_price().toString());
-            viewHolder.idFood_M_Resume.setText(foodMallVO.getFood_m_resume());
-            viewHolder.idFood_M_Resume.setVisibility(foodMallExpanded[i] ? View.VISIBLE : View.GONE);
             viewHolder.idFood_M_Rate.setRating(foodMallVO.getFood_m_rate());
             viewHolder.idFood_M_Unit.setText("單位：" + foodMallVO.getFood_m_unit());
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    for (int j = 0; j < foodMallExpanded.length; j++) {
-                        foodMallExpanded[j] = false;
-                    }
-                    foodMallExpanded[i] = true;
-//                    notifyDataSetChanged();
-
+                    foodDialog = new Dialog(FoodMallActivity.this);
+                    foodDialog.setTitle("確認訂單食材");
+                    foodDialog.setCancelable(true);
+                    foodDialog.setContentView(R.layout.dialog_fooddetail);
+                    final Window dialogWindow = foodDialog.getWindow();
+                    dialogWindow.setGravity(Gravity.CENTER);
+                    WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+                    lp.width = 1000;
+                    lp.alpha = 1.0f;
+                    dialogWindow.setAttributes(lp);
+                    TextView idfood_M_Resume = foodDialog.findViewById(R.id.idfood_M_Resume);
+                    Button btnfood_M_Resume_Back = foodDialog.findViewById(R.id.btnfood_M_Resume_Back);
+                    btnfood_M_Resume_Back.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            foodDialog.cancel();
+                        }
+                    });
+                    idfood_M_Resume.setText(foodMallVO.getFood_m_resume());
+                    foodDialog.show();
                 }
             });
             for (int j = 0; j < favSupList.size(); j++) {
@@ -183,10 +193,8 @@ public class FoodMallActivity extends AppCompatActivity {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     Integer item = Integer.parseInt(parent.getSelectedItem().toString());
-                    ChefOdDetailVO chefOdDetailVO=new ChefOdDetailVO();
+                    ChefOdDetailVO chefOdDetailVO = new ChefOdDetailVO();
                     chefOdDetailVO.setChef_od_qty(item);
-//                    chefOdDetailVO.
-
                     if (item > 0) {
                         stringMap.put(foodMallVO, foodMallVO);
                         stringMapQua.put(foodMallVO, chefOdDetailVO);
@@ -203,6 +211,7 @@ public class FoodMallActivity extends AppCompatActivity {
                 }
             });
         }
+
         @Override
         public int getItemCount() {
             return foodMallList.size();
@@ -235,6 +244,8 @@ public class FoodMallActivity extends AppCompatActivity {
             case R.id.idFoodMallOrder:
                 showFoodOrder();
                 break;
+            case R.id.idClick:
+                break;
         }
         return false;
     }
@@ -253,12 +264,20 @@ public class FoodMallActivity extends AppCompatActivity {
         TextView idConfirmFood = dialog.findViewById(R.id.idConfirmFood);
         TextView idConfirmFoodQua = dialog.findViewById(R.id.idConfirmFoodQua);
         Button idFoodOrderCancel = dialog.findViewById(R.id.idFoodOrderCancel);
-        Button idFoodOrderCheckOK=dialog.findViewById(R.id.idFoodOrderCheckOK);
+        Button idFoodOrderCheckOK = dialog.findViewById(R.id.idFoodOrderCheckOK);
         StringBuilder stringBuilder = new StringBuilder();
         StringBuilder stringBuilderQua = new StringBuilder();
+
+
+        ChefOdDetailVO chefOdDetailVO=new ChefOdDetailVO();
         for (FoodMallVO key : stringMap.keySet()) {
             stringBuilder.append(stringMap.get(key).getFood_m_name() + "\n");
             stringBuilderQua.append("X" + stringMapQua.get(key).getChef_od_qty() + "\n");
+
+            chefOdDetailVO.setFood_ID(stringMap.get(key).getFood_ID());
+            chefOdDetailVO.setFood_sup_ID(stringMap.get(key).getFood_sup_ID());
+            chefOdDetailVO.setChef_od_qty(stringMapQua.get(key).getChef_od_qty());
+            chefOdDetailList.add(chefOdDetailVO);
         }
         idConfirmFood.setText(stringBuilder.toString());
         idConfirmFoodQua.setText(stringBuilderQua.toString());
@@ -272,9 +291,10 @@ public class FoodMallActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-                String stringMapJsonIn=gson.toJson(stringMap);
-                String stringMapQuaJsonIn=gson.toJson(stringMapQua);
-                retrieveChefOrderTask=new RetrieveChefOrderTask(Util.Servlet_URL+"ChefOdDetailServlet",chef_ID,"","");
+                String stringMapJsonIn = gson.toJson(stringMap);
+                String stringMapQuaJsonIn = gson.toJson(stringMapQua);
+                String chefOdDetailJsonIn=gson.toJson(chefOdDetailList);
+                retrieveChefOrderTask = new RetrieveChefOrderTask(Util.Servlet_URL + "ChefOdDetailServlet", chef_ID, chefOdDetailJsonIn);
                 retrieveChefOrderTask.execute();
                 dialog.dismiss();
                 finish();

@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".main.MainActivity">
+
+    <item
+        android:id="@+id/idClick"
+        android:icon="@drawable/ic_click"
+        android:title="QRCode"
+        app:showAsAction="always" />
+
     <item
         android:id="@+id/idFoodMallOrder"
         android:icon="@drawable/ic_foodmallorder"

@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.cookgod.R;
@@ -23,6 +24,7 @@ public class BroadcastFragment extends Fragment {
     private RecyclerView broadcastView,broadcastReadView;
     private List<BroadcastVO> broadcastList;
     private List<BroadcastVO> broadcastNoReadList;
+    private ScrollView idBroadcastScrollView;
 
 
     @Override
@@ -48,13 +50,26 @@ public class BroadcastFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_broadcast, container, false);
+        final View view = inflater.inflate(R.layout.fragment_broadcast, container, false);
+        idBroadcastScrollView=view.findViewById(R.id.idBroadcastScrollView);
+        idBroadcastScrollView.setFillViewport(true);
         broadcastView = view.findViewById(R.id.idBroadcastView);
         broadcastView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        broadcastView.setNestedScrollingEnabled(false);
+
         broadcastView.setAdapter(new BroadcastListAdapter(getActivity(), broadcastNoReadList));
         broadcastReadView=view.findViewById(R.id.idBroadcastReadView);
         broadcastReadView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        broadcastReadView.setNestedScrollingEnabled(false);
         broadcastReadView.setAdapter(new BroadcastListAdapter(getActivity(),broadcastList));
+
+        idBroadcastScrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                idBroadcastScrollView.fullScroll(view.FOCUS_DOWN);
+            }
+        });
+
         return view;
     }
 

@@ -8,19 +8,41 @@
     android:orientation="vertical"
     tools:context=".foodsup.FoodMallActivity">
 
+    <!--<RelativeLayout-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="50dp">-->
+
+        <!--<TextView-->
+            <!--android:layout_width="161dp"-->
+            <!--android:layout_height="29dp"-->
+
+            <!--android:layout_alignParentEnd="true"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_marginEnd="222dp"-->
+            <!--android:layout_marginRight="222dp"-->
+            <!--android:layout_marginBottom="-4dp" />-->
+
+        <!--<Button-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="24dp"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_marginBottom="0dp" />-->
+    <!--</RelativeLayout>-->
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/idChefOrederRecyclerView"
         android:layout_width="match_parent"
-        android:padding="5dp"
         android:layout_height="0dp"
+        android:layout_weight="1"
 
-        android:layout_weight="1">
+        android:padding="5dp">
 
     </android.support.v7.widget.RecyclerView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
 
         <Button
             android:id="@+id/btnFoodConfitm"
@@ -33,10 +55,7 @@
     <TableLayout
         android:id="@+id/ChefFoodFragment"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        >
-
-    </TableLayout>
+        android:layout_height="wrap_content" />
 
 
 </LinearLayout>

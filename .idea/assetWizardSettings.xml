@@ -19,8 +19,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_error" />
-                            <entry key="sourceFile" value="C:\Users\louis-win\Downloads\error.svg" />
+                            <entry key="outputName" value="ic_click" />
+                            <entry key="sourceFile" value="C:\Users\Java\Downloads\click.svg" />
                           </map>
                         </option>
                       </PersistentState>

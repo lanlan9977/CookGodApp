@@ -7,7 +7,7 @@ import android.net.NetworkInfo;
 import android.widget.Toast;
 
 public class Util {
-    public final static String Servlet_URL ="http://10.0.2.2:8081/CookGodTest/";
+    public final static String Servlet_URL ="http://10.120.25.16:8081/CookGodTest/";
     public final static String PREF_FILE = "preference";
 
 

@@ -10,7 +10,6 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -94,6 +93,7 @@ public class MenuOrderFragment extends Fragment {
 
     private class MenuOrderAdapter extends RecyclerView.Adapter<MenuOrderAdapter.ViewHolder> {//CardView顯示訂單Id與日期
         private LayoutInflater inflater;
+
         public MenuOrderAdapter(LayoutInflater inflater) {
             this.inflater = inflater;
         }
@@ -101,12 +101,15 @@ public class MenuOrderFragment extends Fragment {
         class ViewHolder extends RecyclerView.ViewHolder {
             private TextView idMenu_or_id, idMenu_or_appt, idMenu_or_status;
             private ImageView idMenu_or_icon;
+            private RatingBar idMenu_or_rate_up;
+
             public ViewHolder(View itemView) {
                 super(itemView);
                 idMenu_or_id = itemView.findViewById(R.id.idMenu_or_id);
                 idMenu_or_appt = itemView.findViewById(R.id.idMenu_or_appt);
                 idMenu_or_status = itemView.findViewById(R.id.idMenu_or_status);
                 idMenu_or_icon = itemView.findViewById(R.id.idMenu_or_icon);
+                idMenu_or_rate_up=itemView.findViewById(R.id.idMenu_or_rate_up);
             }
         }
 
@@ -126,6 +129,7 @@ public class MenuOrderFragment extends Fragment {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy 年 MM 月 dd 日 HH : mm ");
                 viewHolder.idMenu_or_id.setText("訂單編號：" + menuOrderVO.getMenu_od_ID());
                 viewHolder.idMenu_or_appt.setText("預約日期：" + sdf.format(menuOrderVO.getMenu_od_book()));
+                viewHolder.idMenu_or_rate_up.setRating(menuOrderVO.getMenu_od_rate());
 
                 switch (menuOrderVO.getMenu_od_status()) {
                     case "g0":
@@ -217,10 +221,11 @@ public class MenuOrderFragment extends Fragment {
         } else if ("g4".equals(status)) {
             status = "訂單完成";
             if (!isChef) {
-                if((menuOrder.getMenu_od_rate()==0)) {
+                if ((menuOrder.getMenu_od_rate() == 0)) {
                     idMenu_od_ratinggbar.setVisibility(View.VISIBLE);
                     btnMenu_od_rate.setVisibility(View.VISIBLE);
-                }else{ Log.e(TAG,""+menuOrder.getMenu_od_rate());
+                } else {
+                    idMenu_od_ratinggbar.setVisibility(View.VISIBLE);
                     idMenu_od_ratinggbar.isIndicator();
                     btnMenu_od_rate.setVisibility(View.GONE);
                 }
@@ -251,11 +256,23 @@ public class MenuOrderFragment extends Fragment {
         });
         btnMenu_od_rate.setOnClickListener(new View.OnClickListener() {
             RetrieveMenuOrderRate retrieveMenuOrderRate;
+
             @Override
             public void onClick(View v) {
-                float menu_od_rate=idMenu_od_ratinggbar.getRating();
-                retrieveMenuOrderRate=new RetrieveMenuOrderRate(Util.Servlet_URL+"MenuOrderRateServlet",String.valueOf(menu_od_rate),menuOrder.getMenu_od_ID());
+                float menu_od_rate = idMenu_od_ratinggbar.getRating();
+                retrieveMenuOrderRate = new RetrieveMenuOrderRate(Util.Servlet_URL + "MenuOrderRateServlet", String.valueOf(menu_od_rate), menuOrder.getMenu_od_ID());
                 retrieveMenuOrderRate.execute();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("訂單評價已送出");
+                builder.setPositiveButton("確認", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.setCanceledOnTouchOutside(true);
+                dialog.show();
             }
         });
         btnMenu_od_Food_Order.setOnClickListener(new View.OnClickListener() {
@@ -284,7 +301,7 @@ public class MenuOrderFragment extends Fragment {
                         retrieveMenuOrderStatus.execute();
                     }
                 });
-                builder.setNegativeButton ("審核不通過", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("審核不通過", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         RetrieveMenuOrderStatus retrieveMenuOrderStatus;

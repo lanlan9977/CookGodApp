@@ -1,54 +1,63 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:id="@+id/idBroadcastScrollView"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:scrollbars="vertical"
     android:background="@color/colorWhite"
-    tools:context="com.cookgod.broadcast.BroadcastFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="com.cookgod.broadcast.BroadcastFragment">
 
-    <TextView
-        android:id="@+id/noRead"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:text="未讀的訊息"
-        android:textColor="@color/colorBlack"
-        android:background="@color/colorYellow"
-        android:textSize="16dp" />
+        android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/idBroadcastView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/noRead"
-        android:layout_marginTop="0dp"
-        android:paddingLeft="1dp"
-        android:paddingRight="1dp"
-        android:background="@color/colorYellow" />
+        <TextView
+            android:id="@+id/noRead"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorYellow"
+            android:padding="5dp"
+            android:text="未讀的訊息"
+            android:textColor="@color/colorBlack"
+            android:textSize="16dp" />
 
-
-    <!--android:layout_above="@+id/idTextView"-->
-    <TextView
-        android:id="@+id/idRead"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:text="已讀的訊息"
-        android:textColor="@color/colorBlack"
-        android:background="@color/colorYellow"
-        android:textSize="16sp" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/idBroadcastReadView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/noRead"
-        android:layout_marginTop="0dp"
-        android:paddingLeft="1dp"
-        android:paddingRight="1dp"
-        android:background="@color/colorYellow" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/idBroadcastView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/noRead"
+            android:layout_marginTop="0dp"
+            android:background="@color/colorYellow"
+            android:paddingLeft="1dp"
+            android:nestedScrollingEnabled="false"
+            android:paddingRight="1dp" />
 
 
+        <!--android:layout_above="@+id/idTextView"-->
+        <TextView
+            android:id="@+id/idRead"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorYellow"
+            android:padding="5dp"
+            android:text="已讀的訊息"
+            android:textColor="@color/colorBlack"
+            android:textSize="16sp" />
 
-</LinearLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/idBroadcastReadView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/noRead"
+            android:layout_marginTop="0dp"
+            android:background="@color/colorYellow"
+            android:nestedScrollingEnabled="false"
+            android:paddingLeft="1dp"
+            android:paddingRight="1dp" />
+    </LinearLayout>
+</ScrollView>
+
+

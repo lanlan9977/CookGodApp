@@ -7,7 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.cookgod.R;
 import com.cookgod.main.Util;
@@ -17,6 +20,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class ChefOrderDetailActivity extends AppCompatActivity {
@@ -31,7 +36,7 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cheforderdetail);
-        idChefOrderDetailRecyclerView=findViewById(R.id.idChefOrderDetailRecyclerView);
+        idChefOrderDetailRecyclerView = findViewById(R.id.idChefOrderDetailRecyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(ChefOrderDetailActivity.this);
         idChefOrderDetailRecyclerView.setLayoutManager(layoutManager);
 
@@ -58,29 +63,75 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
             chefOrderList = gson.fromJson(stringList.get(0), chefOrderType);
             chefOdDetailList = gson.fromJson(stringList.get(1), chefOdDetailType);
         } catch (Exception e) {
-            Log.e(TAG,e.toString());
-        }idChefOrderDetailRecyclerView.setAdapter(new ChefOrderDetailAdapter(ChefOrderDetailActivity.this,chefOdDetailList));
+            Log.e(TAG, e.toString());
+        }
+        idChefOrderDetailRecyclerView.setAdapter(new ChefOrderDetailAdapter(ChefOrderDetailActivity.this, chefOrderList));
 
     }
 
-    private class ChefOrderDetailAdapter extends RecyclerView.Adapter {
-        public ChefOrderDetailAdapter(Context context, List<ChefOdDetailVO> chefOdDetailList) {
+    private class ChefOrderDetailAdapter extends RecyclerView.Adapter<ChefOrderDetailAdapter.ViewHolder> {
+        private LayoutInflater layoutInflater;
+        private List<ChefOrderVO> chefOrderList;
+        private Context context;
+
+        public ChefOrderDetailAdapter(Context context, List<ChefOrderVO> chefOrderList) {
+            this.context=context;
+            this.chefOrderList=chefOrderList;
+            layoutInflater = LayoutInflater.from(context);
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+            TextView idChefOrder_ID,idChefOrder_Status,idChefOrder_Name,idChefOrder_Start,idChefOrder_Tel,
+            idChefOrder_Addr,idChefOrder_Send,idChefOrder_Rcv,idChefOrder_End;
+            public ViewHolder(View itemView) {
+                super(itemView);
+                idChefOrder_ID=itemView.findViewById(R.id.idChefOrder_ID);
+                idChefOrder_Status=itemView.findViewById(R.id.idChefOrder_Status);
+                idChefOrder_Name=itemView.findViewById(R.id.idChefOrder_Name);
+                idChefOrder_Start=itemView.findViewById(R.id.idChefOrder_Start);
+                idChefOrder_Tel=itemView.findViewById(R.id.idChefOrder_Tel);
+                idChefOrder_Addr=itemView.findViewById(R.id.idChefOrder_Addr);
+                idChefOrder_Send=itemView.findViewById(R.id.idChefOrder_Send);
+                idChefOrder_Rcv=itemView.findViewById(R.id.idChefOrder_Rcv);
+                idChefOrder_End=itemView.findViewById(R.id.idChefOrder_End);
+            }
         }
 
 
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            return null;
+        public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+            View itemView = layoutInflater.inflate(R.layout.card_cheforderdetail, viewGroup, false);
+            return new ViewHolder(itemView);
+
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int i) {
+        public void onBindViewHolder(ViewHolder viewHolder, int i) {
+            DateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
+            ChefOrderVO chefOrderVO=chefOrderList.get(i);
+            viewHolder.idChefOrder_ID.setText("主廚食材訂單編號："+chefOrderVO.getChef_or_ID());
+            viewHolder.idChefOrder_Status.setText("訂單狀態："+chefOrderVO.getChef_or_status());
+            viewHolder.idChefOrder_Name.setText("收件人姓名："+chefOrderVO.getChef_or_name());
+            viewHolder.idChefOrder_Start.setText("下單日期"+sdf.format(chefOrderVO.getChef_or_start()));
+            viewHolder.idChefOrder_Tel.setText("收件人電話"+chefOrderVO.getChef_or_tel());
+            viewHolder.idChefOrder_Addr.setText("收件人地址"+chefOrderVO.getChef_or_addr());
+            viewHolder.idChefOrder_Send.setText("出貨日期："+sdf.format(chefOrderVO.getChef_or_send()));
+            if(chefOrderVO.getChef_or_rcv()!=null){
+                viewHolder.idChefOrder_Rcv.setText(sdf.format(chefOrderVO.getChef_or_rcv()));
+            }
+            if(chefOrderVO.getChef_or_end()!=null){
+                viewHolder.idChefOrder_End.setText(sdf.format(chefOrderVO.getChef_or_end()));
+            }
+
+
+
+
 
         }
 
         @Override
         public int getItemCount() {
-            return 0;
+            return chefOrderList.size();
         }
     }
 }

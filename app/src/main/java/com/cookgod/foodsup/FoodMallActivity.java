@@ -42,26 +42,27 @@ import java.util.List;
 import java.util.Map;
 
 public class FoodMallActivity extends AppCompatActivity {
-    private final static String TAG = "FoodMallActivity e";
-    private RecyclerView idChefOrederRecyclerView;
+    private final static String TAG = "FoodMallActivity";
     private RetrieveFoodMallTask retrieveFoodMallTask;
+    private RetrieveChefOrderTask retrieveChefOrderTask;
+    private FoodMallImageTask foodMallImageTask;
+    private RecyclerView idChefOrederRecyclerView;
     private List<FavFdSupVO> favSupList;
     private List<FoodMallVO> foodMallList;
     private List<FoodSupVO> foodSupList;
-    private FoodMallImageTask foodMallImageTask;
     private Dialog dialog, foodDialog;
-    private Map<FoodMallVO, FoodMallVO> stringMap = new LinkedHashMap<>();
-    private Map<FoodMallVO, ChefOdDetailVO> stringMapQua = new LinkedHashMap<>();
+    private Map<FoodMallVO, ChefOdDetailVO> foodMallMap;
     private Button btnFoodConfitm;
-    private RetrieveChefOrderTask retrieveChefOrderTask;
     private String chef_ID;
-    private List<ChefOdDetailVO> chefOdDetailList=new ArrayList<>();
+    private List<ChefOdDetailVO> chefOdDetailList;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chef_order);
+        foodMallMap = new LinkedHashMap<>();
+        chefOdDetailList = new ArrayList<>();
         LinearLayoutManager layoutManager = new LinearLayoutManager(FoodMallActivity.this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         idChefOrederRecyclerView = findViewById(R.id.idChefOrederRecyclerView);
@@ -135,7 +136,6 @@ public class FoodMallActivity extends AppCompatActivity {
                         R.array.stringFoodMallArray,
                         android.R.layout.simple_spinner_dropdown_item);
                 idFood_Mall_Qty.setAdapter(lunchList);
-
             }
         }
 
@@ -196,13 +196,11 @@ public class FoodMallActivity extends AppCompatActivity {
                     ChefOdDetailVO chefOdDetailVO = new ChefOdDetailVO();
                     chefOdDetailVO.setChef_od_qty(item);
                     if (item > 0) {
-                        stringMap.put(foodMallVO, foodMallVO);
-                        stringMapQua.put(foodMallVO, chefOdDetailVO);
+                        foodMallMap.put(foodMallVO, chefOdDetailVO);
                         viewHolder.idCheckQua.setVisibility(View.VISIBLE);
                     } else {
                         viewHolder.idCheckQua.setVisibility(View.GONE);
-                        stringMap.remove(foodMallVO.getFood_ID());
-                        stringMapQua.remove(foodMallVO.getFood_ID());
+                        foodMallMap.remove(foodMallVO.getFood_ID());
                     }
                 }
 
@@ -268,15 +266,14 @@ public class FoodMallActivity extends AppCompatActivity {
         StringBuilder stringBuilder = new StringBuilder();
         StringBuilder stringBuilderQua = new StringBuilder();
 
-
-        ChefOdDetailVO chefOdDetailVO=new ChefOdDetailVO();
-        for (FoodMallVO key : stringMap.keySet()) {
-            stringBuilder.append(stringMap.get(key).getFood_m_name() + "\n");
-            stringBuilderQua.append("X" + stringMapQua.get(key).getChef_od_qty() + "\n");
-
-            chefOdDetailVO.setFood_ID(stringMap.get(key).getFood_ID());
-            chefOdDetailVO.setFood_sup_ID(stringMap.get(key).getFood_sup_ID());
-            chefOdDetailVO.setChef_od_qty(stringMapQua.get(key).getChef_od_qty());
+        for (FoodMallVO key : foodMallMap.keySet()) {
+            stringBuilder.append(key.getFood_m_name() + "\n");
+            stringBuilderQua.append("X" + foodMallMap.get(key).getChef_od_qty() + "\n");
+            ChefOdDetailVO chefOdDetailVO = new ChefOdDetailVO();
+            chefOdDetailVO.setFood_ID(key.getFood_ID());
+            chefOdDetailVO.setFood_sup_ID(key.getFood_sup_ID());
+            chefOdDetailVO.setChef_od_qty(foodMallMap.get(key).getChef_od_qty());
+            chefOdDetailVO.setChef_od_stotal(key.getFood_m_price() * foodMallMap.get(key).getChef_od_qty());
             chefOdDetailList.add(chefOdDetailVO);
         }
         idConfirmFood.setText(stringBuilder.toString());
@@ -291,9 +288,7 @@ public class FoodMallActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-                String stringMapJsonIn = gson.toJson(stringMap);
-                String stringMapQuaJsonIn = gson.toJson(stringMapQua);
-                String chefOdDetailJsonIn=gson.toJson(chefOdDetailList);
+                String chefOdDetailJsonIn = gson.toJson(chefOdDetailList);
                 retrieveChefOrderTask = new RetrieveChefOrderTask(Util.Servlet_URL + "ChefOdDetailServlet", chef_ID, chefOdDetailJsonIn);
                 retrieveChefOrderTask.execute();
                 dialog.dismiss();

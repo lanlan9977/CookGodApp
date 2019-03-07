@@ -12,5 +12,6 @@ public class MemberActivity extends AppCompatActivity {
         setContentView(R.layout.activity_member);
 
     }
+
 }
 

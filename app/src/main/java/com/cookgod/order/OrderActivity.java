@@ -20,8 +20,6 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.cookgod.R;
-import com.cookgod.chef.ChefOdDetailVO;
-import com.cookgod.foodsup.FoodMallVO;
 import com.cookgod.main.Page;
 import com.cookgod.main.Util;
 import com.cookgod.task.RetrieveOrderTask;
@@ -32,7 +30,6 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 
 //(訂單專區)
@@ -60,21 +57,21 @@ public class OrderActivity extends AppCompatActivity {
     private int REQUEST_CHER_ORDER = 1;
 
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CHER_ORDER) {
-            if (resultCode == RESULT_OK) {
-                Map<FoodMallVO, FoodMallVO> stringMap = (Map<FoodMallVO, FoodMallVO>) data.getSerializableExtra("FoodMallVO");
-                Map<FoodMallVO, ChefOdDetailVO> stringMapQua = (Map<FoodMallVO, ChefOdDetailVO>) data.getSerializableExtra("Chef_Od_Detail");
-                Log.e(TAG,""+stringMap);
-                Util.showToast(OrderActivity.this,"FFFFFFFFFFFF");
-            }
-            Util.showToast(OrderActivity.this,"TTTTTTTTT");
-
-        }Log.e(TAG,""+111);
-
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == REQUEST_CHER_ORDER) {
+//            if (resultCode == RESULT_OK) {
+//                Map<FoodMallVO, FoodMallVO> stringMap = (Map<FoodMallVO, FoodMallVO>) data.getSerializableExtra("FoodMallVO");
+//                Map<FoodMallVO, ChefOdDetailVO> stringMapQua = (Map<FoodMallVO, ChefOdDetailVO>) data.getSerializableExtra("Chef_Od_Detail");
+//                Log.e(TAG,""+stringMap);
+//                Util.showToast(OrderActivity.this,"FFFFFFFFFFFF");
+//            }
+//            Util.showToast(OrderActivity.this,"TTTTTTTTT");
+//
+//        }Log.e(TAG,""+111);
+//
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

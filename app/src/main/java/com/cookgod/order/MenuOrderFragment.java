@@ -22,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cookgod.R;
+import com.cookgod.chef.ChefOrderDetailActivity;
 import com.cookgod.foodsup.FoodMallActivity;
 import com.cookgod.main.Util;
 import com.cookgod.other.Contents;
@@ -279,13 +280,14 @@ public class MenuOrderFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), FoodMallActivity.class);
-                startActivityForResult(intent, REQUEST_CHER_ORDER);
+                startActivity(intent);
             }
         });
         btnCheckChefFoodOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent=new Intent(getContext(),)
+                Intent intent = new Intent(getContext(), ChefOrderDetailActivity.class);
+                startActivity(intent);
             }
         });
         idMenu_od_status.setOnClickListener(new View.OnClickListener() {

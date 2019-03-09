@@ -228,14 +228,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 onItemSelectedTo(R.string.stringMall, MallActivity.class);
                 break;
             case R.id.itemOrder://(訂單專區)
-                onItemSelectedTo(R.string.stringOrder, OrderActivity.class);
-                Intent intent = new Intent(MainActivity.this, OrderActivity.class);
-                Toast.makeText(getApplicationContext(), R.string.stringOrder, Toast.LENGTH_LONG).show();
-                Bundle bundle = new Bundle();
-                bundle.putBoolean("isChef", isChef);
-                bundle.putString("Cust_id", cust_account.getCust_ID());
-                startActivity(intent);
-                overridePendingTransition(R.anim.in, R.anim.out);
+                if (cust_account == null) {
+                    onItemSelectedTo(R.string.stringLoginNo, LoginActivity.class);
+                } else {
+                    onItemSelectedTo(R.string.stringOrder, OrderActivity.class);
+                    Intent intent = new Intent(MainActivity.this, OrderActivity.class);
+                    Toast.makeText(getApplicationContext(), R.string.stringOrder, Toast.LENGTH_LONG).show();
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("isChef", isChef);
+                    bundle.putString("Cust_id", cust_account.getCust_ID());
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.in, R.anim.out);
+                }
+
                 break;
             case R.id.itemForums://(論壇專區)
                 onItemSelectedTo(R.string.stringForum, ChefZoneActivity.class);

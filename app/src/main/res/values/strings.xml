@@ -12,6 +12,7 @@
     <string name="stringOrder">訂單管理</string>
     <string name="stringCustomerService">線上客服</string>
     <!--登入會員-->
+    <string name="stringLoginNo">請先登入</string>
     <string name="stringLogin">登入會員</string>
     <string name="stringKeyId">輸入帳號</string>
     <string name="stringKeyPassword">輸入密碼</string>

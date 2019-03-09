@@ -1,29 +1,21 @@
 {
   "project_info": {
-    "project_number": "711919237424",
-    "firebase_url": "https://foodgod.firebaseio.com",
-    "project_id": "cookgod",
-    "storage_bucket": "cookgod.appspot.com"
+    "project_number": "331119958448",
+    "firebase_url": "https://cookgod-25adf.firebaseio.com",
+    "project_id": "cookgod-25adf",
+    "storage_bucket": "cookgod-25adf.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:711919237424:android:8344aa4227d6901a",
+        "mobilesdk_app_id": "1:331119958448:android:5240b104928c05c2",
         "android_client_info": {
           "package_name": "com.cookgod"
         }
       },
       "oauth_client": [
         {
-          "client_id": "711919237424-qdrdjachg7tu42qaoe471r4vc2155o60.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.cookgod",
-            "certificate_hash": "ef009991a265bbe9c35841ef851227351ea456a4"
-          }
-        },
-        {
-          "client_id": "711919237424-o1nq91hd3oj51ncal2l9l7c1gt76svuv.apps.googleusercontent.com",
+          "client_id": "331119958448-q2r2pgho124qv0b5rs54s6ba6aju7uvj.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.cookgod",
@@ -31,13 +23,13 @@
           }
         },
         {
-          "client_id": "711919237424-vvf48m4shrouocafmvnsop7abvigsmtj.apps.googleusercontent.com",
+          "client_id": "331119958448-hnu0q6v8milp60rss539im7mgqs462ce.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC3FhRrxhGSgUgVCBQOZQp7KU96RjwS1ho"
+          "current_key": "AIzaSyBWvvkePxsdsslPNjVngoc1Wq-wK1r9768"
         }
       ],
       "services": {
@@ -48,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "711919237424-vvf48m4shrouocafmvnsop7abvigsmtj.apps.googleusercontent.com",
+              "client_id": "331119958448-hnu0q6v8milp60rss539im7mgqs462ce.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

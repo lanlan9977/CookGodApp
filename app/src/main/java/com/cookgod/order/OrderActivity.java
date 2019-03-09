@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.cookgod.R;
 import com.cookgod.main.Page;
 import com.cookgod.main.Util;
+import com.cookgod.task.RetrieveOrderQRCode;
 import com.cookgod.task.RetrieveOrderTask;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -40,7 +41,9 @@ public class OrderActivity extends AppCompatActivity {
     public List<FestOrderVO> festOrderList;
     public List<FoodOrderVO> foodOrderList;
     private RetrieveOrderTask retrieveOrderTask;
+    private RetrieveOrderQRCode retrieveOrderQRCode;
     private Boolean isChef;
+
     public List<MenuOrderVO> getMenuOrderList() {
         return menuOrderList;
     }
@@ -48,30 +51,68 @@ public class OrderActivity extends AppCompatActivity {
     public List<FestOrderVO> getFestOrderList() {
         return festOrderList;
     }
+
     public List<FoodOrderVO> getFoodOrderList() {
         return foodOrderList;
     }
+
     public Boolean getIsChef() {
         return isChef;
     }
+
     private int REQUEST_CHER_ORDER = 1;
+    private int REQUEST_ORDER_QRCODE = 0;
 
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == REQUEST_CHER_ORDER) {
-//            if (resultCode == RESULT_OK) {
-//                Map<FoodMallVO, FoodMallVO> stringMap = (Map<FoodMallVO, FoodMallVO>) data.getSerializableExtra("FoodMallVO");
-//                Map<FoodMallVO, ChefOdDetailVO> stringMapQua = (Map<FoodMallVO, ChefOdDetailVO>) data.getSerializableExtra("Chef_Od_Detail");
-//                Log.e(TAG,""+stringMap);
-//                Util.showToast(OrderActivity.this,"FFFFFFFFFFFF");
-//            }
-//            Util.showToast(OrderActivity.this,"TTTTTTTTT");
-//
-//        }Log.e(TAG,""+111);
-//
-//    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_ORDER_QRCODE) {
+            SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
+                    MODE_PRIVATE);
+            String menu_od_ID = data.getStringExtra("SCAN_RESULT");
+            if (isChef) {
+                try {
+                    String chef_ID = preferences.getString("chef_ID", "");
+                    retrieveOrderQRCode = new RetrieveOrderQRCode(Util.Servlet_URL + "OrderByChefQRCodeServlet", menu_od_ID, isChef, chef_ID);
+                    String result = retrieveOrderQRCode.execute().get();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(OrderActivity.this);
+                    builder.setTitle(result);
+                    builder.setPositiveButton("確認", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.setCanceledOnTouchOutside(true);
+                    dialog.show();
+                } catch (Exception e) {
+                    Log.e(TAG, e.toString());
+                }
+            } else {
+                try {
+                    String cust_ID = preferences.getString("cust_ID", "");
+                    retrieveOrderQRCode = new RetrieveOrderQRCode(Util.Servlet_URL + "OrderByChefQRCodeServlet", menu_od_ID, isChef, cust_ID);
+                    String result = retrieveOrderQRCode.execute().get();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(OrderActivity.this);
+                    builder.setTitle(result);
+                    builder.setPositiveButton("確認", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.setCanceledOnTouchOutside(true);
+                    dialog.show();
+                } catch (Exception e) {
+                    Log.e(TAG, e.toString());
+                }
+
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,31 +124,28 @@ public class OrderActivity extends AppCompatActivity {
     private void findViews() {
     }
 
-
     @Override
     protected void onStart() {
         super.onStart();
         SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
                 MODE_PRIVATE);
-        isChef=preferences.getBoolean("isChef",false);
+        isChef = preferences.getBoolean("isChef", false);
         boolean login = preferences.getBoolean("login", false);
         if (login) {
             if (Util.networkConnected(this)) {
 
                 try {
-                    if(isChef){
-                        retrieveOrderTask = new RetrieveOrderTask(Util.Servlet_URL+"OrderByChefServlet", preferences.getString("chef_ID",""));
-                    }else{
-                        retrieveOrderTask = new RetrieveOrderTask(Util.Servlet_URL+"OrderByCustServlet", preferences.getString("cust_ID", ""));
+                    if (isChef) {
+                        retrieveOrderTask = new RetrieveOrderTask(Util.Servlet_URL + "OrderByChefServlet", preferences.getString("chef_ID", ""));
+                    } else {
+                        retrieveOrderTask = new RetrieveOrderTask(Util.Servlet_URL + "OrderByCustServlet", preferences.getString("cust_ID", ""));
                     }
 
                     String OrderListJsonIn = retrieveOrderTask.execute().get();
-
                     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
                     Type orderType = new TypeToken<List<String>>() {
                     }.getType();
                     List<String> orderList = gson.fromJson(OrderListJsonIn, orderType);
-
                     String menuOrderJsonIn = orderList.get(0);
                     Type menuOrderType = new TypeToken<List<MenuOrderVO>>() {
                     }.getType();
@@ -138,7 +176,6 @@ public class OrderActivity extends AppCompatActivity {
         }
     }
 
-
     private class MyPagerAdapter extends FragmentPagerAdapter {
         List<Page> pageList;
 
@@ -150,7 +187,7 @@ public class OrderActivity extends AppCompatActivity {
             pageList.add(new Page(new MenuOrderFragment(), "嚴選套餐訂單"));
             pageList.add(new Page(new FestOrderFragment(), "節慶主題訂單"));
 
-            if(!isChef)
+            if (!isChef)
                 pageList.add(new Page(new FoodOrderFragment(), "嚴選食材訂單"));
         }
 
@@ -197,10 +234,8 @@ public class OrderActivity extends AppCompatActivity {
     private void scanQRCode() {
         Intent intent = new Intent("com.google.zxing.client.android.SCAN");
         try {
-            startActivityForResult(intent, 0);
-        }
-        // 如果沒有安裝Barcode Scanner，就跳出對話視窗請user安裝
-        catch (ActivityNotFoundException ex) {
+            startActivityForResult(intent, 0);// 如果沒有安裝Barcode Scanner，就跳出對話視窗請user安裝
+        } catch (ActivityNotFoundException ex) {
             showDownloadDialog();
         }
     }

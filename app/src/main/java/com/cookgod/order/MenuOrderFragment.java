@@ -18,7 +18,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cookgod.R;
@@ -41,8 +40,8 @@ import static android.content.Context.WINDOW_SERVICE;
 public class MenuOrderFragment extends Fragment {
     private final static String TAG = "OrderActivity";
     private List<MenuOrderVO> menuOrderList;
-    private RelativeLayout idMenu_Order_Layout;
-    private BottomSheetBehavior bottomSheetBehavior;
+
+
     private TextView idMenu_Order_ID, idMenu_Order_Status, idMenu_Order_Start, idMenu_Order_Appt, idMenu_Order_End, idMenu_Order_Rate, idMenu_Order_Msg;
     private Boolean isOnClick = true;
     private Button btnMenuOrder, btnMenu_od_rate, btnMenu_od_Food_Order, btnCheckChefFoodOrder, idMenu_od_status;
@@ -50,7 +49,7 @@ public class MenuOrderFragment extends Fragment {
     private String menu_ID;
     private ImageView ivCode;
     private Boolean isChef;
-
+    private BottomSheetBehavior bottomSheetBehavior;
 
 
     @Override
@@ -68,7 +67,7 @@ public class MenuOrderFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));//設定recyclerView
         recyclerView.setAdapter(new MenuOrderAdapter(inflater));
         View bottomSheet = view.findViewById(R.id.bottom_sheet);
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);//設定bottomSheetBehavior
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         btnMenuOrder = view.findViewById(R.id.idMenuOrderButton); //設定bottomSheetBehavior中的TextView(顯示訂單內容)
         btnMenu_od_rate = view.findViewById(R.id.btnMenu_od_rate);
         btnMenu_od_Food_Order = view.findViewById(R.id.btnMenu_od_Food_Order);
@@ -77,7 +76,6 @@ public class MenuOrderFragment extends Fragment {
         } else {
             btnMenu_od_Food_Order.setVisibility(View.GONE);
         }
-
         ivCode = view.findViewById(R.id.ivCode);
         idMenu_Order_ID = view.findViewById(R.id.idMenu_Order_id);
         idMenu_Order_Status = view.findViewById(R.id.idMenu_Order_status);
@@ -89,7 +87,6 @@ public class MenuOrderFragment extends Fragment {
         idMenu_od_ratinggbar = view.findViewById(R.id.idMenu_od_ratinggbar);
         btnCheckChefFoodOrder = view.findViewById(R.id.btnCheckChefFoodOrder);
         idMenu_od_status = view.findViewById(R.id.idMenu_od_status);
-//        manager = (NotificationManager) getActivity().getSystemService(getContext().NOTIFICATION_SERVICE);
         return view;
     }
 
@@ -105,6 +102,7 @@ public class MenuOrderFragment extends Fragment {
             private ImageView idMenu_or_icon;
             private RatingBar idMenu_or_rate_up;
 
+
             public ViewHolder(View itemView) {
                 super(itemView);
                 idMenu_or_id = itemView.findViewById(R.id.idMenu_or_id);
@@ -112,6 +110,8 @@ public class MenuOrderFragment extends Fragment {
                 idMenu_or_status = itemView.findViewById(R.id.idMenu_or_status);
                 idMenu_or_icon = itemView.findViewById(R.id.idMenu_or_icon);
                 idMenu_or_rate_up = itemView.findViewById(R.id.idMenu_or_rate_up);
+                //設定bottomSheetBehavior
+
             }
         }
 
@@ -119,13 +119,11 @@ public class MenuOrderFragment extends Fragment {
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View itemView = inflater.inflate(R.layout.card_menuorder, parent, false);
             ViewHolder viewHolder = new ViewHolder(itemView);
-            idMenu_Order_Layout = itemView.findViewById(R.id.idMenu_Order_Layout);
-
             return viewHolder;
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder viewHolder, final int position) {
+        public void onBindViewHolder( ViewHolder viewHolder, final int position) {
             if (!menuOrderList.isEmpty()) {
                 MenuOrderVO menuOrderVO = menuOrderList.get(position);
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy 年 MM 月 dd 日 HH : mm ");
@@ -168,25 +166,16 @@ public class MenuOrderFragment extends Fragment {
                         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                         bottomSheetBehavior.setPeekHeight(755);
                         isOnClick = false;
+                        notifyDataSetChanged();
                     } else {
                         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         isOnClick = true;
+                        notifyDataSetChanged();
                     }
                 }
             });
-            String qrCodeText = menuOrderList.get(position).getMenu_od_ID();
-            int smallerDimension = getDimension();
-            QRCodeEncoder qrCodeEncoder = new QRCodeEncoder(qrCodeText, null,
-                    Contents.Type.TEXT, BarcodeFormat.QR_CODE.toString(),
-                    smallerDimension);
-            try {
-                Bitmap bitmap = qrCodeEncoder.encodeAsBitmap();
-                ivCode.setImageBitmap(bitmap);
-            } catch (WriterException e) {
-                e.printStackTrace();
-            }
-        }
 
+        }
         @Override
         public int getItemCount() {
             return menuOrderList.size();
@@ -194,12 +183,26 @@ public class MenuOrderFragment extends Fragment {
     }
 
     private void displayMenuOrder(int position) {
+
+        String qrCodeText = menuOrderList.get(position).getMenu_od_ID();
+        int smallerDimension = getDimension();
+        QRCodeEncoder qrCodeEncoder = new QRCodeEncoder(qrCodeText, null,
+                Contents.Type.TEXT, BarcodeFormat.QR_CODE.toString(),
+                smallerDimension);
+        try {
+            Bitmap bitmap = qrCodeEncoder.encodeAsBitmap();
+            ivCode.setImageBitmap(bitmap);
+        } catch (WriterException e) {
+            e.printStackTrace();
+        }
         final MenuOrderVO menuOrder = menuOrderList.get(position);
         String status = menuOrder.getMenu_od_status();
         if ("g0".equals(status)) {
             status = "尚未審核";
             if (isChef) {
                 idMenu_od_status.setVisibility(View.VISIBLE);
+                btnMenu_od_Food_Order.setVisibility(View.GONE);
+                btnCheckChefFoodOrder.setVisibility(View.GONE);
             }
         } else if ("g2".equals(status)) {
             status = "審核未通過";
@@ -207,6 +210,8 @@ public class MenuOrderFragment extends Fragment {
                 idMenu_od_status.setVisibility(View.GONE);
                 idMenu_od_ratinggbar.setVisibility(View.GONE);
                 btnMenu_od_rate.setVisibility(View.GONE);
+                btnMenu_od_Food_Order.setVisibility(View.GONE);
+                btnCheckChefFoodOrder.setVisibility(View.GONE);
             }
         } else if ("g1".equals(status)) {
             status = "審核通過";
@@ -218,6 +223,8 @@ public class MenuOrderFragment extends Fragment {
         } else if ("g3".equals(status)) {
             status = "主廚到府";
             if (isChef) {
+                btnMenu_od_Food_Order.setVisibility(View.VISIBLE);
+                btnCheckChefFoodOrder.setVisibility(View.VISIBLE);
                 idMenu_od_status.setVisibility(View.GONE);
             }
         } else if ("g4".equals(status)) {
@@ -233,6 +240,8 @@ public class MenuOrderFragment extends Fragment {
                 }
             } else {
                 idMenu_od_status.setVisibility(View.GONE);
+                btnMenu_od_Food_Order.setVisibility(View.GONE);
+                btnCheckChefFoodOrder.setVisibility(View.GONE);
             }
         }
         String endDate = "";

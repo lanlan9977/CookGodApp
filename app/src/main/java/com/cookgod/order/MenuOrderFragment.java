@@ -53,38 +53,6 @@ public class MenuOrderFragment extends Fragment {
 
 
 
-
-//    private StorageReference mStorageRef;
-
-
-
-//    private static final String URL = "https://developer.android.com/index.html";
-//    private NotificationManager manager;
-//    private static final String CHANNEL_ID = "id";
-//    private static final String CHANNEL_NAME = "name";
-//
-//    private int REQUEST_CHER_ORDER = 1;
-//
-//    private void initData() {
-//        mStorageRef = FirebaseStorage.getInstance().getReference();
-//    }
-//
-//    private void checkPermission(){
-//        int permission = ActivityCompat.checkSelfPermission(getContext(),
-//                android.Manifest.permission.READ_EXTERNAL_STORAGE);
-//        if (permission != PackageManager.PERMISSION_GRANTED) {
-//            //未取得權限，向使用者要求允許權限
-//            ActivityCompat.requestPermissions(this,
-//                    new String[] {android.Manifest.permission.READ_EXTERNAL_STORAGE},getActivity()
-//                    REQUEST_EXTERNAL_STORAGE
-//            );
-//        } else {
-//            getLocalImg();
-//        }
-//
-//    }
-
-
     @Override
     public void onAttach(Context context) {//從OrderActivity取得物件資料
         super.onAttach(context);

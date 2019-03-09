@@ -2,15 +2,15 @@
   "project_info": {
     "project_number": "711919237424",
     "firebase_url": "https://foodgod.firebaseio.com",
-    "project_id": "foodgod",
-    "storage_bucket": "foodgod.appspot.com"
+    "project_id": "cookgod",
+    "storage_bucket": "cookgod.appspot.com"
   },
   "client": [
     {
       "client_info": {
         "mobilesdk_app_id": "1:711919237424:android:8344aa4227d6901a",
         "android_client_info": {
-          "package_name": "idv.david.foodgodapp"
+          "package_name": "com.cookgod"
         }
       },
       "oauth_client": [
@@ -18,8 +18,16 @@
           "client_id": "711919237424-qdrdjachg7tu42qaoe471r4vc2155o60.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "idv.david.foodgodapp",
+            "package_name": "com.cookgod",
             "certificate_hash": "ef009991a265bbe9c35841ef851227351ea456a4"
+          }
+        },
+        {
+          "client_id": "711919237424-o1nq91hd3oj51ncal2l9l7c1gt76svuv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cookgod",
+            "certificate_hash": "c47411946a75dd6838fc0b56b698685d8647d587"
           }
         },
         {

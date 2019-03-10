@@ -2,8 +2,11 @@ package com.cookgod.main;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
@@ -11,6 +14,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -29,6 +33,7 @@ import com.cookgod.R;
 import com.cookgod.broadcast.BadgeActionProvider;
 import com.cookgod.broadcast.BroadcastFragment;
 import com.cookgod.broadcast.BroadcastVO;
+import com.cookgod.broadcast.State;
 import com.cookgod.chef.ChefVO;
 import com.cookgod.chef.ChefZoneActivity;
 import com.cookgod.cust.CustVO;
@@ -75,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
     };
+    private LocalBroadcastManager broadcastManager;
 
     public List<BroadcastVO> getBroadcastList() {
         return broadcastList;
@@ -133,6 +139,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onStart();
         SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
                 MODE_PRIVATE);
+
+        Util.connectServer(preferences.getString("cust_ID",""), this);
+        broadcastManager = LocalBroadcastManager.getInstance(MainActivity.this);
+        registerFriendStateReceiver();
         login = preferences.getBoolean("login", false);
         isChef = preferences.getBoolean("isChef", false);
         if (login) {
@@ -166,7 +176,72 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FirebaseMessaging.getInstance().setAutoInitEnabled(true);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_drawer);//設定主畫面為activity_navigation_drawer
+
+
         findViews();
+    }
+
+
+    private void registerFriendStateReceiver() {
+        IntentFilter openFilter = new IntentFilter("open");
+        IntentFilter closeFilter = new IntentFilter("close");
+        FriendStateReceiver friendStateReceiver = new FriendStateReceiver(MainActivity.this);
+        broadcastManager.registerReceiver(friendStateReceiver, openFilter);
+        broadcastManager.registerReceiver(friendStateReceiver, closeFilter);
+    }
+    public String getUserName() {
+        SharedPreferences preferences =
+                getSharedPreferences("user", MODE_PRIVATE);
+        String userName = preferences.getString("cust_ID", "");
+        Log.d(TAG, "userName = " + userName);
+        return userName;
+    }
+
+    private class FriendStateReceiver extends BroadcastReceiver {
+        MainActivity activity;
+
+        FriendStateReceiver(MainActivity activity) {
+            this.activity = activity;
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            State stateMessage = new Gson().fromJson(message, State.class);
+            String type = stateMessage.getType();
+            String friend = stateMessage.getUser();
+            String user = getUserName();
+            switch (type) {
+                // 有user連線
+                case "open":
+                    // 如果是自己連線
+                    if (friend.equals(user)) {
+                        // 取得server上的所有user
+                        List<String> friendList = new ArrayList<>(stateMessage.getUsers());
+                        Util.setFriendList(friendList);
+                        // 將自己從聊天清單中移除，否則會看到自己在聊天清單上
+                        friendList.remove(user);
+                    } else {
+                        // 如果其他user連線而且清單上沒有該user，就將該user新增至目前聊天清單上
+                        if (!Util.getFriendList().contains(friend)) {
+                            Util.getFriendList().add(friend);
+                        }
+//                        activity.showToast(friend + " is online");
+                    }
+                    // 重刷聊天清單
+//                    rvFriends.getAdapter().notifyDataSetChanged();
+                    break;
+                // 有user斷線
+                case "close":
+                    // 將斷線的user從聊天清單中移除
+                    Util.getFriendList().remove(friend);
+//                    rvFriends.getAdapter().notifyDataSetChanged();
+//                    activity.showToast(friend + " is offline");
+                    break;
+            }
+            Log.d(TAG, "message: " + message);
+            Log.d(TAG, "friendList: " + Util.getFriendList());
+        }
     }
 
     private void findViews() {
@@ -254,6 +329,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.logout://(登出)
                 SharedPreferences pref = getSharedPreferences(Util.PREF_FILE,
                         MODE_PRIVATE);
+                Util.disconnectServer();
                 pref.edit().putBoolean("login", false).putBoolean("isChef", false).apply();
                 logout();
                 break;

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
@@ -123,7 +124,7 @@ public class MenuOrderFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder( ViewHolder viewHolder, final int position) {
+        public void onBindViewHolder(ViewHolder viewHolder, final int position) {
             if (!menuOrderList.isEmpty()) {
                 MenuOrderVO menuOrderVO = menuOrderList.get(position);
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy 年 MM 月 dd 日 HH : mm ");
@@ -176,6 +177,7 @@ public class MenuOrderFragment extends Fragment {
             });
 
         }
+
         @Override
         public int getItemCount() {
             return menuOrderList.size();
@@ -261,7 +263,6 @@ public class MenuOrderFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), MenuOrderDetailActivity.class);
-                intent.putExtra("menu_ID", menu_ID);
                 startActivity(intent);
             }
         });
@@ -296,8 +297,34 @@ public class MenuOrderFragment extends Fragment {
         btnCheckChefFoodOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), ChefOrderDetailActivity.class);
-                startActivity(intent);
+                final Intent intent = new Intent(getContext(), ChefOrderDetailActivity.class);
+                final SharedPreferences preferences = getActivity().getSharedPreferences(Util.PREF_FILE,
+                        getActivity().MODE_PRIVATE);
+                final String check = preferences.getString(menuOrder.getMenu_od_ID(), "");
+                if (check != null) {
+                    intent.putExtra("menu_od_ID", menuOrder.getMenu_od_ID());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("是否要前往該套餐之食材訂單？");
+                    builder.setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    builder.setNegativeButton("確認", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            intent.putExtra(check, "");
+                            startActivity(intent);
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.setCanceledOnTouchOutside(true);
+                    dialog.show();
+                } else {
+                    startActivity(intent);
+                }
+
             }
         });
         idMenu_od_status.setOnClickListener(new View.OnClickListener() {

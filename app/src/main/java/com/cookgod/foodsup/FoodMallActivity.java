@@ -2,6 +2,7 @@ package com.cookgod.foodsup;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -55,6 +56,7 @@ public class FoodMallActivity extends AppCompatActivity {
     private Button btnFoodConfitm;
     private String chef_ID;
     private List<ChefOdDetailVO> chefOdDetailList;
+    private String menu_od_ID;
 
 
     @Override
@@ -79,6 +81,8 @@ public class FoodMallActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        Intent intent=getIntent();
+        menu_od_ID=intent.getStringExtra("menu_od_ID");
         SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
                 MODE_PRIVATE);
         chef_ID = preferences.getString("chef_ID", "");
@@ -290,9 +294,19 @@ public class FoodMallActivity extends AppCompatActivity {
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
                 String chefOdDetailJsonIn = gson.toJson(chefOdDetailList);
                 retrieveChefOrderTask = new RetrieveChefOrderTask(Util.Servlet_URL + "ChefOdDetailServlet", chef_ID, chefOdDetailJsonIn);
-                retrieveChefOrderTask.execute();
-                dialog.dismiss();
-                finish();
+                try {
+                    String chef_or_ID = retrieveChefOrderTask.execute().get();
+                    SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
+                            MODE_PRIVATE);
+                    preferences.edit().putString(menu_od_ID, chef_or_ID).apply();
+                }catch (Exception e){
+                    Log.e(TAG,e.toString());
+                }finally {
+                    dialog.dismiss();
+                    finish();
+                }
+
+
             }
         });
         dialog.show();

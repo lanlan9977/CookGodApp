@@ -54,8 +54,8 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/idMenuOrderRecyclerView"
-        android:layout_width="410dp"
-        android:layout_height="405dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/idMenuClob"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="1dp"

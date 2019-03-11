@@ -52,7 +52,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("食神來了推播通知!")
+                .setContentTitle("主廚直播推播通知!")
                 .setContentText(messageBody)
                 .setAutoCancel(true)
                 .setPriority(Notification.PRIORITY_MAX)

@@ -23,69 +23,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 //(客服專區)
-public class CustomerServiceActivity extends AppCompatActivity{
-
-    private RequestQueue mRequestQue;
-    private String URL = "https://fcm.googleapis.com/fcm/send";
+public class CustomerServiceActivity extends AppCompatActivity {
 
 
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_customerservice);
-            Button button = findViewById(R.id.btn);
-            mRequestQue = Volley.newRequestQueue(this);
-            FirebaseMessaging.getInstance().subscribeToTopic("news");
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_customerservice);
 
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    sendNotification();
-                }
-            });
+    }
 
-        }
-
-
-
-    private void sendNotification() {
-
-        JSONObject json = new JSONObject();
-        try {
-            json.put("to", "/topics/" + "news");
-            JSONObject notificationObj = new JSONObject();
-            notificationObj.put("title", "any title");
-            notificationObj.put("body", "any body");
-            json.put("notification", notificationObj);
-
-            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, URL,
-                    json,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-
-                            Log.d("MUR", "onResponse: ");
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d("MUR", "onError: " + error.networkResponse);
-                }
-            }
-            ) {
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    Map<String, String> header = new HashMap<>();
-                    header.put("content-type", "application/json");
-                    header.put("authorization", "key=AIzaSyBtXIbI66YoR04StpbWLjH48LwaHtXMSKo");
-                    return header;
-                }
-            };
-            mRequestQue.add(request);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-
-    }}
+}
 

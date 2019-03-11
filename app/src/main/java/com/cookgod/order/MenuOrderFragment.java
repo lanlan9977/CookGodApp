@@ -1,6 +1,7 @@
 package com.cookgod.order;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,15 +13,16 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-
 import com.cookgod.R;
 import com.cookgod.chef.ChefOrderDetailActivity;
 import com.cookgod.foodsup.FoodMallActivity;
@@ -29,9 +31,9 @@ import com.cookgod.other.Contents;
 import com.cookgod.other.QRCodeEncoder;
 import com.cookgod.task.RetrieveMenuOrderRate;
 import com.cookgod.task.RetrieveMenuOrderStatus;
+import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -51,6 +53,7 @@ public class MenuOrderFragment extends Fragment {
     private ImageView ivCode;
     private Boolean isChef;
     private BottomSheetBehavior bottomSheetBehavior;
+    private Dialog dialog;
 
 
     @Override
@@ -153,7 +156,6 @@ public class MenuOrderFragment extends Fragment {
                         viewHolder.idMenu_or_status.setText("已完成訂單");
                         viewHolder.idMenu_or_icon.setImageResource(R.drawable.ic_checked);
                         break;
-
                 }
 
             }
@@ -165,6 +167,11 @@ public class MenuOrderFragment extends Fragment {
                     menu_ID = menuOrderList.get(position).getMenu_ID();
                     if (isOnClick) {
                         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                        WindowManager manager = (WindowManager) getContext().getSystemService(WINDOW_SERVICE);
+
+                        Display display = manager.getDefaultDisplay();
+//                        double height = display.getHeight();
+
                         bottomSheetBehavior.setPeekHeight(755);
                         isOnClick = false;
                         notifyDataSetChanged();
@@ -266,24 +273,38 @@ public class MenuOrderFragment extends Fragment {
                 startActivity(intent);
             }
         });
+//
         btnMenu_od_rate.setOnClickListener(new View.OnClickListener() {
             RetrieveMenuOrderRate retrieveMenuOrderRate;
+            float menu_od_rate = idMenu_od_ratinggbar.getRating();
 
             @Override
             public void onClick(View v) {
-                float menu_od_rate = idMenu_od_ratinggbar.getRating();
-                retrieveMenuOrderRate = new RetrieveMenuOrderRate(Util.Servlet_URL + "MenuOrderRateServlet", String.valueOf(menu_od_rate), menuOrder.getMenu_od_ID());
-                retrieveMenuOrderRate.execute();
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("訂單評價已送出");
-                builder.setPositiveButton("確認", new DialogInterface.OnClickListener() {
+                dialog = new Dialog(getContext());
+                dialog.setTitle("評價留言");
+                dialog.setCancelable(true);
+                dialog.setContentView(R.layout.dialog_foodorderrate);
+                final Window dialogWindow = dialog.getWindow();
+                dialogWindow.setGravity(Gravity.CENTER);
+                WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+                lp.width = 1000;
+                lp.alpha = 1.0f;
+                dialogWindow.setAttributes(lp);
+                Button btnOrder_Rate_Ok=dialog.findViewById(R.id.btnOrder_Rate_Ok);
+                Button btnOrder_Rate_Back=dialog.findViewById(R.id.btnOrder_Rate_Back);
+                btnOrder_Rate_Ok.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(View v) {
+                        retrieveMenuOrderRate = new RetrieveMenuOrderRate(Util.Servlet_URL + "MenuOrderRateServlet", String.valueOf(menu_od_rate), menuOrder.getMenu_od_ID());
+//        retrieveMenuOrderRate.execute();
+                    }
+                });
+                btnOrder_Rate_Back.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
                         dialog.cancel();
                     }
                 });
-                AlertDialog dialog = builder.create();
-                dialog.setCanceledOnTouchOutside(true);
                 dialog.show();
             }
         });
@@ -291,6 +312,7 @@ public class MenuOrderFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), FoodMallActivity.class);
+                intent.putExtra("menu_od_ID", menuOrder.getMenu_od_ID());
                 startActivity(intent);
             }
         });
@@ -301,20 +323,21 @@ public class MenuOrderFragment extends Fragment {
                 final SharedPreferences preferences = getActivity().getSharedPreferences(Util.PREF_FILE,
                         getActivity().MODE_PRIVATE);
                 final String check = preferences.getString(menuOrder.getMenu_od_ID(), "");
-                if (check != null) {
-                    intent.putExtra("menu_od_ID", menuOrder.getMenu_od_ID());
+                if (check != null&&!check.equals("")) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle("是否要前往該套餐之食材訂單？");
-                    builder.setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                    builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
+                            startActivity(intent);
                         }
                     });
-                    builder.setNegativeButton("確認", new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton("確認", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            intent.putExtra(check, "");
+                            intent.putExtra("chef_or_ID", check);
+                            intent.putExtra("getOne",true);
                             startActivity(intent);
                         }
                     });
@@ -331,6 +354,9 @@ public class MenuOrderFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                final MenuOrderVO menuOrderVO = new MenuOrderVO();
+                menuOrderVO.setCust_ID(menuOrder.getCust_ID());
+                menuOrderVO.setMenu_od_ID(menuOrder.getMenu_od_ID());
                 builder.setTitle("請審核訂單");
                 builder.setPositiveButton("審核通過", new DialogInterface.OnClickListener() {
                     @Override
@@ -338,7 +364,10 @@ public class MenuOrderFragment extends Fragment {
                         RetrieveMenuOrderStatus retrieveMenuOrderStatus;
                         retrieveMenuOrderStatus = new RetrieveMenuOrderStatus(Util.Servlet_URL + "MenuOrderServlet", "g1", menuOrder.getMenu_od_ID());
                         retrieveMenuOrderStatus.execute();
-//                        showNotification();
+                        menuOrderVO.setMenu_od_status("g1");
+                        String message = new Gson().toJson(menuOrderVO);
+                        Util.broadcastSocket.send(message);
+                        Util.showToast(getActivity(), "審核完畢");
                     }
                 });
                 builder.setNegativeButton("審核不通過", new DialogInterface.OnClickListener() {
@@ -347,73 +376,18 @@ public class MenuOrderFragment extends Fragment {
                         RetrieveMenuOrderStatus retrieveMenuOrderStatus;
                         retrieveMenuOrderStatus = new RetrieveMenuOrderStatus(Util.Servlet_URL + "MenuOrderServlet", "g2", menuOrder.getMenu_od_ID());
                         retrieveMenuOrderStatus.execute();
-//                        showNotification();
+                        menuOrderVO.setMenu_od_status("g2");
+                        String message = new Gson().toJson(menuOrderVO);
+                        Util.broadcastSocket.send(message);
+                        Util.showToast(getActivity(), "審核完畢");
                     }
                 });
+
                 builder.setCancelable(true);
                 AlertDialog dialog = builder.create();
                 dialog.setCanceledOnTouchOutside(true);
                 dialog.show();
             }
-
-//            public void showNotification() {
-//                Intent intent = new Intent();
-//                Bundle bundle = new Bundle();
-//                bundle.putString("title", "通知訊息1");
-//                bundle.putString("content", "通知訊息2");
-//                intent.putExtras(bundle);
-//
-//        /*
-//            Intent指定好要幹嘛後，就去做了，如startActivity(intent);
-//            而PendingIntent則是先把某個Intent包好，以後再去執行Intent要幹嘛
-//         */
-//                PendingIntent pendingIntent = PendingIntent.getActivity(getContext()
-//                        , 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//
-//                Uri uri = Uri.parse(URL);
-//                Intent intent2 = new Intent(Intent.ACTION_VIEW, uri);
-//                PendingIntent pendingIntent2 = PendingIntent.getActivity(
-//                        getContext(), 0, intent2, PendingIntent.FLAG_CANCEL_CURRENT);
-//
-//                Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-//
-//                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_image);
-//
-//                NotificationCompat.Action action = new NotificationCompat.Action.Builder(
-//                        android.R.drawable.ic_menu_share, "Go!", pendingIntent2
-//                ).build();
-//
-//                NotificationCompat.Builder builder;
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                    NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
-//                    manager.createNotificationChannel(channel);
-//                    builder = new NotificationCompat.Builder(getContext(), CHANNEL_ID);
-//                } else {
-//                    builder = new NotificationCompat.Builder(getContext());
-//                    builder.setPriority(Notification.PRIORITY_MAX);
-//                }
-//
-//                Notification notification = builder
-//                        // 訊息面板的標題
-//                        .setContentTitle("套餐訂單已")
-//                        // 訊息面板的內容文字
-//                        .setContentText("前往開發官網")
-//                        // 訊息的小圖示
-//                        .setSmallIcon(R.drawable.ic_chef_icon)
-//                        // 訊息的大圖示
-//                        .setLargeIcon(bitmap)
-//                        // 使用者點了之後才會執行指定的Intent
-//                        .setContentIntent(pendingIntent)
-//                        // 加入音效
-//                        .setSound(soundUri)
-//                        // 點擊後會自動移除狀態列上的通知訊息
-//                        .setAutoCancel(true)
-//                        // 加入狀態列下拉後的進一步操作
-//                        .addAction(action)
-//                        .build();
-//
-//                manager.notify(1, notification);
-//            }
 
         });
     }

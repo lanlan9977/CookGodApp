@@ -15,13 +15,14 @@ import java.net.URL;
 
 public class RetrieveChefOrderDetailTask extends AsyncTask<String, String, String>  {
     private final static String TAG = "FoodMallActivity";
-    private String chefOdDetailServletByChef_url,chef_ID;
+    private String chefOdDetailServletByChef_url,chef_ID,chef_or_ID;
 
 
 
-    public RetrieveChefOrderDetailTask(String chefOdDetailServletByChef_url, String chef_id) {
+    public RetrieveChefOrderDetailTask(String chefOdDetailServletByChef_url, String chef_id,String chef_or_ID) {
         this.chefOdDetailServletByChef_url=chefOdDetailServletByChef_url;
         this.chef_ID=chef_id;
+        this.chef_or_ID=chef_or_ID;
     }
 
 
@@ -29,6 +30,7 @@ public class RetrieveChefOrderDetailTask extends AsyncTask<String, String, Strin
     protected String doInBackground(String... strings) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("chef_ID", chef_ID);
+        jsonObject.addProperty("chef_or_ID", chef_or_ID);
         return getRemoteData(chefOdDetailServletByChef_url, jsonObject.toString());
     }
 

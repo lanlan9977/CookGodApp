@@ -19,13 +19,12 @@ import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.Locale;
 
-public class ChatWebSocketClient extends WebSocketClient {
-    private static final String TAG = "ChatWebSocketClient";
+public class BroadcastSocket extends WebSocketClient {
+    private static final String TAG = "BroadcastSocket";
     private Gson gson;
     private Context context;
-    public static String friendInChat;
 
-    public ChatWebSocketClient(URI serverURI, Context context) {
+    public BroadcastSocket(URI serverURI, Context context) {
         // Draft_17是連接協議，就是標準的RFC 6455（JSR356）
         super(serverURI, new Draft_17());
         this.context = context;
@@ -38,27 +37,15 @@ public class ChatWebSocketClient extends WebSocketClient {
                 "onOpen: Http status code = %d; status message = %s",
                 handshakeData.getHttpStatus(),
                 handshakeData.getHttpStatusMessage());
-        Log.d(TAG, "onOpen: " + text);
+        Log.e(TAG, "onOpen: " + text);
     }
 
-    // 訊息內容多(例如：圖片)，server端必須以byte型式傳送，此方法可以接收byte型式資料
-    @Override
-    public void onMessage(ByteBuffer bytes) {
-        int length = bytes.array().length;
-        String message = new String(bytes.array());
-        Log.d(TAG, "onMessage(ByteBuffer): length = " + length);
-        onMessage(message);
-    }
 
     @Override
     public void onMessage(String message) {
-        Log.d(TAG, "onMessage: " + message);
-        JsonObject jsonObject = gson.fromJson(message, JsonObject.class);
-        // type: 訊息種類，有open(有user連線), close(有user離線), chat(其他user傳送來的聊天訊息)
-        String type = jsonObject.get("type").getAsString();
-
-        showNotification();
-//        sendMessageBroadcast(type, message);
+        Log.e(TAG, "onMessage: " + message);
+        BroadcastVO broadcastVO=gson.fromJson(message, BroadcastVO.class);
+        showNotification(broadcastVO);
     }
 
     @Override
@@ -74,17 +61,11 @@ public class ChatWebSocketClient extends WebSocketClient {
         Log.d(TAG, "onError: exception = " + ex.toString());
     }
 
-//    private void sendMessageBroadcast(String messageType, String message) {
-//        Intent intent = new Intent(messageType);
-//        intent.putExtra("message", message);
-//        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-//    }
-
-    private void showNotification() {
+    private void showNotification(BroadcastVO broadcastVO) {
+        Log.e(TAG, "onMessage: " + broadcastVO.getBroadcast_con());
         Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
         NotificationCompat.Builder notification = new NotificationCompat.Builder(context)
-//                .setContentTitle("message from " + chatMessage.getSender())
+                .setContentTitle(broadcastVO.getBroadcast_con())
                 .setSmallIcon(android.R.drawable.ic_menu_info_details)
                 .setAutoCancel(true)
 //                .setContentIntent(pendingIntent)

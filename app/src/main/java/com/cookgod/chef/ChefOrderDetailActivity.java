@@ -1,6 +1,7 @@
 package com.cookgod.chef;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -31,7 +32,7 @@ import java.util.Map;
 
 public class ChefOrderDetailActivity extends AppCompatActivity {
     private final static String TAG = "ChefOrderDetailActivity";
-    private String chef_ID;
+    private String chef_ID, chef_or_ID;
     private RetrieveChefOrderDetailTask retrieveChefOrderDetailTask;
 
     private List<ChefOrderVO> chefOrderList;
@@ -56,7 +57,17 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
                 MODE_PRIVATE);
         chef_ID = preferences.getString("chef_ID", "");
-        retrieveChefOrderDetailTask = new RetrieveChefOrderDetailTask(Util.Servlet_URL + "ChefOdDetailByChefServlet", chef_ID);
+        Intent intent=getIntent();
+        chef_or_ID=intent.getStringExtra("chef_or_ID");
+        Boolean getOne=intent.getBooleanExtra("getOne",false);
+
+        if (getOne) {
+            Log.e(TAG,"FFFFFFFF");
+            retrieveChefOrderDetailTask = new RetrieveChefOrderDetailTask(Util.Servlet_URL + "ChefOdDetailByChefServlet", chef_ID, chef_or_ID);
+        } else {
+            Log.e(TAG,"KKKKKK");
+            retrieveChefOrderDetailTask = new RetrieveChefOrderDetailTask(Util.Servlet_URL + "ChefOdDetailByChefServlet", chef_ID, "");
+        }
         try {
             Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
             String jsonIn = retrieveChefOrderDetailTask.execute().get();
@@ -71,7 +82,7 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
             }.getType();
             chefOrderList = gson.fromJson(stringList.get(0), chefOrderType);
             chefOdDetailMap = gson.fromJson(stringList.get(1), chefOdDetailType);
-            foodMap=gson.fromJson(stringList.get(2),foodType);
+            foodMap = gson.fromJson(stringList.get(2), foodType);
 
         } catch (Exception e) {
             Log.e(TAG, e.toString());
@@ -92,11 +103,11 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
 
         class ViewHolder extends RecyclerView.ViewHolder {
             TextView idChefOrder_ID, idChefOrder_Status, idChefOrder_Name, idChefOrder_Start, idChefOrder_Tel,
-                    idChefOrder_Addr, idChefOrder_Send, idChefOrder_Rcv, idChefOrder_End,idTotal;
+                    idChefOrder_Addr, idChefOrder_Send, idChefOrder_Rcv, idChefOrder_End, idTotal;
             RelativeLayout idChefOrder_RelativeLayout;
             List<ChefOdDetailVO> chefOdDetailList;
             List<FoodVO> foodList;
-            LinearLayout foodHeaderLayout,foodBottomLayout;
+            LinearLayout foodHeaderLayout, foodBottomLayout;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -108,9 +119,9 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
                 idChefOrder_Addr = itemView.findViewById(R.id.idChefOrder_Addr);
                 idChefOrder_Send = itemView.findViewById(R.id.idChefOrder_Send);
                 idChefOrder_RelativeLayout = itemView.findViewById(R.id.idChefOrder_RelativeLayout);
-                foodBottomLayout=itemView.findViewById(R.id.foodBottomLayout);
-                foodHeaderLayout=itemView.findViewById(R.id.foodHeaderLayout);
-                idTotal=itemView.findViewById(R.id.idTotal);
+                foodBottomLayout = itemView.findViewById(R.id.foodBottomLayout);
+                foodHeaderLayout = itemView.findViewById(R.id.foodHeaderLayout);
+                idTotal = itemView.findViewById(R.id.idTotal);
 //                idChefOrder_Rcv=itemView.findViewById(R.id.idChefOrder_Rcv);
 //                idChefOrder_End=itemView.findViewById(R.id.idChefOrder_End);
             }
@@ -127,20 +138,19 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
             DateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
 
             viewHolder.chefOdDetailList = new ArrayList<>();
-            viewHolder.foodList= new ArrayList<>();
+            viewHolder.foodList = new ArrayList<>();
             ChefOrderVO chefOrderVO = chefOrderList.get(i);
 
-            for(String key:chefOdDetailMap.keySet()){
-                if(chefOrderVO.getChef_or_ID().equals(key)){
+            for (String key : chefOdDetailMap.keySet()) {
+                if (chefOrderVO.getChef_or_ID().equals(key)) {
                     viewHolder.chefOdDetailList = chefOdDetailMap.get(key);
-                    viewHolder.foodList=foodMap.get(key);
+                    viewHolder.foodList = foodMap.get(key);
                 }
             }
-            int total=0;
-            for(ChefOdDetailVO chefOdDetailVO:viewHolder.chefOdDetailList){
-                total+=chefOdDetailVO.getChef_od_stotal();
+            int total = 0;
+            for (ChefOdDetailVO chefOdDetailVO : viewHolder.chefOdDetailList) {
+                total += chefOdDetailVO.getChef_od_stotal();
             }
-
 
 
             viewHolder.idChefOrder_ID.setText("主廚食材訂單編號：" + chefOrderVO.getChef_or_ID());
@@ -150,7 +160,7 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
             viewHolder.idChefOrder_Tel.setText("收件人電話：" + chefOrderVO.getChef_or_tel());
             viewHolder.idChefOrder_Addr.setText("收件人地址：" + chefOrderVO.getChef_or_addr());
             viewHolder.idChefOrder_Send.setText("出貨日期：" + sdf.format(chefOrderVO.getChef_or_send()));
-            viewHolder.idTotal.setText("＄"+String.valueOf(total));
+            viewHolder.idTotal.setText("＄" + String.valueOf(total));
 //            if(chefOrderVO.getChef_or_rcv()!=null){
 //                viewHolder.idChefOrder_Rcv.setText(sdf.format(chefOrderVO.getChef_or_rcv()));
 //            }
@@ -163,12 +173,12 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     RecyclerView idChefOrderDetailListView = v.findViewById(R.id.idChefOrderDetailListView);
                     final LinearLayoutManager layoutManager = new LinearLayoutManager(ChefOrderDetailActivity.this);
-                    Log.e(TAG, String.valueOf("" + viewHolder.chefOdDetailList==null));
+                    Log.e(TAG, String.valueOf("" + viewHolder.chefOdDetailList == null));
                     if (viewHolder.chefOdDetailList != null && viewHolder.chefOdDetailList.size() > 0) {
                         viewHolder.foodHeaderLayout.setVisibility(View.VISIBLE);
                         viewHolder.foodBottomLayout.setVisibility(View.VISIBLE);
                         idChefOrderDetailListView.setLayoutManager(layoutManager);
-                        idChefOrderDetailListView.setAdapter(new ChefOrderDetailListAdapter(ChefOrderDetailActivity.this, viewHolder.chefOdDetailList,viewHolder.foodList));
+                        idChefOrderDetailListView.setAdapter(new ChefOrderDetailListAdapter(ChefOrderDetailActivity.this, viewHolder.chefOdDetailList, viewHolder.foodList));
                     }
                 }
 
@@ -181,18 +191,18 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
                     public ChefOrderDetailListAdapter(Context context, List<ChefOdDetailVO> chefOdDetailList, List<FoodVO> foodList) {
                         this.chefOdDetailList = chefOdDetailList;
                         this.context = context;
-                        this.foodList=foodList;
+                        this.foodList = foodList;
                         layoutInflater = LayoutInflater.from(context);
                     }
 
                     class ViewHolder extends RecyclerView.ViewHolder {
-                        TextView idFood_Name,idChefOrderDetail_Qty,idChefOrderDetail_Stotal;
+                        TextView idFood_Name, idChefOrderDetail_Qty, idChefOrderDetail_Stotal;
 
                         public ViewHolder(View itemView) {
                             super(itemView);
                             idFood_Name = itemView.findViewById(R.id.idFood_Name);
-                            idChefOrderDetail_Qty=itemView.findViewById(R.id.idChefOrderDetail_Qty);
-                            idChefOrderDetail_Stotal=itemView.findViewById(R.id.idChefOrderDetail_Stotal);
+                            idChefOrderDetail_Qty = itemView.findViewById(R.id.idChefOrderDetail_Qty);
+                            idChefOrderDetail_Stotal = itemView.findViewById(R.id.idChefOrderDetail_Stotal);
 
 
                         }
@@ -206,13 +216,13 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
 
                     @Override
                     public void onBindViewHolder(ViewHolder viewHolder, int i) {
-                        FoodVO foodVO=foodList.get(i);
-                        ChefOdDetailVO chefOdDetailVO=chefOdDetailList.get(i);
+                        FoodVO foodVO = foodList.get(i);
+                        ChefOdDetailVO chefOdDetailVO = chefOdDetailList.get(i);
                         viewHolder.idFood_Name.setText(foodVO.getFood_name());
                         viewHolder.idChefOrderDetail_Qty.setText(chefOdDetailVO.getChef_od_qty().toString());
-                        viewHolder.idChefOrderDetail_Stotal.setText("＄"+chefOdDetailVO.getChef_od_stotal().toString());
+                        viewHolder.idChefOrderDetail_Stotal.setText("＄" + chefOdDetailVO.getChef_od_stotal().toString());
 
-                        Log.e(TAG,"＄"+chefOdDetailVO.getChef_od_stotal().toString());
+                        Log.e(TAG, "＄" + chefOdDetailVO.getChef_od_stotal().toString());
 
                     }
 

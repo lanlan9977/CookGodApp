@@ -40,13 +40,13 @@
 
         <TextView
             android:id="@+id/idChefOrderDetail_Qty"
-            android:layout_width="100dp"
+            android:layout_width="80dp"
             android:layout_height="26dp"
             android:layout_marginTop="10dp" />
 
         <TextView
             android:id="@+id/idChefOrderDetail_Stotal"
-            android:layout_width="50dp"
+            android:layout_width="70dp"
             android:layout_height="26dp"
             android:layout_marginTop="10dp" />
 

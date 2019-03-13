@@ -199,13 +199,14 @@ public class FoodMallActivity extends AppCompatActivity {
                     Integer item = Integer.parseInt(parent.getSelectedItem().toString());
                     ChefOdDetailVO chefOdDetailVO = new ChefOdDetailVO();
                     chefOdDetailVO.setChef_od_qty(item);
-                    if (item > 0) {
+                    if (position > 0) {
                         foodMallMap.put(foodMallVO, chefOdDetailVO);
                         viewHolder.idCheckQua.setVisibility(View.VISIBLE);
                     } else {
                         viewHolder.idCheckQua.setVisibility(View.GONE);
-                        foodMallMap.remove(foodMallVO.getFood_ID());
+                        foodMallMap.remove(foodMallVO);
                     }
+
                 }
 
                 @Override
@@ -265,23 +266,31 @@ public class FoodMallActivity extends AppCompatActivity {
         dialogWindow.setAttributes(lp);
         TextView idConfirmFood = dialog.findViewById(R.id.idConfirmFood);
         TextView idConfirmFoodQua = dialog.findViewById(R.id.idConfirmFoodQua);
+        TextView idConfirmFoodStotal=dialog.findViewById(R.id.idConfirmFoodStotal);
+        TextView idFoodMall_Total=dialog.findViewById(R.id.idFoodMall_Total);
         Button idFoodOrderCancel = dialog.findViewById(R.id.idFoodOrderCancel);
         Button idFoodOrderCheckOK = dialog.findViewById(R.id.idFoodOrderCheckOK);
         StringBuilder stringBuilder = new StringBuilder();
         StringBuilder stringBuilderQua = new StringBuilder();
-
+        StringBuilder stringBuilderStoral=new StringBuilder();
+        int total = 0;
         for (FoodMallVO key : foodMallMap.keySet()) {
             stringBuilder.append(key.getFood_m_name() + "\n");
             stringBuilderQua.append("X" + foodMallMap.get(key).getChef_od_qty() + "\n");
+            stringBuilderStoral.append("＄" +(key.getFood_m_price()*foodMallMap.get(key).getChef_od_qty())+ "\n");
+            total+=key.getFood_m_price()*foodMallMap.get(key).getChef_od_qty();
             ChefOdDetailVO chefOdDetailVO = new ChefOdDetailVO();
             chefOdDetailVO.setFood_ID(key.getFood_ID());
             chefOdDetailVO.setFood_sup_ID(key.getFood_sup_ID());
             chefOdDetailVO.setChef_od_qty(foodMallMap.get(key).getChef_od_qty());
             chefOdDetailVO.setChef_od_stotal(key.getFood_m_price() * foodMallMap.get(key).getChef_od_qty());
             chefOdDetailList.add(chefOdDetailVO);
+
         }
         idConfirmFood.setText(stringBuilder.toString());
         idConfirmFoodQua.setText(stringBuilderQua.toString());
+        idConfirmFoodStotal.setText(stringBuilderStoral.toString());
+        idFoodMall_Total.setText("＄"+String.valueOf(total)+"元");
         idFoodOrderCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

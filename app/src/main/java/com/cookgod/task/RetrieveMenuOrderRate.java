@@ -15,14 +15,15 @@ import java.net.URL;
 
 public class RetrieveMenuOrderRate extends AsyncTask<String,String,String> {
     private final static String TAG = "OrderActivity";
-    private String menuOrder_servlet_url, menu_od_id;
-    private String menu_od_rate;
+    private String menuOrder_servlet_url, menu_od_id,menu_od_rate,menu_od_msg;
 
 
-    public RetrieveMenuOrderRate(String menuOrder_servlet_url, String menu_od_rate, String menu_od_id) {
+
+    public RetrieveMenuOrderRate(String menuOrder_servlet_url, String menu_od_rate, String menu_od_id, String menu_od_msg) {
         this.menuOrder_servlet_url = menuOrder_servlet_url;
         this.menu_od_rate = menu_od_rate;
         this.menu_od_id = menu_od_id;
+        this.menu_od_msg=menu_od_msg;
     }
 
         @Override
@@ -30,6 +31,7 @@ public class RetrieveMenuOrderRate extends AsyncTask<String,String,String> {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("menu_od_id", menu_od_id);
             jsonObject.addProperty("menu_od_rate", menu_od_rate);
+            jsonObject.addProperty("menu_od_msg", menu_od_msg);
             return getRemoteData(menuOrder_servlet_url, jsonObject.toString());
         }
 

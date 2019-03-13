@@ -2,11 +2,8 @@ package com.cookgod.main;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
@@ -276,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void onItemSelectedTo(int toastString, Class toClas) {
         Intent intent = new Intent(MainActivity.this, toClas);
-        Toast.makeText(getApplicationContext(), toastString, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), toastString, Toast.LENGTH_SHORT).show();
         startActivity(intent);
         overridePendingTransition(R.anim.in, R.anim.out);
     }

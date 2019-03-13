@@ -22,11 +22,14 @@
         android:id="@+id/idOrder_Msg"
         android:layout_width="300dp"
         android:layout_height="300dp"
+        android:inputType="text"
+        android:hint="請輸入評價內容"
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="82dp"
         android:layout_marginBottom="77dp" />
+
 
     <Button
         android:id="@+id/btnOrder_Rate_Ok"
@@ -39,7 +42,7 @@
         android:layout_marginLeft="43dp"
         android:layout_marginBottom="10dp"
         android:background="@color/colorBlack"
-        android:text="確認"
+        android:text="發送"
         android:textColor="@color/colorWhite" />
 
     <Button

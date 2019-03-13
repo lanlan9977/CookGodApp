@@ -20,9 +20,11 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
 import com.cookgod.R;
 import com.cookgod.chef.ChefOrderDetailActivity;
 import com.cookgod.foodsup.FoodMallActivity;
@@ -34,6 +36,7 @@ import com.cookgod.task.RetrieveMenuOrderStatus;
 import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -89,6 +92,7 @@ public class MenuOrderFragment extends Fragment {
         idMenu_Order_Rate = view.findViewById(R.id.idMenu_Order_rate);
         idMenu_Order_Msg = view.findViewById(R.id.idMenu_Order_msg);
         idMenu_od_ratinggbar = view.findViewById(R.id.idMenu_od_ratinggbar);
+
         btnCheckChefFoodOrder = view.findViewById(R.id.btnCheckChefFoodOrder);
         idMenu_od_status = view.findViewById(R.id.idMenu_od_status);
         return view;
@@ -160,6 +164,7 @@ public class MenuOrderFragment extends Fragment {
 
             }
 
+
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -167,11 +172,6 @@ public class MenuOrderFragment extends Fragment {
                     menu_ID = menuOrderList.get(position).getMenu_ID();
                     if (isOnClick) {
                         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                        WindowManager manager = (WindowManager) getContext().getSystemService(WINDOW_SERVICE);
-
-                        Display display = manager.getDefaultDisplay();
-//                        double height = display.getHeight();
-
                         bottomSheetBehavior.setPeekHeight(755);
                         isOnClick = false;
                         notifyDataSetChanged();
@@ -244,7 +244,7 @@ public class MenuOrderFragment extends Fragment {
                     btnMenu_od_rate.setVisibility(View.VISIBLE);
                 } else {
                     idMenu_od_ratinggbar.setVisibility(View.VISIBLE);
-                    idMenu_od_ratinggbar.isIndicator();
+//                    idMenu_od_ratinggbar.isIndicator();
                     btnMenu_od_rate.setVisibility(View.GONE);
                 }
             } else {
@@ -270,13 +270,23 @@ public class MenuOrderFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), MenuOrderDetailActivity.class);
+                intent.putExtra("menu_ID",menu_ID);
                 startActivity(intent);
             }
         });
-//
+        final float[] menu_od_rate = {0};
+//        Log.e(TAG, String.valueOf(menu_od_rate));
+
+        idMenu_od_ratinggbar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rate, boolean b) {
+                menu_od_rate[0] = rate;
+            }
+        });
+
+
         btnMenu_od_rate.setOnClickListener(new View.OnClickListener() {
             RetrieveMenuOrderRate retrieveMenuOrderRate;
-            float menu_od_rate = idMenu_od_ratinggbar.getRating();
 
             @Override
             public void onClick(View v) {
@@ -290,13 +300,20 @@ public class MenuOrderFragment extends Fragment {
                 lp.width = 1000;
                 lp.alpha = 1.0f;
                 dialogWindow.setAttributes(lp);
-                Button btnOrder_Rate_Ok=dialog.findViewById(R.id.btnOrder_Rate_Ok);
-                Button btnOrder_Rate_Back=dialog.findViewById(R.id.btnOrder_Rate_Back);
+                Button btnOrder_Rate_Ok = dialog.findViewById(R.id.btnOrder_Rate_Ok);
+                Button btnOrder_Rate_Back = dialog.findViewById(R.id.btnOrder_Rate_Back);
+                final EditText idOrder_Msg = dialog.findViewById(R.id.idOrder_Msg);
+                RatingBar idOrder_Rate = dialog.findViewById(R.id.idOrder_Rate);
+                idOrder_Rate.setRating(menu_od_rate[0]);
                 btnOrder_Rate_Ok.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        retrieveMenuOrderRate = new RetrieveMenuOrderRate(Util.Servlet_URL + "MenuOrderRateServlet", String.valueOf(menu_od_rate), menuOrder.getMenu_od_ID());
-//        retrieveMenuOrderRate.execute();
+                        String msg = idOrder_Msg.getText().toString().trim();
+                        retrieveMenuOrderRate = new RetrieveMenuOrderRate(Util.Servlet_URL + "MenuOrderRateServlet", String.valueOf(menu_od_rate[0]), menuOrder.getMenu_od_ID(), msg);
+                        retrieveMenuOrderRate.execute();
+                        Util.showToast(getActivity(),"評價成功");
+                        dialog.dismiss();
+
                     }
                 });
                 btnOrder_Rate_Back.setOnClickListener(new View.OnClickListener() {
@@ -323,7 +340,7 @@ public class MenuOrderFragment extends Fragment {
                 final SharedPreferences preferences = getActivity().getSharedPreferences(Util.PREF_FILE,
                         getActivity().MODE_PRIVATE);
                 final String check = preferences.getString(menuOrder.getMenu_od_ID(), "");
-                if (check != null&&!check.equals("")) {
+                if (check != null && !check.equals("")) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle("是否要前往該套餐之食材訂單？");
                     builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -337,7 +354,7 @@ public class MenuOrderFragment extends Fragment {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             intent.putExtra("chef_or_ID", check);
-                            intent.putExtra("getOne",true);
+                            intent.putExtra("getOne", true);
                             startActivity(intent);
                         }
                     });

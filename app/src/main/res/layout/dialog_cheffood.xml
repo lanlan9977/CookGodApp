@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="550dp"
-    >
+    android:background="@color/colorYellow">
+
 
     <TextView
         android:layout_width="match_parent"
@@ -13,31 +14,110 @@
         android:textColor="@android:color/white"
         android:textSize="16sp" />
 
-    <TextView
-        android:id="@+id/idConfirmFood"
-        android:layout_width="207dp"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="70dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="30dp"
+            android:background="@drawable/text_view_border_black"
+            android:gravity="top"
+            android:padding="2dp"
+            android:text="食材名稱："
+            android:textColor="@color/colorBlack" />
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:background="@drawable/text_view_border_black"
+            android:gravity="top"
+            android:padding="2dp"
+            android:text="數量："
+            android:textColor="@color/colorBlack" />
+
+        <TextView
+            android:layout_width="154dp"
+            android:layout_height="30dp"
+            android:background="@drawable/text_view_border_black"
+            android:gravity="left"
+            android:padding="2dp"
+            android:text="價格："
+            android:textColor="@color/colorBlack" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="348dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="110dp"
-        android:padding="10dp"
-        android:letterSpacing="0.3"
-        android:gravity="center"
-        android:textColor="@color/colorBlack"
-        android:textSize="20dp" />
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/idConfirmFoodQua"
-        android:padding="10dp"
-        android:layout_width="207dp"
-        android:layout_height="348dp"
-        android:layout_alignBottom="@+id/idFoodOrderCancel"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:gravity="center"
-        android:letterSpacing="0.3"
-        android:textColor="@color/colorBlack"
-        android:layout_marginBottom="106dp"
-        android:textSize="20dp"/>
+        <TextView
+            android:id="@+id/idConfirmFood"
+            android:layout_width="150dp"
+            android:layout_height="348dp"
+            android:background="@drawable/text_view_border_black"
+            android:gravity="top"
+            android:letterSpacing="0.3"
+            android:padding="10dp"
+            android:textColor="@color/colorRed"
+            android:textSize="16dp"
+            android:textStyle="italic"/>
+
+        <TextView
+            android:id="@+id/idConfirmFoodQua"
+            android:layout_width="100dp"
+            android:layout_height="348dp"
+            android:textStyle="italic"
+            android:background="@drawable/text_view_border_black"
+            android:gravity="top"
+            android:letterSpacing="0.1"
+
+            android:padding="10dp"
+            android:textColor="@color/colorRed"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/idConfirmFoodStotal"
+            android:layout_width="154dp"
+            android:layout_height="348dp"
+            android:background="@drawable/text_view_border_black"
+            android:gravity="top"
+            android:textStyle="italic"
+            android:letterSpacing="0.1"
+            android:padding="10dp"
+            android:textColor="@color/colorRed"
+            android:textSize="16dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="81dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="260dp"
+            android:layout_height="match_parent"
+            android:gravity="right"
+            android:text="總共："
+            android:textStyle="italic"
+            android:textColor="@color/colorRed"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/idFoodMall_Total"
+            android:layout_width="120dp"
+            android:textStyle="italic"
+            android:layout_height="match_parent"
+            android:textColor="@color/colorRed"
+            android:textSize="18dp" />
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/idFoodOrderCheckOK"
@@ -48,11 +128,11 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="55dp"
         android:layout_marginLeft="55dp"
-        android:background="@color/colorBlack"
         android:layout_marginBottom="4dp"
-        android:textColor="@color/colorWhite"
+        android:background="@color/colorBlack"
+        android:text="送出"
 
-        android:text="送出"/>
+        android:textColor="@color/colorWhite" />
 
     <Button
         android:id="@+id/idFoodOrderCancel"
@@ -63,10 +143,10 @@
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="55dp"
         android:layout_marginRight="55dp"
-        android:background="@color/colorBlack"
         android:layout_marginBottom="4dp"
-        android:textColor="@color/colorWhite"
-        android:text="取消"/>
+        android:background="@color/colorBlack"
+        android:text="取消"
+        android:textColor="@color/colorWhite" />
 
 
 </RelativeLayout>

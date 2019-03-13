@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -57,15 +58,15 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
                 MODE_PRIVATE);
         chef_ID = preferences.getString("chef_ID", "");
-        Intent intent=getIntent();
-        chef_or_ID=intent.getStringExtra("chef_or_ID");
-        Boolean getOne=intent.getBooleanExtra("getOne",false);
+        Intent intent = getIntent();
+        chef_or_ID = intent.getStringExtra("chef_or_ID");
+        Boolean getOne = intent.getBooleanExtra("getOne", false);
 
         if (getOne) {
-            Log.e(TAG,"FFFFFFFF");
+            Log.e(TAG, "FFFFFFFF");
             retrieveChefOrderDetailTask = new RetrieveChefOrderDetailTask(Util.Servlet_URL + "ChefOdDetailByChefServlet", chef_ID, chef_or_ID);
         } else {
-            Log.e(TAG,"KKKKKK");
+            Log.e(TAG, "KKKKKK");
             retrieveChefOrderDetailTask = new RetrieveChefOrderDetailTask(Util.Servlet_URL + "ChefOdDetailByChefServlet", chef_ID, "");
         }
         try {
@@ -108,6 +109,7 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
             List<ChefOdDetailVO> chefOdDetailList;
             List<FoodVO> foodList;
             LinearLayout foodHeaderLayout, foodBottomLayout;
+            Button btnOrderDetail;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -122,6 +124,7 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
                 foodBottomLayout = itemView.findViewById(R.id.foodBottomLayout);
                 foodHeaderLayout = itemView.findViewById(R.id.foodHeaderLayout);
                 idTotal = itemView.findViewById(R.id.idTotal);
+                btnOrderDetail=itemView.findViewById(R.id.btnOrderDetail);
 //                idChefOrder_Rcv=itemView.findViewById(R.id.idChefOrder_Rcv);
 //                idChefOrder_End=itemView.findViewById(R.id.idChefOrder_End);
             }
@@ -152,11 +155,31 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
                 total += chefOdDetailVO.getChef_od_stotal();
             }
 
+            String status = chefOrderVO.getChef_or_status();
+            String status_string="";
+            switch (status) {
+                case "o0":
+                    status_string="未付款";
+                    break;
+                case "o1":
+                    status_string="未出貨";
+                    break;
+                case "02":
+                    status_string="已出貨";
+                    break;
+                case "o3":
+                    status_string="送達";
+                    break;
+                case "o4":
+                    status_string="訂單完成";
+                    break;
+            }
+
 
             viewHolder.idChefOrder_ID.setText("主廚食材訂單編號：" + chefOrderVO.getChef_or_ID());
-            viewHolder.idChefOrder_Status.setText("訂單狀態：" + chefOrderVO.getChef_or_status());
+            viewHolder.idChefOrder_Status.setText("訂單狀態：" +status_string);
             viewHolder.idChefOrder_Name.setText("收件人姓名：" + chefOrderVO.getChef_or_name());
-            viewHolder.idChefOrder_Start.setText("下單日期" + sdf.format(chefOrderVO.getChef_or_start()));
+            viewHolder.idChefOrder_Start.setText("下單日期：" + sdf.format(chefOrderVO.getChef_or_start()));
             viewHolder.idChefOrder_Tel.setText("收件人電話：" + chefOrderVO.getChef_or_tel());
             viewHolder.idChefOrder_Addr.setText("收件人地址：" + chefOrderVO.getChef_or_addr());
             viewHolder.idChefOrder_Send.setText("出貨日期：" + sdf.format(chefOrderVO.getChef_or_send()));
@@ -168,10 +191,11 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
 //                viewHolder.idChefOrder_End.setText(sdf.format(chefOrderVO.getChef_or_end()));
 //            }
 
-            viewHolder.idChefOrder_RelativeLayout.setOnClickListener(new View.OnClickListener() {
+            viewHolder.btnOrderDetail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    RecyclerView idChefOrderDetailListView = v.findViewById(R.id.idChefOrderDetailListView);
+                    viewHolder.btnOrderDetail.setVisibility(View.GONE);
+                    RecyclerView idChefOrderDetailListView = findViewById(R.id.idChefOrderDetailListView);
                     final LinearLayoutManager layoutManager = new LinearLayoutManager(ChefOrderDetailActivity.this);
                     Log.e(TAG, String.valueOf("" + viewHolder.chefOdDetailList == null));
                     if (viewHolder.chefOdDetailList != null && viewHolder.chefOdDetailList.size() > 0) {
@@ -179,6 +203,10 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
                         viewHolder.foodBottomLayout.setVisibility(View.VISIBLE);
                         idChefOrderDetailListView.setLayoutManager(layoutManager);
                         idChefOrderDetailListView.setAdapter(new ChefOrderDetailListAdapter(ChefOrderDetailActivity.this, viewHolder.chefOdDetailList, viewHolder.foodList));
+//                        final Animation animAnticipateOvershoot = AnimationUtils.loadAnimation(ChefOrderDetailActivity.this, R.anim.set_up);
+//                        idChefOrderDetailListView.setAnimation(animAnticipateOvershoot);
+//                        viewHolder.foodHeaderLayout.setAnimation(animAnticipateOvershoot);
+//                        viewHolder.foodBottomLayout.setAnimation(animAnticipateOvershoot);
                     }
                 }
 
@@ -221,8 +249,6 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
                         viewHolder.idFood_Name.setText(foodVO.getFood_name());
                         viewHolder.idChefOrderDetail_Qty.setText(chefOdDetailVO.getChef_od_qty().toString());
                         viewHolder.idChefOrderDetail_Stotal.setText("＄" + chefOdDetailVO.getChef_od_stotal().toString());
-
-                        Log.e(TAG, "＄" + chefOdDetailVO.getChef_od_stotal().toString());
 
                     }
 

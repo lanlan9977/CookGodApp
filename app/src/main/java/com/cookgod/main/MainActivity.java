@@ -106,8 +106,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     };
 
 
-
-
     private void showFragment(MenuItem item) {
         FragmentTransaction transaction = manager.beginTransaction();
         hideFragment(transaction);
@@ -122,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         transaction.commit();
     }
+
 
     private void hideFragment(FragmentTransaction fragmentTransaction) {
         if (broadcastFragment != null) {
@@ -139,11 +138,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         isChef = preferences.getBoolean("isChef", false);
         if (login) {
 
-            Util.connectServer(preferences.getString("cust_ID",""), this);
+            Util.connectServer(preferences.getString("cust_ID", ""), this);
             broadcastManager = LocalBroadcastManager.getInstance(MainActivity.this);
 
             idCust_name.setText(preferences.getString("cust_name", ""));
-            retrieveCustTask = new RetrieveCustTask(Util.Servlet_URL+"CustServlet", preferences.getString("cust_acc", ""), preferences.getString("cust_pwd", ""));
+            retrieveCustTask = new RetrieveCustTask(Util.Servlet_URL + "CustServlet", preferences.getString("cust_acc", ""), preferences.getString("cust_pwd", ""));
             try {
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
                 String jsonIn = retrieveCustTask.execute().get();

@@ -2,22 +2,32 @@ package com.cookgod.broadcast;
 
 
 import android.content.Context;
+import android.location.Location;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
+import android.view.View;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.google.maps.DirectionsApi;
+import com.google.maps.GeoApiContext;
+import com.google.maps.model.DirectionsResult;
+import com.google.maps.model.TravelMode;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.handshake.ServerHandshake;
+import org.joda.time.DateTime;
 
+import java.lang.reflect.Type;
 import java.net.URI;
-import java.nio.ByteBuffer;
+import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class BroadcastSocket extends WebSocketClient {
     private static final String TAG = "BroadcastSocket";
@@ -28,7 +38,7 @@ public class BroadcastSocket extends WebSocketClient {
         // Draft_17是連接協議，就是標準的RFC 6455（JSR356）
         super(serverURI, new Draft_17());
         this.context = context;
-        gson = new Gson();
+        gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
     }
 
     @Override
@@ -44,8 +54,40 @@ public class BroadcastSocket extends WebSocketClient {
     @Override
     public void onMessage(String message) {
         Log.e(TAG, "onMessage: " + message);
-        BroadcastVO broadcastVO=gson.fromJson(message, BroadcastVO.class);
-        showNotification(broadcastVO);
+        String con = "";
+        Type stringType = new TypeToken<List<String>>() {
+        }.getType();
+        List<String> stringList = gson.fromJson(message, stringType);
+        String type = stringList.get(0);
+        Log.e(TAG, type);
+        if ("menu_order".equals(type)) {
+            BroadcastVO broadcastVO = gson.fromJson(stringList.get(1), BroadcastVO.class);
+            con = broadcastVO.getBroadcast_con();
+            Log.e(TAG, con);
+        } else if ("location".equals(type)) {
+            String stringLocation = stringList.get(2);
+            Location location = gson.fromJson(stringLocation, Location.class);
+            DateTime now = new DateTime();
+            DirectionsResult result = null;
+            java.text.DecimalFormat df =new   java.text.DecimalFormat("#.000000");
+            String latitude=df.format(location.getLatitude());
+            String stringDestination = ""+location.getLatitude() + "," +location.getLongitude();
+//            String stringDestination = "32.045333,118.885803";
+            Log.e(TAG, stringDestination);
+            try {
+                result = DirectionsApi.newRequest(getGeoContext()).mode(TravelMode.DRIVING).origin("32.045333,118.885803").destination("32.045333,118.885803").departureTime(now).await();
+            } catch (Exception e) {
+
+                Log.e(TAG, e.toString());
+            }
+           con = getEndLocationTitle(result);
+
+
+        } else {
+            Log.e(TAG, "");
+        }
+
+        showNotification(con);
     }
 
     @Override
@@ -61,11 +103,11 @@ public class BroadcastSocket extends WebSocketClient {
         Log.d(TAG, "onError: exception = " + ex.toString());
     }
 
-    private void showNotification(BroadcastVO broadcastVO) {
-        Log.e(TAG, "onMessage: " + broadcastVO.getBroadcast_con());
+    private void showNotification(String con) {
+        Log.e(TAG, con);
         Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notification = new NotificationCompat.Builder(context)
-                .setContentTitle(broadcastVO.getBroadcast_con())
+                .setContentTitle(con)
                 .setSmallIcon(android.R.drawable.ic_menu_info_details)
                 .setAutoCancel(true)
 //                .setContentIntent(pendingIntent)
@@ -75,5 +117,29 @@ public class BroadcastSocket extends WebSocketClient {
         NotificationManagerCompat notificationManager =
                 NotificationManagerCompat.from(context);
         notificationManager.notify(0, notification.build());
+    }
+
+
+    public void TEST(View view) {
+        DateTime now = new DateTime();
+        DirectionsResult result = null;
+        try {
+            result = DirectionsApi.newRequest(getGeoContext()).mode(TravelMode.DRIVING).origin("32.045333,118.885803").destination("32.045333,118.885803").departureTime(now).await();
+        } catch (Exception e) {
+            Log.e(TAG, e.toString());
+        }
+        String url = getEndLocationTitle(result);
+        Log.e(TAG, "" + url);
+    }
+
+    private GeoApiContext getGeoContext() {
+        GeoApiContext geoApiContext = new GeoApiContext();
+        return geoApiContext.setQueryRateLimit(3).setApiKey("AIzaSyBSifSVz-yV3KYbzJ75s7MF8hREAz1FkjQ").setConnectTimeout(1, TimeUnit.SECONDS).setReadTimeout(1, TimeUnit.SECONDS).setWriteTimeout(1, TimeUnit.SECONDS);
+    }
+
+
+    private String getEndLocationTitle(DirectionsResult results) {
+        return "Time :" + results.routes[0].legs[0].duration.humanReadable + " Distance :" + results.routes[0].legs[0].distance.humanReadable;
+
     }
 }

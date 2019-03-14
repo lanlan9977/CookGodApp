@@ -10,18 +10,11 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- GPS定位 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- 網路方式定位 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-
-    <!-- 開啟外部相機功能 -->
-    <!-- <uses-feature android:name="android.hardware.Camera"/> -->
-    <!-- <meta-data -->
-    <!-- android:name="com.google.android." -->
-    <!-- android:value="@integer/google_play_services_version" /> -->
-    <!-- <meta-data -->
-    <!-- android:name="com.google.android.geo.API_KEY" -->
-    <!-- android:value="AIzaSyAL8zuUrISDl-2x14vLtz3LQqkHiXUFEVo" /> -->
-    <!-- <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/> -->
-    <!-- <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/> -->
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -29,6 +22,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBSifSVz-yV3KYbzJ75s7MF8hREAz1FkjQ" />
         <activity
             android:name="com.cookgod.main.WelcomeActivity"
             android:label="@string/app_name">

@@ -6,6 +6,26 @@
     android:layout_height="match_parent"
     tools:context=".other.CustomerServiceActivity">
 
+<Button
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="傳址"
+    android:onClick="FUCK"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="126dp"
+        android:text="距離"
+        android:onClick="FUCKYOU" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="278dp"
+        android:text="TEST"
+        android:onClick="TEST"/>
 
 </RelativeLayout>

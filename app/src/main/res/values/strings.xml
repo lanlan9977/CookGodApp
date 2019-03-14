@@ -91,4 +91,9 @@
         <item>9</item>
         <item>10</item>
     </string-array>
+
+
+    <string name="dateFormat" translatable="false">EE, dd MMM</string>
+    <string name="timeFormat" translatable="false">EE, dd MMM HH:mm</string>
+    <string name="period" translatable="false">%1$s – %2$s</string>
 </resources>

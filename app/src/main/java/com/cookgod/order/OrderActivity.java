@@ -1,13 +1,18 @@
 package com.cookgod.order;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -43,6 +48,9 @@ public class OrderActivity extends AppCompatActivity {
     private RetrieveOrderTask retrieveOrderTask;
     private RetrieveOrderQRCode retrieveOrderQRCode;
     private Boolean isChef;
+    private LocationManager locationManager;
+    private String cust_ID, commadStr;
+    private static final int MY_PERMISSION_ACCESS_COARSE_LOCATION = 11;
 
     public List<MenuOrderVO> getMenuOrderList() {
         return menuOrderList;
@@ -62,6 +70,11 @@ public class OrderActivity extends AppCompatActivity {
 
     private int REQUEST_CHER_ORDER = 1;
     private int REQUEST_ORDER_QRCODE = 0;
+
+
+    public void updataCist_ID(String cust_ID) {
+        this.cust_ID = cust_ID;
+    }
 
 
     @Override
@@ -118,6 +131,7 @@ public class OrderActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
+        commadStr = LocationManager.GPS_PROVIDER;
         findViews();
     }
 
@@ -225,11 +239,27 @@ public class OrderActivity extends AppCompatActivity {
                 scanQRCode();
                 break;
             case R.id.idOrderQRCode:
-                Toast.makeText(OrderActivity.this, getResources().getText(R.string.stringOrderQRCode), Toast.LENGTH_SHORT).show();
+                Toast.makeText(OrderActivity.this, cust_ID, Toast.LENGTH_SHORT).show();
+
+                locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(OrderActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSION_ACCESS_COARSE_LOCATION);
+                }
+                Location location = locationManager.getLastKnownLocation(commadStr);
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+                List<String> list = new ArrayList<>();
+                list.add("location");
+                list.add("C00009");
+                String stringLocation = gson.toJson(location);
+                list.add(stringLocation);
+                String message = new Gson().toJson(list);
+                Util.broadcastSocket.send(message);
+                Util.showToast(OrderActivity.this,String.valueOf(location.getLongitude()));
                 break;
         }
         return false;
     }
+
 
     private void scanQRCode() {
         Intent intent = new Intent("com.google.zxing.client.android.SCAN");

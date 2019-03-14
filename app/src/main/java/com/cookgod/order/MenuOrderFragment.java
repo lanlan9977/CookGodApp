@@ -39,6 +39,7 @@ import com.google.zxing.WriterException;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.WINDOW_SERVICE;
@@ -52,11 +53,13 @@ public class MenuOrderFragment extends Fragment {
     private Boolean isOnClick = true;
     private Button btnMenuOrder, btnMenu_od_rate, btnMenu_od_Food_Order, btnCheckChefFoodOrder, idMenu_od_status;
     private RatingBar idMenu_od_ratinggbar;
-    private String menu_ID;
+    private String menu_ID,cust_ID;
     private ImageView ivCode;
     private Boolean isChef;
     private BottomSheetBehavior bottomSheetBehavior;
     private Dialog dialog;
+
+
 
 
     @Override
@@ -64,6 +67,7 @@ public class MenuOrderFragment extends Fragment {
         super.onAttach(context);
         menuOrderList = ((OrderActivity) context).getMenuOrderList();
         isChef = ((OrderActivity) context).getIsChef();
+        ((OrderActivity) context).updataCist_ID(cust_ID);
     }
 
     @Override
@@ -134,6 +138,7 @@ public class MenuOrderFragment extends Fragment {
         public void onBindViewHolder(ViewHolder viewHolder, final int position) {
             if (!menuOrderList.isEmpty()) {
                 MenuOrderVO menuOrderVO = menuOrderList.get(position);
+                cust_ID=menuOrderVO.getCust_ID();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy 年 MM 月 dd 日 HH : mm ");
                 viewHolder.idMenu_or_id.setText("訂單編號：" + menuOrderVO.getMenu_od_ID());
                 viewHolder.idMenu_or_appt.setText("預約日期：" + sdf.format(menuOrderVO.getMenu_od_book()));
@@ -375,6 +380,7 @@ public class MenuOrderFragment extends Fragment {
                 menuOrderVO.setCust_ID(menuOrder.getCust_ID());
                 menuOrderVO.setMenu_od_ID(menuOrder.getMenu_od_ID());
                 builder.setTitle("請審核訂單");
+                final List<String> list=new ArrayList<>();
                 builder.setPositiveButton("審核通過", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -382,7 +388,10 @@ public class MenuOrderFragment extends Fragment {
                         retrieveMenuOrderStatus = new RetrieveMenuOrderStatus(Util.Servlet_URL + "MenuOrderServlet", "g1", menuOrder.getMenu_od_ID());
                         retrieveMenuOrderStatus.execute();
                         menuOrderVO.setMenu_od_status("g1");
-                        String message = new Gson().toJson(menuOrderVO);
+                        String menu_order_json=new Gson().toJson(menuOrderVO);
+                        list.add("menu_order");
+                        list.add(menu_order_json);
+                        String message = new Gson().toJson(list);
                         Util.broadcastSocket.send(message);
                         Util.showToast(getActivity(), "審核完畢");
                     }
@@ -394,7 +403,10 @@ public class MenuOrderFragment extends Fragment {
                         retrieveMenuOrderStatus = new RetrieveMenuOrderStatus(Util.Servlet_URL + "MenuOrderServlet", "g2", menuOrder.getMenu_od_ID());
                         retrieveMenuOrderStatus.execute();
                         menuOrderVO.setMenu_od_status("g2");
-                        String message = new Gson().toJson(menuOrderVO);
+                        String menu_order_json=new Gson().toJson(menuOrderVO);
+                        list.add("menu_order");
+                        list.add(menu_order_json);
+                        String message = new Gson().toJson(list);
                         Util.broadcastSocket.send(message);
                         Util.showToast(getActivity(), "審核完畢");
                     }

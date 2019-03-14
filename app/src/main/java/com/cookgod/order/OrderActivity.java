@@ -16,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -29,13 +30,17 @@ import com.cookgod.main.Page;
 import com.cookgod.main.Util;
 import com.cookgod.task.RetrieveOrderQRCode;
 import com.cookgod.task.RetrieveOrderTask;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationResult;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 //(訂單專區)
@@ -50,6 +55,7 @@ public class OrderActivity extends AppCompatActivity {
     private Boolean isChef;
     private LocationManager locationManager;
     private String cust_ID, commadStr;
+    private static final int MY_REQUEST_CODE = 0;
     private static final int MY_PERMISSION_ACCESS_COARSE_LOCATION = 11;
 
     public List<MenuOrderVO> getMenuOrderList() {
@@ -141,6 +147,7 @@ public class OrderActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        askPermissions();
         SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
                 MODE_PRIVATE);
         isChef = preferences.getBoolean("isChef", false);
@@ -240,7 +247,6 @@ public class OrderActivity extends AppCompatActivity {
                 break;
             case R.id.idOrderQRCode:
                 Toast.makeText(OrderActivity.this, cust_ID, Toast.LENGTH_SHORT).show();
-
                 locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(OrderActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSION_ACCESS_COARSE_LOCATION);
@@ -254,10 +260,32 @@ public class OrderActivity extends AppCompatActivity {
                 list.add(stringLocation);
                 String message = new Gson().toJson(list);
                 Util.broadcastSocket.send(message);
-                Util.showToast(OrderActivity.this,String.valueOf(location.getLongitude()));
+
+//                Util.showToast(OrderActivity.this,String.valueOf(location.getLongitude()));
                 break;
         }
         return false;
+    }
+
+    private void askPermissions() {
+        String[] permissions = {
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
+        };
+
+        Set<String> permissionsRequest = new HashSet<>();
+        for (String permission : permissions) {
+            int result = ContextCompat.checkSelfPermission(this, permission);
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                permissionsRequest.add(permission);
+            }
+        }
+
+        if (!permissionsRequest.isEmpty()) {
+            ActivityCompat.requestPermissions(this,
+                    permissionsRequest.toArray(new String[permissionsRequest.size()]),
+                    MY_REQUEST_CODE);
+        }
     }
 
 

@@ -85,18 +85,11 @@
             android:name="com.cookgod.chef.ChefOrderDetailActivity"
             android:label="@string/stringChefOrderDetail"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
-        <!--<service-->
-            <!--android:name=".other.MyFirebaseInstanceIdService">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>-->
-            <!--</intent-filter>-->
-        <!--</service>-->
-        <!--<service-->
-            <!--android:name=".other.MyFirebaseInstanceIdService">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.google.firebase.MESSAGING_EVENT"/>-->
-            <!--</intent-filter>-->
-        <!--</service>-->
+        <activity
+            android:name="com.cookgod.broadcast.BroadcastDetailActivity"
+            android:label="推播訊息"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+
         <service android:name=".other.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

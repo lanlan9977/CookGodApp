@@ -5,7 +5,7 @@
     tools:context=".main.MainActivity">
     <item
         android:id="@+id/idOrderQRCode"
-        android:icon="@drawable/ic_qr_code"
+        android:icon="@drawable/ic_positioning"
         android:title="QRCode"
         app:showAsAction="always" />
     <item

@@ -5,73 +5,96 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-
+    android:background="@color/colorBlack"
     tools:context=".cust.LoginActivity">
+    <TextView
+        android:layout_marginTop="30dp"
+        android:background="@drawable/bkd_logohandler"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content" />
 
-    <android.support.design.widget.TextInputLayout
-        android:paddingTop="100dp"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
 
-        <AutoCompleteTextView
-            android:id="@+id/idCust_Acc"
+        android:padding="20dp">
+
+        <android.support.design.widget.TextInputLayout
+
+            android:layout_width="match_parent"
+            android:layout_marginTop="20dp"
+            android:background="@color/colorWhite"
+            android:layout_height="wrap_content">
+
+            <AutoCompleteTextView
+                android:id="@+id/idCust_Acc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/stringKeyId"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:background="@color/colorWhite"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/idCust_Pwd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/stringKeyPassword"
+                android:inputType="textPassword"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/email_sign_in_button"
+            style="?android:textAppearanceSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/stringKeyId"
-            android:singleLine="true" />
-    </android.support.design.widget.TextInputLayout>
+            android:layout_marginTop="16dp"
+            android:onClick="onLogInClick"
+            android:background="@drawable/buttin_rounde"
+            android:text="@string/stringLogin"
+            android:textStyle="bold" />
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <EditText
-            android:id="@+id/idCust_Pwd"
+        <Button
+            android:id="@+id/sign_in_button"
+            style="?android:textAppearanceSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/stringKeyPassword"
-            android:inputType="textPassword"
-            android:singleLine="true" />
-    </android.support.design.widget.TextInputLayout>
 
-    <Button
-        android:id="@+id/email_sign_in_button"
-        style="?android:textAppearanceSmall"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:onClick="onLogInClick"
-        android:text="@string/stringLogin"
-        android:textStyle="bold" />
+            android:layout_marginTop="16dp"
+            android:background="@drawable/buttin_rounde"
+            android:text="註冊新會員"
+            android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/sign_in_button"
-        style="?android:textAppearanceSmall"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="註冊新會員"
-        android:textStyle="bold" />
+        <Button
+            android:id="@+id/fast_button"
+            style="?android:textAppearanceSmall"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/buttin_rounde"
+            android:layout_marginTop="16dp"
+            android:onClick="onSimpleInputClick"
+            android:text="顧客"
+            android:textStyle="bold"
+            tools:ignore="OnClick" />
 
-    <Button
-        android:id="@+id/fast_button"
-        style="?android:textAppearanceSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:onClick="onSimpleInputClick"
-        android:text="顧客"
-        android:textStyle="bold"
-        tools:ignore="OnClick" />
-    <Button
-        android:id="@+id/fast_chefbutton"
-        style="?android:textAppearanceSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:onClick="onSimpleInputChefClick"
-        android:text="主廚"
-        android:textStyle="bold"
-        tools:ignore="OnClick" />
+        <Button
+            android:id="@+id/fast_chefbutton"
+            style="?android:textAppearanceSmall"
+            android:layout_width="40dp"
+            android:background="@drawable/buttin_rounde"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:onClick="onSimpleInputChefClick"
+            android:text="主廚"
+            android:textStyle="bold"
+            tools:ignore="OnClick" />
+    </LinearLayout>
 
 </LinearLayout>

@@ -1,30 +1,39 @@
 package com.cookgod.broadcast;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.cookgod.R;
+import com.cookgod.main.Util;
 import com.cookgod.other.DateFormatBack;
 import com.cookgod.main.MainActivity;
+import com.cookgod.task.RetrieveBroadcastTask;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 public class BroadcastFragment extends Fragment {
     private final static String TAG = "MainActivity";
-    private RecyclerView broadcastView,broadcastReadView;
+    private RecyclerView broadcastView, broadcastReadView;
     private List<BroadcastVO> broadcastList;
     private List<BroadcastVO> broadcastNoReadList;
     private ScrollView idBroadcastScrollView;
+    private RetrieveBroadcastTask retrieveBroadcastTask;
+    private BroadcastListAdapter broadcasNoReadtListAdapter;
+    private BroadcastListAdapter broadcastListAdapter;
 
 
     @Override
@@ -34,34 +43,44 @@ public class BroadcastFragment extends Fragment {
         isRead();
     }
 
+
     private void isRead() {
-        broadcastNoReadList=new  ArrayList<>();
-        for(int i=0;i<broadcastList.size();i++){
-            if("B0".equals(broadcastList.get(i).getBroadcast_status())){
+        broadcastNoReadList = new ArrayList<>();
+        for (int i = 0; i < broadcastList.size(); i++) {
+            if ("B0".equals(broadcastList.get(i).getBroadcast_status())) {
                 broadcastNoReadList.add(broadcastList.get(i));
                 broadcastList.remove(i);
                 i--;
-            }else{
+            } else {
 
             }
 
         }
     }
 
+    public void refreshData() {
+        broadcasNoReadtListAdapter.setData();
+        broadcastListAdapter.setData();
+        Log.e(TAG,"KKKKKKKKKKKKKKKKKK");
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_broadcast, container, false);
-        idBroadcastScrollView=view.findViewById(R.id.idBroadcastScrollView);
+        broadcasNoReadtListAdapter=new BroadcastListAdapter(getActivity(), broadcastNoReadList);
+        broadcastListAdapter=new BroadcastListAdapter(getActivity(), broadcastList);
+        idBroadcastScrollView = view.findViewById(R.id.idBroadcastScrollView);
         idBroadcastScrollView.setFillViewport(true);
         broadcastView = view.findViewById(R.id.idBroadcastView);
         broadcastView.setLayoutManager(new LinearLayoutManager(getActivity()));
         broadcastView.setNestedScrollingEnabled(false);
 
-        broadcastView.setAdapter(new BroadcastListAdapter(getActivity(), broadcastNoReadList));
-        broadcastReadView=view.findViewById(R.id.idBroadcastReadView);
+        broadcastView.setAdapter(broadcasNoReadtListAdapter);
+        broadcastReadView = view.findViewById(R.id.idBroadcastReadView);
         broadcastReadView.setLayoutManager(new LinearLayoutManager(getActivity()));
         broadcastReadView.setNestedScrollingEnabled(false);
-        broadcastReadView.setAdapter(new BroadcastListAdapter(getActivity(),broadcastList));
+        broadcastReadView.setAdapter(broadcastListAdapter);
 
         idBroadcastScrollView.post(new Runnable() {
             @Override
@@ -78,20 +97,25 @@ public class BroadcastFragment extends Fragment {
         private List<BroadcastVO> broadcastList;
         private LayoutInflater layoutInflater;
 
+
         public BroadcastListAdapter(Context context, List<BroadcastVO> broadcastList) {
             this.context = context;
             layoutInflater = LayoutInflater.from(context);
             this.broadcastList = broadcastList;
 
+
         }
 
+
         class ViewHolder extends RecyclerView.ViewHolder {
-            TextView idBoradcast_con,idBoradcast_start;
+            TextView idBoradcast_con, idBoradcast_start;
+            LinearLayout idBoradcast_Layout;
 
             public ViewHolder(View itemView) {
                 super(itemView);
                 idBoradcast_con = itemView.findViewById(R.id.idBoradcast_con);
-                idBoradcast_start=itemView.findViewById(R.id.idBoradcast_start);
+                idBoradcast_start = itemView.findViewById(R.id.idBoradcast_start);
+                idBoradcast_Layout = itemView.findViewById(R.id.idBoradcast_Layout);
             }
         }
 
@@ -106,12 +130,30 @@ public class BroadcastFragment extends Fragment {
             final BroadcastVO broadcastVO = broadcastList.get(i);
             viewHolder.idBoradcast_con.setText(broadcastVO.getBroadcast_con());
             viewHolder.idBoradcast_start.setText(new DateFormatBack().format(broadcastVO.getBroadcast_start().toString()));
+            viewHolder.idBoradcast_Layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        retrieveBroadcastTask = (RetrieveBroadcastTask) new RetrieveBroadcastTask(Util.Servlet_URL + "BroadcastServlet", broadcastVO.getBroadcast_ID()).execute();
+                    } catch (Exception e) {
+                        Log.e(TAG, e.toString());
+                    }
+                    Intent intent = new Intent(getContext(), BroadcastDetailActivity.class);
+                    intent.putExtra("msg", broadcastVO.getBroadcast_con());
+                    startActivity(intent);
+                }
+            });
         }
 
         @Override
         public int getItemCount() {
             return broadcastList.size();
         }
+
+        public void setData() {
+            notifyDataSetChanged();
+        }
+
 
     }
 

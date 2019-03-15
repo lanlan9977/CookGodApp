@@ -130,6 +130,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (broadcastFragment != null) {
+            Log.e(TAG,"FFFFFFFFFFFFFFFFF");
+            broadcastFragment.refreshData();
+        } else {
+        }
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,

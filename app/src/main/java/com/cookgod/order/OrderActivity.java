@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.cookgod.R;
 import com.cookgod.main.Page;
 import com.cookgod.main.Util;
+import com.cookgod.task.RetrieveMenuOrderStatus;
 import com.cookgod.task.RetrieveOrderQRCode;
 import com.cookgod.task.RetrieveOrderTask;
 import com.google.android.gms.location.LocationCallback;
@@ -248,20 +249,40 @@ public class OrderActivity extends AppCompatActivity {
             case R.id.idOrderQRCode:
                 Toast.makeText(OrderActivity.this, cust_ID, Toast.LENGTH_SHORT).show();
                 locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(OrderActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSION_ACCESS_COARSE_LOCATION);
-                }
-                Location location = locationManager.getLastKnownLocation(commadStr);
-                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-                List<String> list = new ArrayList<>();
-                list.add("location");
-                list.add("C00009");
-                String stringLocation = gson.toJson(location);
-                list.add(stringLocation);
-                String message = new Gson().toJson(list);
-                Util.broadcastSocket.send(message);
 
-//                Util.showToast(OrderActivity.this,String.valueOf(location.getLongitude()));
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(OrderActivity.this);
+                builder.setTitle("是否發送位置給顧客");
+                builder.setPositiveButton("發送", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (ActivityCompat.checkSelfPermission(OrderActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(OrderActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(OrderActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSION_ACCESS_COARSE_LOCATION);
+                        }
+                        Location location = locationManager.getLastKnownLocation(commadStr);
+                        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+                        List<String> list = new ArrayList<>();
+                        list.add("location");
+                        list.add("C00009");
+                        String stringLocation = gson.toJson(location);
+                        list.add(stringLocation);
+                        String message = new Gson().toJson(list);
+                        Util.broadcastSocket.send(message);
+                        dialog.dismiss();
+                        Util.showToast(OrderActivity.this, "發送完畢");
+                    }
+                });
+                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+
+                });
+                builder.setCancelable(true);
+                AlertDialog dialog = builder.create();
+                dialog.setCanceledOnTouchOutside(true);
+                dialog.show();
                 break;
         }
         return false;

@@ -2,7 +2,10 @@ package com.cookgod.broadcast;
 
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -39,6 +42,9 @@ public class BroadcastSocket extends WebSocketClient {
     private static final String TAG = "BroadcastSocket";
     private Gson gson;
     private Context context;
+    private LocationManager locationManager;
+    private static final int MY_PERMISSION_ACCESS_COARSE_LOCATION = 11;
+    private String commadStr;
 
 
     public BroadcastSocket(URI serverURI, Context context) {
@@ -46,6 +52,7 @@ public class BroadcastSocket extends WebSocketClient {
         super(serverURI, new Draft_17());
         this.context = context;
         gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+
     }
 
     @Override
@@ -60,6 +67,7 @@ public class BroadcastSocket extends WebSocketClient {
 
     @Override
     public void onMessage(String message) {
+
         Log.e(TAG, "onMessage: " + message);
         String con = "";
         Type stringType = new TypeToken<List<String>>() {
@@ -73,7 +81,24 @@ public class BroadcastSocket extends WebSocketClient {
             Log.e(TAG, con);
         } else if ("location".equals(type)) {
             String stringLocation = stringList.get(2);
-            con="主廚已傳送位置訊息";
+            Location location = gson.fromJson(stringLocation, Location.class);
+            DateTime now = new DateTime();
+            DirectionsResult result = null;
+            commadStr = LocationManager.GPS_PROVIDER;
+            locationManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
+            String stringDestination = "" + location.getLatitude() + "," + location.getLongitude();
+//            Log.e(TAG, stringDestination);
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSION_ACCESS_COARSE_LOCATION);
+            }
+            Location myLocation = locationManager.getLastKnownLocation(commadStr);
+            String stringMyDestination = "" + myLocation.getLatitude() + "," + myLocation.getLongitude();
+            try {
+                result = DirectionsApi.newRequest(getGeoContext()).mode(TravelMode.DRIVING).origin(stringMyDestination).destination(stringDestination).departureTime(now).await();
+            } catch (Exception e) {
+                Log.e(TAG, e.toString());
+            }
+            con = getEndLocationTitle(result);
 
         } else {
             Log.e(TAG, "");
@@ -87,28 +112,44 @@ public class BroadcastSocket extends WebSocketClient {
         String text = String.format(Locale.getDefault(),
                 "code = %d, reason = %s, remote = %b",
                 code, reason, remote);
-        Log.d(TAG, "onClose: " + text);
+        Log.e(TAG, "onClose: " + text);
     }
 
     @Override
     public void onError(Exception ex) {
-        Log.d(TAG, "onError: exception = " + ex.toString());
+        Log.e(TAG, "onError: exception = " + ex.toString());
     }
 
     private void showNotification(String con) {
+        Intent intent = new Intent(context, BroadcastDetailActivity.class);
+        intent.putExtra("msg",con);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context
+                , 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         Log.e(TAG, con);
         Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notification = new NotificationCompat.Builder(context)
                 .setContentTitle(con)
                 .setSmallIcon(android.R.drawable.ic_menu_info_details)
                 .setAutoCancel(true)
-//                .setContentIntent(pendingIntent)
+                .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setSound(soundUri)
                 .setDefaults(NotificationCompat.DEFAULT_VIBRATE);
         NotificationManagerCompat notificationManager =
                 NotificationManagerCompat.from(context);
         notificationManager.notify(0, notification.build());
+    }
+
+
+    private String getEndLocationTitle(DirectionsResult results) {
+        return "主廚預計 :" + results.routes[0].legs[0].duration.humanReadable + "到府";
+//                + " Distance :" + results.routes[0].legs[0].distance.humanReadable;
+
+    }
+
+    private GeoApiContext getGeoContext() {
+        GeoApiContext geoApiContext = new GeoApiContext();
+        return geoApiContext.setQueryRateLimit(3).setApiKey("AIzaSyBSifSVz-yV3KYbzJ75s7MF8hREAz1FkjQ").setConnectTimeout(1, TimeUnit.SECONDS).setReadTimeout(1, TimeUnit.SECONDS).setWriteTimeout(1, TimeUnit.SECONDS);
     }
 
 

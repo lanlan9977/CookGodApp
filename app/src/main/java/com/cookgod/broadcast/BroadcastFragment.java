@@ -15,14 +15,13 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.cookgod.R;
+import com.cookgod.main.MainActivity;
 import com.cookgod.main.Util;
 import com.cookgod.other.DateFormatBack;
-import com.cookgod.main.MainActivity;
 import com.cookgod.task.RetrieveBroadcastTask;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 
 public class BroadcastFragment extends Fragment {
@@ -31,7 +30,6 @@ public class BroadcastFragment extends Fragment {
     private List<BroadcastVO> broadcastList;
     private List<BroadcastVO> broadcastNoReadList;
     private ScrollView idBroadcastScrollView;
-    private RetrieveBroadcastTask retrieveBroadcastTask;
     private BroadcastListAdapter broadcasNoReadtListAdapter;
     private BroadcastListAdapter broadcastListAdapter;
 
@@ -43,7 +41,6 @@ public class BroadcastFragment extends Fragment {
         isRead();
     }
 
-
     private void isRead() {
         broadcastNoReadList = new ArrayList<>();
         for (int i = 0; i < broadcastList.size(); i++) {
@@ -51,31 +48,21 @@ public class BroadcastFragment extends Fragment {
                 broadcastNoReadList.add(broadcastList.get(i));
                 broadcastList.remove(i);
                 i--;
-            } else {
-
             }
-
         }
-    }
-
-    public void refreshData() {
-        broadcasNoReadtListAdapter.setData();
-        broadcastListAdapter.setData();
-        Log.e(TAG,"KKKKKKKKKKKKKKKKKK");
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_broadcast, container, false);
-        broadcasNoReadtListAdapter=new BroadcastListAdapter(getActivity(), broadcastNoReadList);
-        broadcastListAdapter=new BroadcastListAdapter(getActivity(), broadcastList);
+        broadcasNoReadtListAdapter = new BroadcastListAdapter(getActivity(), broadcastNoReadList);
+        broadcastListAdapter = new BroadcastListAdapter(getActivity(), broadcastList);
         idBroadcastScrollView = view.findViewById(R.id.idBroadcastScrollView);
         idBroadcastScrollView.setFillViewport(true);
         broadcastView = view.findViewById(R.id.idBroadcastView);
         broadcastView.setLayoutManager(new LinearLayoutManager(getActivity()));
         broadcastView.setNestedScrollingEnabled(false);
-
         broadcastView.setAdapter(broadcasNoReadtListAdapter);
         broadcastReadView = view.findViewById(R.id.idBroadcastReadView);
         broadcastReadView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -102,10 +89,7 @@ public class BroadcastFragment extends Fragment {
             this.context = context;
             layoutInflater = LayoutInflater.from(context);
             this.broadcastList = broadcastList;
-
-
         }
-
 
         class ViewHolder extends RecyclerView.ViewHolder {
             TextView idBoradcast_con, idBoradcast_start;
@@ -134,7 +118,7 @@ public class BroadcastFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     try {
-                        retrieveBroadcastTask = (RetrieveBroadcastTask) new RetrieveBroadcastTask(Util.Servlet_URL + "BroadcastServlet", broadcastVO.getBroadcast_ID()).execute();
+                        new RetrieveBroadcastTask(Util.Servlet_URL + "BroadcastServlet", broadcastVO.getBroadcast_ID()).execute();
                     } catch (Exception e) {
                         Log.e(TAG, e.toString());
                     }
@@ -149,11 +133,6 @@ public class BroadcastFragment extends Fragment {
         public int getItemCount() {
             return broadcastList.size();
         }
-
-        public void setData() {
-            notifyDataSetChanged();
-        }
-
 
     }
 

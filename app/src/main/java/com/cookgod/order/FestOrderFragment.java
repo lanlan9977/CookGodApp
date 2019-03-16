@@ -36,7 +36,8 @@ public class FestOrderFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_festorder, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.festOrderView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));//設定recyclerView
-        recyclerView.setAdapter(new FestOrderAdapter(inflater));
+        if(festOrderVOList!=null){
+        recyclerView.setAdapter(new FestOrderAdapter(inflater));}
         View bottomSheet = view.findViewById(R.id.bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);//設定bottomSheetBehavior
         idFest_Order_msg = view.findViewById(R.id.idFest_Order_msg);//設定bottomSheetBehavior中的TextView(顯示訂單內容)

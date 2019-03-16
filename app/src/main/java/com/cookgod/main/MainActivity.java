@@ -11,7 +11,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -45,7 +44,6 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private BadgeActionProvider provider;
     private FragmentManager manager;
     private ImageView idPicView;
+   private FragmentTransaction transaction ;
     private BadgeActionProvider.OnClickListener onClickListener = new BadgeActionProvider.OnClickListener() {
         @Override
         public void onClick(int what) {
@@ -76,12 +75,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
     };
-    private LocalBroadcastManager broadcastManager;
 
     public List<BroadcastVO> getBroadcastList() {
+        Log.e(TAG,"getBroadcastList");
         return broadcastList;
     }
-
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -107,14 +105,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     private void showFragment(MenuItem item) {
-        FragmentTransaction transaction = manager.beginTransaction();
+        transaction= manager.beginTransaction();
         hideFragment(transaction);
         switch (item.getItemId()) {
             case R.id.navigation_notifications:
                 if (broadcastFragment == null) {
+                    Log.e(TAG,"null");
                     broadcastFragment = new BroadcastFragment();
                     transaction.add(R.id.frameLayout, broadcastFragment).setCustomAnimations(R.anim.in, R.anim.out).show(broadcastFragment);
                 } else {
+                    Log.e(TAG,"else");
                     transaction.setCustomAnimations(R.anim.in, R.anim.out).show(broadcastFragment);
                 }
         }
@@ -125,18 +125,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void hideFragment(FragmentTransaction fragmentTransaction) {
         if (broadcastFragment != null) {
             fragmentTransaction.hide(broadcastFragment);
-        } else {
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (broadcastFragment != null) {
-            Log.e(TAG,"FFFFFFFFFFFFFFFFF");
-            broadcastFragment.refreshData();
-        } else {
         }
     }
 
@@ -148,10 +136,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         login = preferences.getBoolean("login", false);
         isChef = preferences.getBoolean("isChef", false);
         if (login) {
-
             Util.connectServer(preferences.getString("cust_ID", ""), this);
-            broadcastManager = LocalBroadcastManager.getInstance(MainActivity.this);
-
             idCust_name.setText(preferences.getString("cust_name", ""));
             retrieveCustTask = new RetrieveCustTask(Util.Servlet_URL + "CustServlet", preferences.getString("cust_acc", ""), preferences.getString("cust_pwd", ""));
             try {
@@ -168,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 cust_account = gson.fromJson(list.get(0), CustVO.class);
                 broadcastList = gson.fromJson(map.get(list.get(0)), broadcastType);
-                if (!list.get(1).isEmpty()) {
+                if (list.size()>1) {
                     chef_account = gson.fromJson(map.get(list.get(1)), ChefVO.class);
                 }
             } catch (Exception e) {
@@ -178,12 +163,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        if(broadcastFragment!=null) {
+            manager = getSupportFragmentManager();
+            transaction= manager.beginTransaction();
+            transaction.remove(broadcastFragment).commitAllowingStateLoss();
+            broadcastFragment = null;
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         FirebaseMessaging.getInstance().setAutoInitEnabled(true);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_drawer);//設定主畫面為activity_navigation_drawer
-
-
         findViews();
     }
 
@@ -204,7 +198,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         idHeaderText = header.findViewById(R.id.idHeaderText);
         idPicView = header.findViewById(R.id.idPicView);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

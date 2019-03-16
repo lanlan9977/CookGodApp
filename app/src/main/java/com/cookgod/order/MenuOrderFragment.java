@@ -53,13 +53,11 @@ public class MenuOrderFragment extends Fragment {
     private Boolean isOnClick = true;
     private Button btnMenuOrder, btnMenu_od_rate, btnMenu_od_Food_Order, btnCheckChefFoodOrder, idMenu_od_status;
     private RatingBar idMenu_od_ratinggbar;
-    private String menu_ID,cust_ID;
+    private String menu_ID, cust_ID;
     private ImageView ivCode;
     private Boolean isChef;
     private BottomSheetBehavior bottomSheetBehavior;
     private Dialog dialog;
-
-
 
 
     @Override
@@ -67,7 +65,10 @@ public class MenuOrderFragment extends Fragment {
         super.onAttach(context);
         menuOrderList = ((OrderActivity) context).getMenuOrderList();
         isChef = ((OrderActivity) context).getIsChef();
-        ((OrderActivity) context).updataCist_ID(cust_ID);
+    }
+
+    public String setData() {
+        return cust_ID;
     }
 
     @Override
@@ -138,7 +139,7 @@ public class MenuOrderFragment extends Fragment {
         public void onBindViewHolder(ViewHolder viewHolder, final int position) {
             if (!menuOrderList.isEmpty()) {
                 MenuOrderVO menuOrderVO = menuOrderList.get(position);
-                cust_ID=menuOrderVO.getCust_ID();
+                cust_ID = menuOrderVO.getCust_ID();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy 年 MM 月 dd 日 HH : mm ");
                 viewHolder.idMenu_or_id.setText("訂單編號：" + menuOrderVO.getMenu_od_ID());
                 viewHolder.idMenu_or_appt.setText("預約日期：" + sdf.format(menuOrderVO.getMenu_od_book()));
@@ -194,6 +195,7 @@ public class MenuOrderFragment extends Fragment {
         public int getItemCount() {
             return menuOrderList.size();
         }
+
     }
 
     private void displayMenuOrder(int position) {
@@ -275,7 +277,7 @@ public class MenuOrderFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), MenuOrderDetailActivity.class);
-                intent.putExtra("menu_ID",menu_ID);
+                intent.putExtra("menu_ID", menu_ID);
                 startActivity(intent);
             }
         });
@@ -316,7 +318,7 @@ public class MenuOrderFragment extends Fragment {
                         String msg = idOrder_Msg.getText().toString().trim();
                         retrieveMenuOrderRate = new RetrieveMenuOrderRate(Util.Servlet_URL + "MenuOrderRateServlet", String.valueOf(menu_od_rate[0]), menuOrder.getMenu_od_ID(), msg);
                         retrieveMenuOrderRate.execute();
-                        Util.showToast(getActivity(),"評價成功");
+                        Util.showToast(getActivity(), "評價成功");
                         dialog.dismiss();
 
                     }
@@ -380,7 +382,7 @@ public class MenuOrderFragment extends Fragment {
                 menuOrderVO.setCust_ID(menuOrder.getCust_ID());
                 menuOrderVO.setMenu_od_ID(menuOrder.getMenu_od_ID());
                 builder.setTitle("請審核訂單");
-                final List<String> list=new ArrayList<>();
+                final List<String> list = new ArrayList<>();
                 builder.setPositiveButton("審核通過", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -388,7 +390,7 @@ public class MenuOrderFragment extends Fragment {
                         retrieveMenuOrderStatus = new RetrieveMenuOrderStatus(Util.Servlet_URL + "MenuOrderServlet", "g1", menuOrder.getMenu_od_ID());
                         retrieveMenuOrderStatus.execute();
                         menuOrderVO.setMenu_od_status("g1");
-                        String menu_order_json=new Gson().toJson(menuOrderVO);
+                        String menu_order_json = new Gson().toJson(menuOrderVO);
                         list.add("menu_order");
                         list.add(menu_order_json);
                         String message = new Gson().toJson(list);
@@ -403,7 +405,7 @@ public class MenuOrderFragment extends Fragment {
                         retrieveMenuOrderStatus = new RetrieveMenuOrderStatus(Util.Servlet_URL + "MenuOrderServlet", "g2", menuOrder.getMenu_od_ID());
                         retrieveMenuOrderStatus.execute();
                         menuOrderVO.setMenu_od_status("g2");
-                        String menu_order_json=new Gson().toJson(menuOrderVO);
+                        String menu_order_json = new Gson().toJson(menuOrderVO);
                         list.add("menu_order");
                         list.add(menu_order_json);
                         String message = new Gson().toJson(list);

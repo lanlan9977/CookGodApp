@@ -28,11 +28,8 @@ import android.widget.Toast;
 import com.cookgod.R;
 import com.cookgod.main.Page;
 import com.cookgod.main.Util;
-import com.cookgod.task.RetrieveMenuOrderStatus;
 import com.cookgod.task.RetrieveOrderQRCode;
 import com.cookgod.task.RetrieveOrderTask;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationResult;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -48,6 +45,9 @@ import java.util.Set;
 public class OrderActivity extends AppCompatActivity {
     private final static String TAG = "OrderActivity";
     private final static String PACKAGE = "com.google.zxing.client.android";
+    private static final int MY_REQUEST_CODE = 0;
+    private static final int MY_PERMISSION_ACCESS_COARSE_LOCATION = 11;
+    private int REQUEST_ORDER_QRCODE = 0;
     public List<MenuOrderVO> menuOrderList;
     public List<FestOrderVO> festOrderList;
     public List<FoodOrderVO> foodOrderList;
@@ -56,32 +56,20 @@ public class OrderActivity extends AppCompatActivity {
     private Boolean isChef;
     private LocationManager locationManager;
     private String cust_ID, commadStr;
-    private static final int MY_REQUEST_CODE = 0;
-    private static final int MY_PERMISSION_ACCESS_COARSE_LOCATION = 11;
-
+    private MenuOrderFragment menuOrderFragment;
     public List<MenuOrderVO> getMenuOrderList() {
         return menuOrderList;
     }
-
     public List<FestOrderVO> getFestOrderList() {
         return festOrderList;
     }
-
     public List<FoodOrderVO> getFoodOrderList() {
         return foodOrderList;
     }
-
     public Boolean getIsChef() {
         return isChef;
     }
 
-    private int REQUEST_CHER_ORDER = 1;
-    private int REQUEST_ORDER_QRCODE = 0;
-
-
-    public void updataCist_ID(String cust_ID) {
-        this.cust_ID = cust_ID;
-    }
 
 
     @Override
@@ -139,23 +127,43 @@ public class OrderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
         commadStr = LocationManager.GPS_PROVIDER;
-        findViews();
+        Log.e(TAG,"onCreate");
     }
 
-    private void findViews() {
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.e(TAG,"onStop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e(TAG,"onDestroy");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.e(TAG,"onPause");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.e(TAG,"onRestart");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        Log.e(TAG,"onStart");
         askPermissions();
-        SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
-                MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE, MODE_PRIVATE);
         isChef = preferences.getBoolean("isChef", false);
         boolean login = preferences.getBoolean("login", false);
         if (login) {
             if (Util.networkConnected(this)) {
-
                 try {
                     if (isChef) {
                         retrieveOrderTask = new RetrieveOrderTask(Util.Servlet_URL + "OrderByChefServlet", preferences.getString("chef_ID", ""));
@@ -173,15 +181,17 @@ public class OrderActivity extends AppCompatActivity {
                     }.getType();
                     menuOrderList = gson.fromJson(menuOrderJsonIn, menuOrderType);
 
-                    String festOrderJsonIn = orderList.get(0);
+                    String festOrderJsonIn = orderList.get(1);
                     Type festOrderType = new TypeToken<List<FestOrderVO>>() {
                     }.getType();
                     festOrderList = gson.fromJson(festOrderJsonIn, festOrderType);
 
-                    String foodOrderJsonIn = orderList.get(2);
-                    Type foodOrderType = new TypeToken<List<FoodOrderVO>>() {
-                    }.getType();
-                    foodOrderList = gson.fromJson(foodOrderJsonIn, foodOrderType);
+                    if(orderList.size()>2) {
+                        String foodOrderJsonIn = orderList.get(2);
+                        Type foodOrderType = new TypeToken<List<FoodOrderVO>>() {
+                        }.getType();
+                        foodOrderList = gson.fromJson(foodOrderJsonIn, foodOrderType);
+                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -189,7 +199,6 @@ public class OrderActivity extends AppCompatActivity {
                 if (menuOrderList != null) {
                     ViewPager viewPager = findViewById(R.id.viewPager);
                     viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));//頁面手勢滑動
-
                     TabLayout tabLayout = findViewById(R.id.tabLayout);//訂單種類滑動列表
                     viewPager.isFakeDragging();
                     tabLayout.setupWithViewPager(viewPager);
@@ -201,14 +210,11 @@ public class OrderActivity extends AppCompatActivity {
     private class MyPagerAdapter extends FragmentPagerAdapter {
         List<Page> pageList;
 
-        public MyPagerAdapter(FragmentManager fragmentManager) {
+        private MyPagerAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
             pageList = new ArrayList<>();
-            SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
-                    MODE_PRIVATE);
-            pageList.add(new Page(new MenuOrderFragment(), "嚴選套餐訂單"));
+            pageList.add(new Page(menuOrderFragment = new MenuOrderFragment(), "嚴選套餐訂單"));
             pageList.add(new Page(new FestOrderFragment(), "節慶主題訂單"));
-
             if (!isChef)
                 pageList.add(new Page(new FoodOrderFragment(), "嚴選食材訂單"));
         }
@@ -243,14 +249,12 @@ public class OrderActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.idCameraQRCode:
                 Toast.makeText(OrderActivity.this, getResources().getText(R.string.stringCameraQRCode), Toast.LENGTH_SHORT).show();
-//                MenuOrderFragment menuOrderFragment = (MenuOrderFragment) getFragmentManager().findFragmentById(R.id.example_fragment);
                 scanQRCode();
                 break;
             case R.id.idOrderQRCode:
+                cust_ID = menuOrderFragment.setData();
                 Toast.makeText(OrderActivity.this, cust_ID, Toast.LENGTH_SHORT).show();
                 locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-
-
                 AlertDialog.Builder builder = new AlertDialog.Builder(OrderActivity.this);
                 builder.setTitle("是否發送位置給顧客");
                 builder.setPositiveButton("發送", new DialogInterface.OnClickListener() {
@@ -263,7 +267,7 @@ public class OrderActivity extends AppCompatActivity {
                         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
                         List<String> list = new ArrayList<>();
                         list.add("location");
-                        list.add("C00009");
+                        list.add(cust_ID);
                         String stringLocation = gson.toJson(location);
                         list.add(stringLocation);
                         String message = new Gson().toJson(list);

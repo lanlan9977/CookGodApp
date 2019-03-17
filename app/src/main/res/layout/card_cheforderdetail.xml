@@ -12,6 +12,15 @@
         android:layout_height="wrap_content"
         android:padding="10dp">
 
+        <Button
+            android:id="@+id/idPayOrder"
+            android:layout_marginLeft="280dp"
+            android:background="@color/colorBlue"
+            android:textColor="@color/colorWhite"
+            android:text="付款"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp" />
+
         <TextView
             android:id="@+id/idChefOrder_ID"
             android:layout_width="match_parent"

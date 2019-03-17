@@ -79,11 +79,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
     };
-    private ImageView imageView;
     private AdImageTask adImageTask;
-    CarouselView carouselView;
-    int[] sampleImages = {R.drawable.default_image , R.drawable.default_image, R.drawable.default_image, R.drawable.default_image, R.drawable.default_image};
-
+    private CarouselView carouselView;
+    private int adSize;
 
     public List<BroadcastVO> getBroadcastList() {
         Log.e(TAG, "getBroadcastList");
@@ -159,21 +157,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 for (String key : map.keySet()) {
                     list.add(key);
                 }
+                adSize = Integer.valueOf(list.get(1));
                 cust_account = gson.fromJson(list.get(0), CustVO.class);
                 broadcastList = gson.fromJson(map.get(list.get(0)), broadcastType);
-                if (list.size() > 1) {
-                    chef_account = gson.fromJson(map.get(list.get(1)), ChefVO.class);
+                if (list.size() > 2) {
+                    chef_account = gson.fromJson(map.get(list.get(2)), ChefVO.class);
                 }
             } catch (Exception e) {
                 Log.e(TAG, e.toString());
             }
+            carouselView.setPageCount(adSize);
+            carouselView.setImageListener(imageListener);
+
         }
-        int imageSize = getResources().getDisplayMetrics().widthPixels / 4;
-//        adImageTask=new AdImageTask(Util.Servlet_URL+"Adservlet",imageSize,imageView);
-//        adImageTask.execute();
     }
-
-
+    
     @Override
     protected void onRestart() {
         super.onRestart();
@@ -211,17 +209,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         idHeaderText = header.findViewById(R.id.idHeaderText);
         idPicView = header.findViewById(R.id.idPicView);
         carouselView = findViewById(R.id.carouselView);
-        carouselView.setPageCount(sampleImages.length);
-        carouselView.setImageListener(imageListener);
-
-        imageView=findViewById(R.id.TTEST);
-
     }
+
     ImageListener imageListener = new ImageListener() {
         @Override
         public void setImageForPosition(int position, ImageView imageView) {
-            imageView.setImageResource(sampleImages[position]);
-//            imageView=
+            int imageSize = getResources().getDisplayMetrics().widthPixels / 4;
+            adImageTask = new AdImageTask(Util.Servlet_URL + "Adservlet", imageSize, imageView, position);
+            adImageTask.execute();
+
         }
     };
 

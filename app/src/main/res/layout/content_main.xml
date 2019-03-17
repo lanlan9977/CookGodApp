@@ -24,12 +24,4 @@
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="57dp" />
 
-
-    <ImageView
-        android:id="@+id/TTEST"
-        android:layout_width="96dp"
-        android:layout_height="103dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="370dp"
-        android:background="@color/colorBlack" />
 </RelativeLayout>

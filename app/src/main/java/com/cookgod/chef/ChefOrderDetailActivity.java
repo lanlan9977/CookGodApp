@@ -63,10 +63,8 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
         Boolean getOne = intent.getBooleanExtra("getOne", false);
 
         if (getOne) {
-            Log.e(TAG, "FFFFFFFF");
             retrieveChefOrderDetailTask = new RetrieveChefOrderDetailTask(Util.Servlet_URL + "ChefOdDetailByChefServlet", chef_ID, chef_or_ID);
         } else {
-            Log.e(TAG, "KKKKKK");
             retrieveChefOrderDetailTask = new RetrieveChefOrderDetailTask(Util.Servlet_URL + "ChefOdDetailByChefServlet", chef_ID, "");
         }
         try {
@@ -109,7 +107,7 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
             List<ChefOdDetailVO> chefOdDetailList;
             List<FoodVO> foodList;
             LinearLayout foodHeaderLayout, foodBottomLayout;
-            Button btnOrderDetail;
+            Button btnOrderDetail,idPayOrder;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -125,6 +123,7 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
                 foodHeaderLayout = itemView.findViewById(R.id.foodHeaderLayout);
                 idTotal = itemView.findViewById(R.id.idTotal);
                 btnOrderDetail=itemView.findViewById(R.id.btnOrderDetail);
+                idPayOrder=itemView.findViewById(R.id.idPayOrder);
 //                idChefOrder_Rcv=itemView.findViewById(R.id.idChefOrder_Rcv);
 //                idChefOrder_End=itemView.findViewById(R.id.idChefOrder_End);
             }
@@ -174,7 +173,6 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
                     status_string="訂單完成";
                     break;
             }
-
 
             viewHolder.idChefOrder_ID.setText("主廚食材訂單編號：" + chefOrderVO.getChef_or_ID());
             viewHolder.idChefOrder_Status.setText("訂單狀態：" +status_string);

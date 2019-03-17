@@ -21,7 +21,7 @@ public class AdImageTask extends AsyncTask<Object, Integer, Bitmap> {
     private final static String TAG = "ImageTask";
 
     private String url;
-    private int imageSize;
+    private int imageSize,position;
     /* ImageTask的屬性strong reference到BookListAdapter內的imageView不好，
      * 會導致BookListAdapter進入背景時imageView被參考到而無法被釋放，
      * 而且imageView會參考到Context，也會導致Activity無法被回收。
@@ -33,8 +33,9 @@ public class AdImageTask extends AsyncTask<Object, Integer, Bitmap> {
 //        this(url, menu_ID, imageSize, null);
 //    }
 
-    public AdImageTask(String url,  int imageSize, ImageView imageView) {
+    public AdImageTask(String url,  int imageSize, ImageView imageView,int position) {
         this.url = url;
+        this.position=position;
         this.imageSize = imageSize;
         this.imageViewWeakReference = new WeakReference<>(imageView);
     }
@@ -44,6 +45,7 @@ public class AdImageTask extends AsyncTask<Object, Integer, Bitmap> {
     protected Bitmap doInBackground(Object... objects) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("action", "getImage");
+        jsonObject.addProperty("position", position);
         jsonObject.addProperty("imageSize", imageSize);
         return getRemoteImage(url, jsonObject.toString());
     }

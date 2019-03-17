@@ -124,8 +124,10 @@ public class LoginActivity extends AppCompatActivity {
                 list.add(key);
             }
             cust_account = gson.fromJson(list.get(0), CustVO.class);
-            if (!list.get(1).isEmpty()) {
-                chef_account = gson.fromJson(map.get(list.get(1)), ChefVO.class);
+
+
+            if (!list.get(2).isEmpty()) {
+                chef_account = gson.fromJson(map.get(list.get(2)), ChefVO.class);
             }
 
         } catch (Exception e) {

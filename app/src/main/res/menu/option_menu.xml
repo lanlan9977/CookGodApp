@@ -9,6 +9,11 @@
         android:title="Pos"
         app:showAsAction="always" />
     <item
+        android:id="@+id/myRefresh"
+        android:icon="@drawable/ic_refresh"
+        android:title="Alarm"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/myBadge"
         android:title="Alarm"
         app:actionProviderClass="com.cookgod.broadcast.BadgeActionProvider"

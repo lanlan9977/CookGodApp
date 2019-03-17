@@ -181,11 +181,12 @@ public class OrderActivity extends AppCompatActivity {
                     }.getType();
                     menuOrderList = gson.fromJson(menuOrderJsonIn, menuOrderType);
 
-                    String festOrderJsonIn = orderList.get(1);
-                    Type festOrderType = new TypeToken<List<FestOrderVO>>() {
-                    }.getType();
-                    festOrderList = gson.fromJson(festOrderJsonIn, festOrderType);
-
+                    if(orderList.size()>1) {
+                        String festOrderJsonIn = orderList.get(1);
+                        Type festOrderType = new TypeToken<List<FestOrderVO>>() {
+                        }.getType();
+                        festOrderList = gson.fromJson(festOrderJsonIn, festOrderType);
+                    }
                     if(orderList.size()>2) {
                         String foodOrderJsonIn = orderList.get(2);
                         Type foodOrderType = new TypeToken<List<FoodOrderVO>>() {

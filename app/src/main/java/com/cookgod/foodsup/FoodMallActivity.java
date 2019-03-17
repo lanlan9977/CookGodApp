@@ -1,33 +1,31 @@
 package com.cookgod.foodsup;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RatingBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.cookgod.R;
 import com.cookgod.chef.ChefOdDetailVO;
+import com.cookgod.main.Page;
 import com.cookgod.main.Util;
 import com.cookgod.task.FoodMallImageTask;
 import com.cookgod.task.RetrieveChefOrderTask;
@@ -47,17 +45,38 @@ public class FoodMallActivity extends AppCompatActivity {
     private RetrieveFoodMallTask retrieveFoodMallTask;
     private RetrieveChefOrderTask retrieveChefOrderTask;
     private FoodMallImageTask foodMallImageTask;
-    private RecyclerView idChefOrederRecyclerView;
     private List<FavFdSupVO> favSupList;
-    private List<FoodMallVO> foodMallList;
+    private List<FoodMallVO> foodMallList, foodMallListOne, foodMallListTwo, foodMallListThree, foodMallListFour, foodMallListFive;
+    private FoodMallListFragment foodMallListFragment, foodMallListFragmentOne, foodMallListFragmentTwo, foodMallListFragmentThree, foodMallListFragmentFour, foodMallListFragmentFive;
     private List<FoodSupVO> foodSupList;
-    private Dialog dialog, foodDialog;
+    private List<FoodVO> foodList;
+    private List<DishFoodVO> dishFoodList;
+    private Dialog dialog;
     private Map<FoodMallVO, ChefOdDetailVO> foodMallMap;
     private Button btnFoodConfitm;
     private String chef_ID;
     private List<ChefOdDetailVO> chefOdDetailList;
     private String menu_od_ID;
 
+    public Map<FoodMallVO, ChefOdDetailVO> getFoodMallMap() {
+        return foodMallMap;
+    }
+
+    public List<FavFdSupVO> getFavSupList() {
+        return favSupList;
+    }
+
+    public List<FoodSupVO> getFoodSupList() {
+        return foodSupList;
+    }
+
+    public List<FoodMallVO> getFoodMallList() {
+        return foodMallList;
+    }
+
+    public List<FoodVO> getFoodList() {
+        return foodList;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,10 +84,11 @@ public class FoodMallActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chef_order);
         foodMallMap = new LinkedHashMap<>();
         chefOdDetailList = new ArrayList<>();
-        LinearLayoutManager layoutManager = new LinearLayoutManager(FoodMallActivity.this);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        idChefOrederRecyclerView = findViewById(R.id.idChefOrederRecyclerView);
-        idChefOrederRecyclerView.setLayoutManager(layoutManager);
+        foodMallListOne = new ArrayList<>();
+        foodMallListTwo = new ArrayList<>();
+        foodMallListThree = new ArrayList<>();
+        foodMallListFour = new ArrayList<>();
+        foodMallListFive = new ArrayList<>();
         btnFoodConfitm = findViewById(R.id.btnFoodConfitm);
         btnFoodConfitm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,12 +101,12 @@ public class FoodMallActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Intent intent=getIntent();
-        menu_od_ID=intent.getStringExtra("menu_od_ID");
+        Intent intent = getIntent();
+        menu_od_ID = intent.getStringExtra("menu_od_ID");
         SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
                 MODE_PRIVATE);
         chef_ID = preferences.getString("chef_ID", "");
-        retrieveFoodMallTask = new RetrieveFoodMallTask(Util.Servlet_URL + "CherOrderServlet", chef_ID);
+        retrieveFoodMallTask = new RetrieveFoodMallTask(Util.Servlet_URL + "CherOrderServlet", chef_ID,menu_od_ID);
         try {
             String stringJsonIn = retrieveFoodMallTask.execute().get();
             Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
@@ -99,127 +119,80 @@ public class FoodMallActivity extends AppCompatActivity {
             }.getType();
             Type foodSupListType = new TypeToken<List<FoodSupVO>>() {
             }.getType();
+            Type foodListType = new TypeToken<List<FoodVO>>() {
+            }.getType();
+            Type dishFoodListType = new TypeToken<List<DishFoodVO>>() {
+            }.getType();
             favSupList = gson.fromJson(stringList.get(0), favFdSupListType);
             foodMallList = gson.fromJson(stringList.get(1), foodMallListType);
             foodSupList = gson.fromJson(stringList.get(2), foodSupListType);
+            foodList = gson.fromJson(stringList.get(3), foodListType);
+            dishFoodList=gson.fromJson(stringList.get(4),dishFoodListType);
         } catch (Exception e) {
             Log.e(TAG, e.toString());
         }
-        idChefOrederRecyclerView.setAdapter(new FoodMallListAdapter(FoodMallActivity.this, foodMallList));
-    }
-
-    private class FoodMallListAdapter extends RecyclerView.Adapter<FoodMallListAdapter.ViewHolder> {
-        private Context context;
-        private LayoutInflater layoutInflater;
-        private List<FoodMallVO> foodMallList;
-
-        public FoodMallListAdapter(Context context, List<FoodMallVO> foodMallList) {
-            this.context = context;
-            layoutInflater = LayoutInflater.from(context);
-            this.foodMallList = foodMallList;
-        }
-
-        class ViewHolder extends RecyclerView.ViewHolder {
-            TextView idFood_M_Name, idFood_M_Place, idFood_M_Price, idFood_M_Unit, idCheckQua;
-            ImageView idFood_M_Pic, idFav_Sup;
-            RatingBar idFood_M_Rate;
-            Spinner idFood_Mall_Qty;
-
-            public ViewHolder(View itemView) {
-                super(itemView);
-                idFood_M_Name = itemView.findViewById(R.id.idFood_M_Name);
-                idFood_M_Place = itemView.findViewById(R.id.idFood_M_Place);
-                idFood_M_Price = itemView.findViewById(R.id.idFood_M_Price);
-                idFood_M_Pic = itemView.findViewById(R.id.idFood_M_Pic);
-                idFood_M_Rate = itemView.findViewById(R.id.idFood_M_Rate);
-                idFood_M_Unit = itemView.findViewById(R.id.idFood_M_Unit);
-                idFav_Sup = itemView.findViewById(R.id.idFav_Sup);
-                idFood_Mall_Qty = itemView.findViewById(R.id.idFood_Mall_Qty);
-                idCheckQua = itemView.findViewById(R.id.idCheckQua);
-                ArrayAdapter<CharSequence> lunchList = ArrayAdapter.createFromResource(FoodMallActivity.this,
-                        R.array.stringFoodMallArray,
-                        android.R.layout.simple_spinner_dropdown_item);
-                idFood_Mall_Qty.setAdapter(lunchList);
-            }
-        }
-
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            View itemView = layoutInflater.inflate(R.layout.card_cheforder, viewGroup, false);
-            return new ViewHolder(itemView);
-        }
-
-        @Override
-        public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
-            int imageSize = getResources().getDisplayMetrics().widthPixels / 4;
-            final FoodMallVO foodMallVO = foodMallList.get(i);
-            foodMallImageTask = new FoodMallImageTask(Util.Servlet_URL + "FoodMallServlet", foodMallVO.getFood_ID(), imageSize, viewHolder.idFood_M_Pic);
-            foodMallImageTask.execute();
-            viewHolder.idFood_M_Name.setText(foodMallVO.getFood_m_name());
-            viewHolder.idFood_M_Place.setText(foodMallVO.getFood_m_place());
-            viewHolder.idFood_M_Price.setText("$" + foodMallVO.getFood_m_price().toString());
-            viewHolder.idFood_M_Rate.setRating(foodMallVO.getFood_m_rate());
-            viewHolder.idFood_M_Unit.setText("單位：" + foodMallVO.getFood_m_unit());
-            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    foodDialog = new Dialog(FoodMallActivity.this);
-                    foodDialog.setTitle("確認訂單食材");
-                    foodDialog.setCancelable(true);
-                    foodDialog.setContentView(R.layout.dialog_fooddetail);
-                    final Window dialogWindow = foodDialog.getWindow();
-                    dialogWindow.setGravity(Gravity.CENTER);
-                    WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-                    lp.width = 1000;
-                    lp.alpha = 1.0f;
-                    dialogWindow.setAttributes(lp);
-                    TextView idfood_M_Resume = foodDialog.findViewById(R.id.idfood_M_Resume);
-                    Button btnfood_M_Resume_Back = foodDialog.findViewById(R.id.btnfood_M_Resume_Back);
-                    btnfood_M_Resume_Back.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            foodDialog.cancel();
-                        }
-                    });
-                    idfood_M_Resume.setText(foodMallVO.getFood_m_resume());
-                    foodDialog.show();
-                }
-            });
-            for (int j = 0; j < favSupList.size(); j++) {
-                FavFdSupVO favFdSupVO = favSupList.get(j);
-                if (favFdSupVO.getFood_sup_ID().equals(foodMallVO.getFood_sup_ID())) {
-                    viewHolder.idFav_Sup.setVisibility(View.VISIBLE);
-                    break;
-                }
-            }
-
-            viewHolder.idFood_Mall_Qty.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    Integer item = Integer.parseInt(parent.getSelectedItem().toString());
-                    ChefOdDetailVO chefOdDetailVO = new ChefOdDetailVO();
-                    chefOdDetailVO.setChef_od_qty(item);
-                    if (position > 0) {
-                        foodMallMap.put(foodMallVO, chefOdDetailVO);
-                        viewHolder.idCheckQua.setVisibility(View.VISIBLE);
-                    } else {
-                        viewHolder.idCheckQua.setVisibility(View.GONE);
-                        foodMallMap.remove(foodMallVO);
-                    }
-
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                }
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return foodMallList.size();
+        if (foodMallList != null) {
+            autoType();
+            ViewPager viewPager = findViewById(R.id.viewFoodMallPager);
+            viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));//頁面手勢滑動
+            TabLayout tabLayout = findViewById(R.id.tabFoodMallLayout);//訂單種類滑動列表
+            viewPager.isFakeDragging();
+            tabLayout.setupWithViewPager(viewPager);
         }
     }
+
+    public void autoType(){
+        for (int i = 0; i < foodList.size(); i++) {
+            if (foodList.get(i).getFood_type_ID().equals("g0")) {
+                foodMallListOne.add(foodMallList.get(i));
+            }
+            if (foodList.get(i).getFood_type_ID().equals("g1")) {
+                foodMallListTwo.add(foodMallList.get(i));
+            }
+            if (foodList.get(i).getFood_type_ID().equals("g2")) {
+                foodMallListThree.add(foodMallList.get(i));
+            }
+            if (foodList.get(i).getFood_type_ID().equals("g3")) {
+                foodMallListFour.add(foodMallList.get(i));
+            }
+            if (foodList.get(i).getFood_type_ID().equals("g4")) {
+                foodMallListFive.add(foodMallList.get(i));
+            }
+        }
+    }
+
+
+    private class MyPagerAdapter extends FragmentPagerAdapter {
+        List<Page> pageList;
+
+        private MyPagerAdapter(FragmentManager fragmentManager) {
+            super(fragmentManager);
+            pageList = new ArrayList<>();
+            pageList.add(new Page(foodMallListFragment = new FoodMallListFragment(foodMallList), "全部"));
+            pageList.add(new Page(foodMallListFragmentOne = new FoodMallListFragment(foodMallListOne), "肉類"));
+            pageList.add(new Page(foodMallListFragmentTwo = new FoodMallListFragment(foodMallListTwo), "菜類"));
+            pageList.add(new Page(foodMallListFragmentThree = new FoodMallListFragment(foodMallListThree), "海鮮"));
+            pageList.add(new Page(foodMallListFragmentFour = new FoodMallListFragment(foodMallListFour), "五穀雜糧"));
+            pageList.add(new Page(foodMallListFragmentFive = new FoodMallListFragment(foodMallListFive), "其他"));
+
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return pageList.get(position).getFragment();
+        }
+
+        @Override
+        public int getCount() {
+            return pageList.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return pageList.get(position).getTitle();
+        }
+    }
+
 
     @Override
     protected void onPause() {
@@ -248,6 +221,45 @@ public class FoodMallActivity extends AppCompatActivity {
                 showFoodOrder();
                 break;
             case R.id.idClick:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("請否要一鍵購買該套餐菜色所需食材");
+                builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        foodMallMap = new LinkedHashMap<>();
+                        foodMallListFragmentOne.reMapData();
+                        foodMallListFragmentTwo.reMapData();
+                        foodMallListFragmentThree.reMapData();
+                        foodMallListFragmentFour.reMapData();
+                        foodMallListFragmentFive.reMapData();
+                        for(int i=0;i<dishFoodList.size();i++){
+                            for(int j=0;j<foodMallList.size();j++){
+                                if(dishFoodList.get(i).getFood_ID().equals(foodMallList.get(j).getFood_ID())){
+                                    ChefOdDetailVO chefOdDetailVO=new ChefOdDetailVO();
+                                    chefOdDetailVO.setFood_ID(foodMallList.get(j).getFood_ID());
+                                    chefOdDetailVO.setFood_sup_ID(foodMallList.get(j).getFood_sup_ID());
+                                    chefOdDetailVO.setChef_od_qty(dishFoodList.get(i).getDish_f_qty());
+                                    foodMallMap.put(foodMallList.get(i),chefOdDetailVO);
+                                }
+                            }
+                        }
+                        foodMallListFragment.reMapData();
+                        Util.showToast(FoodMallActivity.this, "已自動選取食材");
+                    }
+                });
+                builder.setNegativeButton("否", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.setCancelable(true);
+                AlertDialog dialog = builder.create();
+                dialog.setCanceledOnTouchOutside(true);
+                dialog.show();
+
+
                 break;
         }
         return false;
@@ -266,31 +278,32 @@ public class FoodMallActivity extends AppCompatActivity {
         dialogWindow.setAttributes(lp);
         TextView idConfirmFood = dialog.findViewById(R.id.idConfirmFood);
         TextView idConfirmFoodQua = dialog.findViewById(R.id.idConfirmFoodQua);
-        TextView idConfirmFoodStotal=dialog.findViewById(R.id.idConfirmFoodStotal);
-        TextView idFoodMall_Total=dialog.findViewById(R.id.idFoodMall_Total);
+        TextView idConfirmFoodStotal = dialog.findViewById(R.id.idConfirmFoodStotal);
+        TextView idFoodMall_Total = dialog.findViewById(R.id.idFoodMall_Total);
         Button idFoodOrderCancel = dialog.findViewById(R.id.idFoodOrderCancel);
         Button idFoodOrderCheckOK = dialog.findViewById(R.id.idFoodOrderCheckOK);
         StringBuilder stringBuilder = new StringBuilder();
         StringBuilder stringBuilderQua = new StringBuilder();
-        StringBuilder stringBuilderStoral=new StringBuilder();
+        StringBuilder stringBuilderStoral = new StringBuilder();
         int total = 0;
-        for (FoodMallVO key : foodMallMap.keySet()) {
-            stringBuilder.append(key.getFood_m_name() + "\n");
-            stringBuilderQua.append("X" + foodMallMap.get(key).getChef_od_qty() + "\n");
-            stringBuilderStoral.append("＄" +(key.getFood_m_price()*foodMallMap.get(key).getChef_od_qty())+ "\n");
-            total+=key.getFood_m_price()*foodMallMap.get(key).getChef_od_qty();
-            ChefOdDetailVO chefOdDetailVO = new ChefOdDetailVO();
-            chefOdDetailVO.setFood_ID(key.getFood_ID());
-            chefOdDetailVO.setFood_sup_ID(key.getFood_sup_ID());
-            chefOdDetailVO.setChef_od_qty(foodMallMap.get(key).getChef_od_qty());
-            chefOdDetailVO.setChef_od_stotal(key.getFood_m_price() * foodMallMap.get(key).getChef_od_qty());
-            chefOdDetailList.add(chefOdDetailVO);
-
+        if (foodMallMap != null) {
+            for (FoodMallVO key : foodMallMap.keySet()) {
+                stringBuilder.append(key.getFood_m_name() + "\n");
+                stringBuilderQua.append("X" + foodMallMap.get(key).getChef_od_qty() + "\n");
+                stringBuilderStoral.append("＄" + (key.getFood_m_price() * foodMallMap.get(key).getChef_od_qty()) + "\n");
+                total += key.getFood_m_price() * foodMallMap.get(key).getChef_od_qty();
+                ChefOdDetailVO chefOdDetailVO = new ChefOdDetailVO();
+                chefOdDetailVO.setFood_ID(key.getFood_ID());
+                chefOdDetailVO.setFood_sup_ID(key.getFood_sup_ID());
+                chefOdDetailVO.setChef_od_qty(foodMallMap.get(key).getChef_od_qty());
+                chefOdDetailVO.setChef_od_stotal(key.getFood_m_price() * foodMallMap.get(key).getChef_od_qty());
+                chefOdDetailList.add(chefOdDetailVO);
+            }
         }
         idConfirmFood.setText(stringBuilder.toString());
         idConfirmFoodQua.setText(stringBuilderQua.toString());
         idConfirmFoodStotal.setText(stringBuilderStoral.toString());
-        idFoodMall_Total.setText("＄"+String.valueOf(total)+"元");
+        idFoodMall_Total.setText("＄" + String.valueOf(total) + "元");
         idFoodOrderCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -308,14 +321,12 @@ public class FoodMallActivity extends AppCompatActivity {
                     SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
                             MODE_PRIVATE);
                     preferences.edit().putString(menu_od_ID, chef_or_ID).apply();
-                }catch (Exception e){
-                    Log.e(TAG,e.toString());
-                }finally {
+                } catch (Exception e) {
+                    Log.e(TAG, e.toString());
+                } finally {
                     dialog.dismiss();
                     finish();
                 }
-
-
             }
         });
         dialog.show();

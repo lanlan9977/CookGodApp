@@ -38,7 +38,9 @@ public class BroadcastFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         broadcastList = ((MainActivity) context).getBroadcastList();
-        isRead();
+        if (broadcastList != null) {
+            isRead();
+        }
     }
 
     private void isRead() {
@@ -63,12 +65,14 @@ public class BroadcastFragment extends Fragment {
         broadcastView = view.findViewById(R.id.idBroadcastView);
         broadcastView.setLayoutManager(new LinearLayoutManager(getActivity()));
         broadcastView.setNestedScrollingEnabled(false);
-        broadcastView.setAdapter(broadcasNoReadtListAdapter);
+
         broadcastReadView = view.findViewById(R.id.idBroadcastReadView);
         broadcastReadView.setLayoutManager(new LinearLayoutManager(getActivity()));
         broadcastReadView.setNestedScrollingEnabled(false);
-        broadcastReadView.setAdapter(broadcastListAdapter);
-
+        if (broadcastList != null) {
+            broadcastReadView.setAdapter(broadcastListAdapter);
+            broadcastView.setAdapter(broadcasNoReadtListAdapter);
+        }
         idBroadcastScrollView.post(new Runnable() {
             @Override
             public void run() {

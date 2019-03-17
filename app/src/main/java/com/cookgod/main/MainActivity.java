@@ -39,11 +39,15 @@ import com.cookgod.other.CustomerServiceActivity;
 import com.cookgod.other.LivesActivity;
 import com.cookgod.other.MallActivity;
 import com.cookgod.other.NewsActivity;
+import com.cookgod.task.AdImageTask;
 import com.cookgod.task.RetrieveCustTask;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.synnapps.carouselview.CarouselView;
+import com.synnapps.carouselview.ImageListener;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private BadgeActionProvider provider;
     private FragmentManager manager;
     private ImageView idPicView;
-   private FragmentTransaction transaction ;
+    private FragmentTransaction transaction;
     private BadgeActionProvider.OnClickListener onClickListener = new BadgeActionProvider.OnClickListener() {
         @Override
         public void onClick(int what) {
@@ -75,9 +79,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
     };
+    private ImageView imageView;
+    private AdImageTask adImageTask;
+    CarouselView carouselView;
+    int[] sampleImages = {R.drawable.default_image , R.drawable.default_image, R.drawable.default_image, R.drawable.default_image, R.drawable.default_image};
+
 
     public List<BroadcastVO> getBroadcastList() {
-        Log.e(TAG,"getBroadcastList");
+        Log.e(TAG, "getBroadcastList");
         return broadcastList;
     }
 
@@ -88,7 +97,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             manager = getSupportFragmentManager();
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
                     showFragment(item);
                     return true;
                 case R.id.navigation_dashboard:
@@ -105,16 +113,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     private void showFragment(MenuItem item) {
-        transaction= manager.beginTransaction();
+        transaction = manager.beginTransaction();
         hideFragment(transaction);
         switch (item.getItemId()) {
             case R.id.navigation_notifications:
                 if (broadcastFragment == null) {
-                    Log.e(TAG,"null");
+                    Log.e(TAG, "null");
                     broadcastFragment = new BroadcastFragment();
                     transaction.add(R.id.frameLayout, broadcastFragment).setCustomAnimations(R.anim.in, R.anim.out).show(broadcastFragment);
                 } else {
-                    Log.e(TAG,"else");
+                    Log.e(TAG, "else");
                     transaction.setCustomAnimations(R.anim.in, R.anim.out).show(broadcastFragment);
                 }
         }
@@ -153,24 +161,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 cust_account = gson.fromJson(list.get(0), CustVO.class);
                 broadcastList = gson.fromJson(map.get(list.get(0)), broadcastType);
-                if (list.size()>1) {
+                if (list.size() > 1) {
                     chef_account = gson.fromJson(map.get(list.get(1)), ChefVO.class);
                 }
             } catch (Exception e) {
                 Log.e(TAG, e.toString());
             }
         }
+        int imageSize = getResources().getDisplayMetrics().widthPixels / 4;
+//        adImageTask=new AdImageTask(Util.Servlet_URL+"Adservlet",imageSize,imageView);
+//        adImageTask.execute();
     }
+
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        if(broadcastFragment!=null) {
+        if (broadcastFragment != null) {
             manager = getSupportFragmentManager();
-            transaction= manager.beginTransaction();
+            transaction = manager.beginTransaction();
             transaction.remove(broadcastFragment).commitAllowingStateLoss();
             broadcastFragment = null;
         }
+        Log.e(TAG, "onRestart");
     }
 
     @Override
@@ -197,7 +210,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         idCust_name = header.findViewById(R.id.idCust_name);
         idHeaderText = header.findViewById(R.id.idHeaderText);
         idPicView = header.findViewById(R.id.idPicView);
+        carouselView = findViewById(R.id.carouselView);
+        carouselView.setPageCount(sampleImages.length);
+        carouselView.setImageListener(imageListener);
+
+        imageView=findViewById(R.id.TTEST);
+
     }
+    ImageListener imageListener = new ImageListener() {
+        @Override
+        public void setImageForPosition(int position, ImageView imageView) {
+            imageView.setImageResource(sampleImages[position]);
+//            imageView=
+        }
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -219,11 +245,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Toast.makeText(MainActivity.this, "您已經登入", Toast.LENGTH_SHORT).show();
                 }
                 break;
+            case R.id.myRefresh://(重新整理)
+                onRestart();
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
         return true;
     }
+
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {

@@ -8,54 +8,37 @@
     android:orientation="vertical"
     tools:context=".foodsup.FoodMallActivity">
 
-    <!--<RelativeLayout-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="50dp">-->
-
-        <!--<TextView-->
-            <!--android:layout_width="161dp"-->
-            <!--android:layout_height="29dp"-->
-
-            <!--android:layout_alignParentEnd="true"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_marginEnd="222dp"-->
-            <!--android:layout_marginRight="222dp"-->
-            <!--android:layout_marginBottom="-4dp" />-->
-
-        <!--<Button-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="24dp"-->
-            <!--android:layout_alignParentBottom="true"-->
-            <!--android:layout_marginBottom="0dp" />-->
-    <!--</RelativeLayout>-->
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/idChefOrederRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-
-        android:padding="5dp">
-
-    </android.support.v7.widget.RecyclerView>
-
-    <LinearLayout
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-
-        <Button
-            android:id="@+id/btnFoodConfitm"
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabFoodMallLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="確認所挑選的食材" />
-    </LinearLayout>
+            app:tabBackground="@color/colorWhite"
+            app:tabContentStart="999dp"
+            app:tabGravity="fill"
+            app:tabIndicatorColor="#ffD700"
+            app:tabIndicatorHeight="50dp"
+            app:tabInlineLabel="false"
+            app:tabMaxWidth="0dp"
+            app:tabMode="fixed" />
+    </android.support.design.widget.AppBarLayout>
 
-    <TableLayout
-        android:id="@+id/ChefFoodFragment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewFoodMallPager"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <Button
+        android:id="@+id/btnFoodConfitm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="確認所挑選的食材" />
 
 
 </LinearLayout>

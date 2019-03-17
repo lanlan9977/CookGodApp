@@ -47,8 +47,6 @@ import static android.content.Context.WINDOW_SERVICE;
 public class MenuOrderFragment extends Fragment {
     private final static String TAG = "OrderActivity";
     private List<MenuOrderVO> menuOrderList;
-
-
     private TextView idMenu_Order_ID, idMenu_Order_Status, idMenu_Order_Start, idMenu_Order_Appt, idMenu_Order_End, idMenu_Order_Rate, idMenu_Order_Msg;
     private Boolean isOnClick = true;
     private Button btnMenuOrder, btnMenu_od_rate, btnMenu_od_Food_Order, btnCheckChefFoodOrder, idMenu_od_status;

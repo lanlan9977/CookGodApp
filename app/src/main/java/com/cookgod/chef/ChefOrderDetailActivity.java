@@ -1,17 +1,30 @@
 package com.cookgod.chef;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -35,13 +48,14 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
     private final static String TAG = "ChefOrderDetailActivity";
     private String chef_ID, chef_or_ID;
     private RetrieveChefOrderDetailTask retrieveChefOrderDetailTask;
-
     private List<ChefOrderVO> chefOrderList;
     private RecyclerView idChefOrderDetailRecyclerView;
-
-
+    private FragmentTransaction transaction;
+    private FragmentManager manager;
     private Map<String, List<ChefOdDetailVO>> chefOdDetailMap;
     private Map<String, List<FoodVO>> foodMap;
+    private Dialog dialog;
+    private ChefOrderDetailAdapter chefOrderDetailAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,11 +75,15 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         chef_or_ID = intent.getStringExtra("chef_or_ID");
         Boolean getOne = intent.getBooleanExtra("getOne", false);
+        updateChefOrder(getOne);
+        idChefOrderDetailRecyclerView.setAdapter(chefOrderDetailAdapter=new ChefOrderDetailAdapter(ChefOrderDetailActivity.this, chefOrderList));
+    }
 
+    private void updateChefOrder(Boolean getOne) {
         if (getOne) {
-            retrieveChefOrderDetailTask = new RetrieveChefOrderDetailTask(Util.Servlet_URL + "ChefOdDetailByChefServlet", chef_ID, chef_or_ID);
+            retrieveChefOrderDetailTask = new RetrieveChefOrderDetailTask(Util.Servlet_URL + "ChefOdDetailByChefServlet", chef_ID, chef_or_ID,"add");
         } else {
-            retrieveChefOrderDetailTask = new RetrieveChefOrderDetailTask(Util.Servlet_URL + "ChefOdDetailByChefServlet", chef_ID, "");
+            retrieveChefOrderDetailTask = new RetrieveChefOrderDetailTask(Util.Servlet_URL + "ChefOdDetailByChefServlet", chef_ID, "","add");
         }
         try {
             Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
@@ -82,12 +100,16 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
             chefOrderList = gson.fromJson(stringList.get(0), chefOrderType);
             chefOdDetailMap = gson.fromJson(stringList.get(1), chefOdDetailType);
             foodMap = gson.fromJson(stringList.get(2), foodType);
-
         } catch (Exception e) {
             Log.e(TAG, e.toString());
         }
-        idChefOrderDetailRecyclerView.setAdapter(new ChefOrderDetailAdapter(ChefOrderDetailActivity.this, chefOrderList));
     }
+
+//    @Override
+//    protected void onRestart() {
+//        super.onRestart();
+//        updateChefOrder(true);
+//    }
 
     private class ChefOrderDetailAdapter extends RecyclerView.Adapter<ChefOrderDetailAdapter.ViewHolder> {
         private LayoutInflater layoutInflater;
@@ -107,7 +129,7 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
             List<ChefOdDetailVO> chefOdDetailList;
             List<FoodVO> foodList;
             LinearLayout foodHeaderLayout, foodBottomLayout;
-            Button btnOrderDetail,idPayOrder;
+            Button btnOrderDetail, idPayOrder;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -122,10 +144,10 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
                 foodBottomLayout = itemView.findViewById(R.id.foodBottomLayout);
                 foodHeaderLayout = itemView.findViewById(R.id.foodHeaderLayout);
                 idTotal = itemView.findViewById(R.id.idTotal);
-                btnOrderDetail=itemView.findViewById(R.id.btnOrderDetail);
-                idPayOrder=itemView.findViewById(R.id.idPayOrder);
-//                idChefOrder_Rcv=itemView.findViewById(R.id.idChefOrder_Rcv);
-//                idChefOrder_End=itemView.findViewById(R.id.idChefOrder_End);
+                btnOrderDetail = itemView.findViewById(R.id.btnOrderDetail);
+                idPayOrder = itemView.findViewById(R.id.idPayOrder);
+                idChefOrder_Rcv = itemView.findViewById(R.id.idChefOrder_Rcv);
+                idChefOrder_End = itemView.findViewById(R.id.idChefOrder_End);
             }
         }
 
@@ -136,12 +158,11 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder viewHolder, int i) {
+        public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
             DateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
-
             viewHolder.chefOdDetailList = new ArrayList<>();
             viewHolder.foodList = new ArrayList<>();
-            ChefOrderVO chefOrderVO = chefOrderList.get(i);
+            final ChefOrderVO chefOrderVO = chefOrderList.get(i);
 
             for (String key : chefOdDetailMap.keySet()) {
                 if (chefOrderVO.getChef_or_ID().equals(key)) {
@@ -153,41 +174,125 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
             for (ChefOdDetailVO chefOdDetailVO : viewHolder.chefOdDetailList) {
                 total += chefOdDetailVO.getChef_od_stotal();
             }
-
             String status = chefOrderVO.getChef_or_status();
-            String status_string="";
+            String status_string = "";
             switch (status) {
                 case "o0":
-                    status_string="未付款";
+                    status_string = "未付款";
                     break;
                 case "o1":
-                    status_string="未出貨";
+                    status_string = "等待食材出貨";
+                    viewHolder.idChefOrder_Status.setTextColor(getResources().getColor(R.color.colorGreen));
                     break;
                 case "02":
-                    status_string="已出貨";
+                    status_string = "已出貨";
                     break;
                 case "o3":
-                    status_string="送達";
+                    status_string = "送達";
                     break;
                 case "o4":
-                    status_string="訂單完成";
+                    status_string = "訂單完成";
                     break;
             }
-
             viewHolder.idChefOrder_ID.setText("主廚食材訂單編號：" + chefOrderVO.getChef_or_ID());
-            viewHolder.idChefOrder_Status.setText("訂單狀態：" +status_string);
+            viewHolder.idChefOrder_Status.setText("訂單狀態：" + status_string);
             viewHolder.idChefOrder_Name.setText("收件人姓名：" + chefOrderVO.getChef_or_name());
             viewHolder.idChefOrder_Start.setText("下單日期：" + sdf.format(chefOrderVO.getChef_or_start()));
             viewHolder.idChefOrder_Tel.setText("收件人電話：" + chefOrderVO.getChef_or_tel());
             viewHolder.idChefOrder_Addr.setText("收件人地址：" + chefOrderVO.getChef_or_addr());
             viewHolder.idChefOrder_Send.setText("出貨日期：" + sdf.format(chefOrderVO.getChef_or_send()));
+
             viewHolder.idTotal.setText("＄" + String.valueOf(total));
-//            if(chefOrderVO.getChef_or_rcv()!=null){
-//                viewHolder.idChefOrder_Rcv.setText(sdf.format(chefOrderVO.getChef_or_rcv()));
-//            }
-//            if(chefOrderVO.getChef_or_end()!=null){
-//                viewHolder.idChefOrder_End.setText(sdf.format(chefOrderVO.getChef_or_end()));
-//            }
+            if (chefOrderVO.getChef_or_rcv() != null) {
+                viewHolder.idChefOrder_Rcv.setText("到貨日期：" + sdf.format(chefOrderVO.getChef_or_rcv()));
+            } else {
+                viewHolder.idChefOrder_Rcv.setText("到貨日期：" + "食材尚未到貨");
+                viewHolder.idChefOrder_Rcv.setTextColor(getResources().getColor(R.color.colorRed));
+            }
+            if (chefOrderVO.getChef_or_end() != null) {
+                viewHolder.idChefOrder_End.setText("完成日期：" + sdf.format(chefOrderVO.getChef_or_end()));
+            } else {
+                viewHolder.idChefOrder_End.setText("完成日期：" + "訂單尚未完成");
+                viewHolder.idChefOrder_End.setTextColor(getResources().getColor(R.color.colorRed));
+            }
+            viewHolder.idPayOrder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog = new Dialog(ChefOrderDetailActivity.this);
+                    dialog.setTitle("確認付款");
+                    dialog.setCancelable(true);
+                    dialog.setContentView(R.layout.dialog_cheforderpay);
+                    final ImageView idCard1 = dialog.findViewById(R.id.idCard1);
+                    final ImageView idCard2 = dialog.findViewById(R.id.idCard2);
+                    final LinearLayout idCardLayout = dialog.findViewById(R.id.idCardLayout);
+                    final  TextView idCareText=dialog.findViewById(R.id.idCareText);
+                    Button btnCardCheck=dialog.findViewById(R.id.btnCardCheck);
+                    final EditText idCardName=dialog.findViewById(R.id.idCardName);
+                    idCard1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+//                            idCard1.bringToFront();
+
+                            idCardName.setText(chefOrderVO.getChef_or_name());
+                            TranslateAnimation mShowAction1 = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+                                    Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+                                    0.11f, Animation.RELATIVE_TO_SELF, 0.0f);
+                            mShowAction1.setDuration(600);
+                            idCard1.setAnimation(mShowAction1);
+                            idCardLayout.setAnimation(AnimationUtils.loadAnimation(ChefOrderDetailActivity.this, R.anim.alpha));
+                            idCareText.setVisibility(View.GONE);
+                            TranslateAnimation mShowAction2 = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+                                    Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+                                    -2.05f, Animation.RELATIVE_TO_SELF, 0.0f);
+                            mShowAction2.setDuration(600);
+                            idCard2.setAnimation(mShowAction2);
+                            idCardLayout.setVisibility(View.VISIBLE);
+                        }
+                    });
+                    idCard2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            idCard2.bringToFront();
+                        }
+                    });
+                    btnCardCheck.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(ChefOrderDetailActivity.this);
+                            builder.setTitle("是否確定送出付款訊息");
+                            builder.setPositiveButton("確定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface aDialog, int which) {
+                                    retrieveChefOrderDetailTask= (RetrieveChefOrderDetailTask) new RetrieveChefOrderDetailTask(Util.Servlet_URL + "ChefOdDetailByChefServlet", "o1", chef_or_ID,"update").execute();
+                                    dialog.dismiss();
+                                    onStart();
+                                    Util.showToast(ChefOrderDetailActivity.this, "付款完畢");
+                                }
+                            });
+                            builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Util.showToast(ChefOrderDetailActivity.this, "取消付款");
+                                }
+                            });
+
+                            builder.setCancelable(true);
+                            AlertDialog dialog = builder.create();
+                            dialog.setCanceledOnTouchOutside(true);
+                            dialog.show();
+                        }
+                    });
+                    final Window dialogWindow = dialog.getWindow();
+                    dialogWindow.setGravity(Gravity.CENTER);
+                    WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+                    lp.width = 1000;
+                    lp.alpha = 1.0f;
+                    dialogWindow.setAttributes(lp);
+                    dialog.show();
+                }
+
+            });
+
 
             viewHolder.btnOrderDetail.setOnClickListener(new View.OnClickListener() {
                 @Override

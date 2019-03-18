@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="700dp">
+
+    <TextView
+        android:id="@+id/idCardHandler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorBlack"
+        android:padding="16dp"
+        android:text="付款確認"
+        android:textColor="@android:color/white"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/idCareText"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@+id/idCardHandler"
+        android:gravity="center"
+        android:text="選擇信用卡"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+
+    <ImageView
+        android:id="@+id/idCard1"
+        android:layout_width="331dp"
+        android:layout_height="205dp"
+        android:layout_below="@+id/idCareText"
+        android:layout_marginLeft="7dp"
+        android:background="@drawable/card_credit1" />
+
+    <LinearLayout
+        android:id="@+id/idCardLayout"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_below="@+id/idCard1"
+        android:layout_marginTop="1dp"
+    android:visibility="gone"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:paddingTop="15dp"
+                android:text="信用卡卡號：" />
+
+            <EditText
+                android:layout_width="45dp"
+                android:textSize="15dp"
+                android:layout_height="match_parent"
+                android:text="4386" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="-" />
+
+            <EditText
+                android:layout_width="45dp"
+                android:textSize="15dp"
+                android:layout_height="match_parent"
+                android:text="7588" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="-" />
+
+            <EditText
+                android:layout_width="45dp"
+                android:textSize="15dp"
+                android:layout_height="match_parent"
+                android:text="8888" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="-" />
+
+            <EditText
+                android:layout_width="45dp"
+                android:textSize="15dp"
+                android:layout_height="match_parent"
+                android:text="8888" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:paddingTop="15dp"
+                android:text="卡片到期日：" />
+
+            <EditText
+                android:layout_width="50dp"
+                android:textSize="15dp"
+                android:layout_height="match_parent"
+                android:text="07/22" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="50dp"
+                android:paddingTop="15dp"
+                android:text="驗證碼：" />
+
+            <EditText
+                android:layout_width="37dp"
+                android:textSize="15dp"
+                android:layout_height="match_parent"
+                android:text="768" />
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:paddingTop="15dp"
+            android:text="持卡人姓名：" />
+        <EditText
+            android:id="@+id/idCardName"
+            android:layout_width="190dp"
+            android:layout_gravity="center"
+            android:textSize="15dp"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+        <Button
+            android:id="@+id/btnCardCheck"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="20dp"
+            android:background="@color/colorBlue"
+            android:text="確認"
+            android:textColor="@color/colorWhite" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/idCard2"
+        android:layout_width="335dp"
+        android:layout_height="208dp"
+        android:layout_below="@+id/idCardLayout"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="-150dp"
+        android:background="@drawable/card_credit2" />
+
+
+</RelativeLayout>

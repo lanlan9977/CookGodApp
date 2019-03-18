@@ -13,27 +13,22 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class RetrieveChefOrderDetailTask extends AsyncTask<String, String, String>  {
-    private final static String TAG = "FoodMallActivity";
-    private String chefOdDetailServletByChef_url,chef_ID,chef_or_ID,value;
+public class RetrieveAdTask extends AsyncTask<String,String,String> {
+    private final static String TAG = "MainActivity";
+    private String url;
 
 
 
-    public RetrieveChefOrderDetailTask(String chefOdDetailServletByChef_url, String chef_id, String chef_or_ID, String value) {
-        this.chefOdDetailServletByChef_url=chefOdDetailServletByChef_url;
-        this.chef_ID=chef_id;
-        this.chef_or_ID=chef_or_ID;
-        this.value=value;
+    public RetrieveAdTask(String url) {
+        this.url=url;
     }
 
 
     @Override
     protected String doInBackground(String... strings) {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("action", value);
-        jsonObject.addProperty("chef_ID", chef_ID);
-        jsonObject.addProperty("chef_or_ID", chef_or_ID);
-        return getRemoteData(chefOdDetailServletByChef_url, jsonObject.toString());
+        jsonObject.addProperty("action", "getSize");
+        return getRemoteData(url, jsonObject.toString());
     }
 
     private String getRemoteData(String url, String outStr) {

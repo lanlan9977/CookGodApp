@@ -40,6 +40,7 @@ import com.cookgod.other.LivesActivity;
 import com.cookgod.other.MallActivity;
 import com.cookgod.other.NewsActivity;
 import com.cookgod.task.AdImageTask;
+import com.cookgod.task.RetrieveAdTask;
 import com.cookgod.task.RetrieveCustTask;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public List<BroadcastVO> broadcastList;
     private final static String TAG = "MainActivity";
     private RetrieveCustTask retrieveCustTask;
+    private RetrieveAdTask retrieveAdTask;
     private CustVO cust_account;
     private ChefVO chef_account;
     private Toolbar toolbar;
@@ -137,6 +139,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onStart() {
         super.onStart();
+       retrieveAdTask=new RetrieveAdTask(Util.Servlet_URL + "Adservlet");
+        try {
+            String stringSize=retrieveAdTask.execute().get();
+            adSize = Integer.valueOf(stringSize);
+        } catch (Exception e) {
+            Log.e(TAG, e.toString());
+        }
         SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
                 MODE_PRIVATE);
         login = preferences.getBoolean("login", false);
@@ -157,19 +166,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 for (String key : map.keySet()) {
                     list.add(key);
                 }
-                adSize = Integer.valueOf(list.get(1));
                 cust_account = gson.fromJson(list.get(0), CustVO.class);
                 broadcastList = gson.fromJson(map.get(list.get(0)), broadcastType);
-                if (list.size() > 2) {
-                    chef_account = gson.fromJson(map.get(list.get(2)), ChefVO.class);
+                if (list.size() > 1) {
+                    chef_account = gson.fromJson(map.get(list.get(1)), ChefVO.class);
                 }
             } catch (Exception e) {
                 Log.e(TAG, e.toString());
             }
-            carouselView.setPageCount(adSize);
-            carouselView.setImageListener(imageListener);
-
         }
+        carouselView.setPageCount(adSize);
+        carouselView.setImageListener(imageListener);
     }
     
     @Override

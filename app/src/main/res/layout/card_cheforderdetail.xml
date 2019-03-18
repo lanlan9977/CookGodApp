@@ -14,7 +14,7 @@
 
         <Button
             android:id="@+id/idPayOrder"
-            android:layout_marginLeft="280dp"
+            android:layout_marginLeft="300dp"
             android:background="@color/colorBlue"
             android:textColor="@color/colorWhite"
             android:text="付款"
@@ -74,7 +74,7 @@
 
         <TextView
             android:id="@+id/idChefOrder_Send"
-            android:layout_width="344dp"
+            android:layout_width="347dp"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginTop="132dp" />
@@ -84,18 +84,31 @@
             android:layout_width="match_parent"
             android:layout_height="22dp"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="170dp"
+            android:layout_marginTop="220dp"
             android:gravity="center"
             android:textColor="@color/colorWhite"
             android:background="@color/colorBlue"
             android:text="▼" />
+        <TextView
+            android:id="@+id/idChefOrder_Rcv"
+            android:layout_width="347dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="163dp" />
+
+        <TextView
+            android:id="@+id/idChefOrder_End"
+            android:layout_width="347dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="194dp" />
 
         <LinearLayout
             android:id="@+id/foodHeaderLayout"
             android:layout_width="match_parent"
             android:layout_height="20dp"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="170dp"
+            android:layout_marginTop="220dp"
             android:background="@color/colorBlue"
             android:visibility="gone">
 
@@ -122,27 +135,7 @@
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="wrap_content"></Spinner>-->
 
-        <!--<TextView-->
-        <!--android:id="@+id/idChefOrder_Rcv"-->
-        <!--android:layout_width="346dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentStart="true"-->
-        <!--android:layout_alignParentLeft="true"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:layout_marginStart="16dp"-->
-        <!--android:layout_marginLeft="10dp"-->
-        <!--android:layout_marginTop="173dp" />-->
 
-        <!--<TextView-->
-        <!--android:id="@+id/idChefOrder_End"-->
-        <!--android:layout_width="277dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentStart="true"-->
-        <!--android:layout_alignParentLeft="true"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:layout_marginStart="19dp"-->
-        <!--android:layout_marginLeft="10dp"-->
-        <!--android:layout_marginTop="206dp" />-->
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/idChefOrderDetailListView"
@@ -177,6 +170,7 @@
                 android:textSize="15dp" />
 
         </LinearLayout>
+
 
     </RelativeLayout>
 

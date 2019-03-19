@@ -4,13 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".main.MainActivity">
     <item
-        android:id="@+id/idOrderQRCode"
-        android:icon="@drawable/ic_positioning"
-        android:title="QRCode"
+        android:id="@+id/idOrderRestart"
+        android:icon="@drawable/ic_refresh"
+        android:title="refres"
         app:showAsAction="always" />
     <item
-    android:id="@+id/idCameraQRCode"
-    android:icon="@drawable/ic_menu_camera"
-    android:title="Camera"
-    app:showAsAction="always" />
+        android:id="@+id/idOrderLocation"
+        android:icon="@drawable/ic_positioning"
+        android:title="location"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/idCameraQRCode"
+        android:icon="@drawable/ic_menu_camera"
+        android:title="Camera"
+        app:showAsAction="always" />
 </menu>

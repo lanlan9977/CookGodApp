@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -58,6 +59,7 @@ public class MenuOrderFragment extends Fragment {
     private Boolean isChef;
     private BottomSheetBehavior bottomSheetBehavior;
     private Dialog dialog;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
 
     @Override
@@ -75,6 +77,11 @@ public class MenuOrderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_menuorder, container, false);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setColorSchemeResources(
+                R.color.colorBlack, R.color.colorWhite,
+                R.color.colorBlack, R.color.colorWhite);
+
         RecyclerView recyclerView = view.findViewById(R.id.menuOrderView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));//設定recyclerView
         recyclerView.setAdapter(new MenuOrderAdapter(inflater));
@@ -100,6 +107,15 @@ public class MenuOrderFragment extends Fragment {
 
         btnCheckChefFoodOrder = view.findViewById(R.id.btnCheckChefFoodOrder);
         idMenu_od_status = view.findViewById(R.id.idMenu_od_status);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                RecyclerView recyclerView = view.findViewById(R.id.menuOrderView);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));//設定recyclerView
+                recyclerView.setAdapter(new MenuOrderAdapter(inflater));
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
         return view;
     }
 
@@ -179,15 +195,15 @@ public class MenuOrderFragment extends Fragment {
 
 
                     ViewGroup.LayoutParams para;
-                    DisplayMetrics metrics =getContext().getResources().getDisplayMetrics();
-                   float highSize=metrics.heightPixels;
-                    Log.e(TAG,""+highSize);
+                    DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
+                    float highSize = metrics.heightPixels;
+                    Log.e(TAG, "" + highSize);
                     if (isOnClick) {
                         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
-                        if(highSize>1024){
+                        if (highSize > 1024) {
                             bottomSheetBehavior.setPeekHeight(755);
-                        }else{
+                        } else {
                             bottomSheetBehavior.setPeekHeight(290);
                         }
 
@@ -277,18 +293,18 @@ public class MenuOrderFragment extends Fragment {
         if (menuOrder.getMenu_od_end() == null) {
             idMenu_Order_End.setTextColor(getResources().getColor(R.color.colorRed));
             endDate = "訂單尚未完成";
-        }else{
-            endDate=sdf.format(menuOrder.getMenu_od_end());
+        } else {
+            endDate = sdf.format(menuOrder.getMenu_od_end());
         }
         String rateMsg = "";
-        if(menuOrder.getMenu_od_msg()==null&& menuOrder.getMenu_od_rate()<=0){
-            rateMsg="尚未給評";
-            idMenu_Order_Rate.setText("訂單評價：" +rateMsg);
+        if (menuOrder.getMenu_od_msg() == null && menuOrder.getMenu_od_rate() <= 0) {
+            rateMsg = "尚未給評";
+            idMenu_Order_Rate.setText("訂單評價：" + rateMsg);
             idMenu_Order_Rate.setTextColor(getResources().getColor(R.color.colorRed));
             idMenu_Order_Msg.setTextColor(getResources().getColor(R.color.colorRed));
-        }else{
-            rateMsg=menuOrder.getMenu_od_msg();
-            idMenu_Order_Rate.setText("訂單評價：" + menuOrder.getMenu_od_rate()+"顆星");
+        } else {
+            rateMsg = menuOrder.getMenu_od_msg();
+            idMenu_Order_Rate.setText("訂單評價：" + menuOrder.getMenu_od_rate() + "顆星");
         }
 
 
@@ -459,5 +475,7 @@ public class MenuOrderFragment extends Fragment {
         smallerDimension = smallerDimension / 2;
         return smallerDimension;
     }
+
+
 }
 

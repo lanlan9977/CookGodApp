@@ -3,29 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
-    xmlns:tools="http://schemas.android.com/tools"
+
     android:orientation="vertical">
-    <Button
-        android:id="@+id/get_selected_dates"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Selected Dates"
-        tools:layout_editor_absoluteX="229dp"
-        tools:layout_editor_absoluteY="447dp" />
-    <com.savvi.rangedatepicker.CalendarPickerView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/calendar_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingBottom="16dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:scrollbarStyle="outsideOverlay"
-        app:tsquare_dividerColor="@color/colorBlue"
-        app:tsquare_headerTextColor="@color/colorRed"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp" />
+
 
 
 </LinearLayout>

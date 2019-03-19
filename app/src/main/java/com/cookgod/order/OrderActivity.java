@@ -69,9 +69,6 @@ public class OrderActivity extends AppCompatActivity {
     public Boolean getIsChef() {
         return isChef;
     }
-
-
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -130,29 +127,6 @@ public class OrderActivity extends AppCompatActivity {
         Log.e(TAG,"onCreate");
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.e(TAG,"onStop");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.e(TAG,"onDestroy");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.e(TAG,"onPause");
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.e(TAG,"onRestart");
-    }
 
     @Override
     protected void onStart() {
@@ -248,11 +222,14 @@ public class OrderActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         //點選相機icon後發生事件
         switch (item.getItemId()) {
+            case R.id.idOrderRestart:
+                onStart();
+                break;
             case R.id.idCameraQRCode:
                 Toast.makeText(OrderActivity.this, getResources().getText(R.string.stringCameraQRCode), Toast.LENGTH_SHORT).show();
                 scanQRCode();
                 break;
-            case R.id.idOrderQRCode:
+            case R.id.idOrderLocation:
                 cust_ID = menuOrderFragment.setData();
                 Toast.makeText(OrderActivity.this, cust_ID, Toast.LENGTH_SHORT).show();
                 locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -349,7 +326,6 @@ public class OrderActivity extends AppCompatActivity {
                 });
         downloadDialog.show();
     }
-
 
 }
 

@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onStart() {
         super.onStart();
-       retrieveAdTask=new RetrieveAdTask(Util.Servlet_URL + "Adservlet");
+       retrieveAdTask=new RetrieveAdTask(Util.Servlet_URL + "AdServlet");
         try {
             String stringSize=retrieveAdTask.execute().get();
             adSize = Integer.valueOf(stringSize);
@@ -221,8 +221,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ImageListener imageListener = new ImageListener() {
         @Override
         public void setImageForPosition(int position, ImageView imageView) {
-            int imageSize = getResources().getDisplayMetrics().widthPixels ;
-            adImageTask = new AdImageTask(Util.Servlet_URL + "Adservlet", imageSize, imageView, position);
+            int imageSize = getResources().getDisplayMetrics().widthPixels/4 ;
+            adImageTask = new AdImageTask(Util.Servlet_URL + "AdServlet", imageSize, imageView, position);
             adImageTask.execute();
 
         }
@@ -275,7 +275,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (cust_account == null) {
                     onItemSelectedTo(R.string.stringLoginNo, LoginActivity.class);
                 } else {
-                    onItemSelectedTo(R.string.stringOrder, OrderActivity.class);
+//                    onItemSelectedTo(R.string.stringOrder, OrderActivity.class);
                     Intent intent = new Intent(MainActivity.this, OrderActivity.class);
                     Toast.makeText(getApplicationContext(), R.string.stringOrder, Toast.LENGTH_LONG).show();
                     Bundle bundle = new Bundle();
@@ -287,7 +287,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 break;
             case R.id.itemForums://(論壇專區)
-                onItemSelectedTo(R.string.stringForum, ChefZoneActivity.class);
+                Intent intent = new Intent(MainActivity.this, ChefZoneActivity.class);
+                intent.putExtra("chef_ID",chef_account.getChef_ID());
+                startActivity(intent);
+                overridePendingTransition(R.anim.in, R.anim.out);
                 break;
             case R.id.itemLives://(直播專區)
                 onItemSelectedTo(R.string.stringLives, LivesActivity.class);

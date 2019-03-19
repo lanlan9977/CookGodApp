@@ -221,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ImageListener imageListener = new ImageListener() {
         @Override
         public void setImageForPosition(int position, ImageView imageView) {
-            int imageSize = getResources().getDisplayMetrics().widthPixels / 4;
+            int imageSize = getResources().getDisplayMetrics().widthPixels ;
             adImageTask = new AdImageTask(Util.Servlet_URL + "Adservlet", imageSize, imageView, position);
             adImageTask.execute();
 

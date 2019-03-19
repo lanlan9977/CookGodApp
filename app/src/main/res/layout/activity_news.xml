@@ -1,7 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite">
-</LinearLayout>
+    tools:context="com.cookgod.other.NewsActivity">
+
+    <com.ptrstovka.calendarview2.CalendarView2
+        android:id="@+id/calendar_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:mcv_weekDayTextAppearance="@style/CustomWeekTextAppearance"
+        app:mcv_selectionColor="#4DB9C8"
+        app:mcv_circlePadding="5dp"
+        app:mcv_showOtherDates="all"
+        />
+
+    <Button
+        android:id="@+id/calendar_action_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:text="action"
+        />
+
+</FrameLayout>
 <!--最新消息專區-->

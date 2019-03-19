@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+
+    <ImageView
+        android:id="@+id/idMenuBlobView"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:scaleType="matrix"
+        />
+
+    <TextView
+        android:id="@+id/idMenuName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/idMenuBlobView"
+        android:layout_marginTop="-1dp"
+        android:paddingLeft="20dp"
+        android:paddingTop="5dp"
+        android:textColor="@color/colorBlack"
+        android:textSize="22dp" />
+
+    <TextView
+        android:id="@+id/idMenuPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/idMenuName"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
+        android:paddingLeft="340dp"
+        android:paddingTop="5dp"
+        android:gravity="right"
+        android:paddingRight="30dp"
+        android:paddingBottom="2dp"
+        android:textColor="@color/colorRed"
+        android:textSize="22dp" />
+
+    <TextView
+        android:id="@+id/idMenuClob"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/idMenuName"
+        android:layout_alignBottom="@+id/idMenuName"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="-94dp"
+        android:paddingLeft="20dp"
+        android:paddingTop="2dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="5dp"
+        android:textColor="@color/colorGary"
+        android:textSize="16dp"
+        android:background="#E9DE6C"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/idMenuOrderRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/idMenuClob"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="1dp"
+        android:layout_marginTop="94dp"
+        android:layout_marginRight="1dp"
+        android:layout_marginBottom="0dp" />
+
+</RelativeLayout>

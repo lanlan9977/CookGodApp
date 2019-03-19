@@ -20,7 +20,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.cookgod.R;
@@ -54,7 +60,7 @@ public class FoodMallActivity extends AppCompatActivity {
     private Dialog dialog;
     private Map<FoodMallVO, ChefOdDetailVO> foodMallMap;
     private Button btnFoodConfitm;
-    private String chef_ID;
+    private String chef_ID,chef_addr,chef_tel,chef_name;
     private List<ChefOdDetailVO> chefOdDetailList;
     private String menu_od_ID;
 
@@ -106,6 +112,9 @@ public class FoodMallActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
                 MODE_PRIVATE);
         chef_ID = preferences.getString("chef_ID", "");
+        chef_name=preferences.getString("chef_name", "");
+        chef_tel=preferences.getString("chef_tel", "");
+        chef_addr=preferences.getString("chef_addr", "");
         retrieveFoodMallTask = new RetrieveFoodMallTask(Util.Servlet_URL + "CherOrderServlet", chef_ID,menu_od_ID);
         try {
             String stringJsonIn = retrieveFoodMallTask.execute().get();
@@ -281,7 +290,14 @@ public class FoodMallActivity extends AppCompatActivity {
         TextView idConfirmFoodStotal = dialog.findViewById(R.id.idConfirmFoodStotal);
         TextView idFoodMall_Total = dialog.findViewById(R.id.idFoodMall_Total);
         Button idFoodOrderCancel = dialog.findViewById(R.id.idFoodOrderCancel);
-        Button idFoodOrderCheckOK = dialog.findViewById(R.id.idFoodOrderCheckOK);
+        final Button idFoodOrderCheckOK = dialog.findViewById(R.id.idFoodOrderCheckOK);
+        final Button idFoodOrderCheckNext=dialog.findViewById(R.id.idFoodOrderCheckNext);
+        final LinearLayout idChef_Or_Data=dialog.findViewById(R.id.idChef_Or_Data);
+        final LinearLayout idChef_Or=dialog.findViewById(R.id.idChef_Or);
+        final EditText idCheckName=dialog.findViewById(R.id.idCheckName);
+        final EditText idCheckTel=dialog.findViewById(R.id.idCheckTel);
+        final EditText idCheckAddr=dialog.findViewById(R.id.idCheckAddr);
+        RadioButton rbtnChefData=dialog.findViewById(R.id.rbtnChefData);
         StringBuilder stringBuilder = new StringBuilder();
         StringBuilder stringBuilderQua = new StringBuilder();
         StringBuilder stringBuilderStoral = new StringBuilder();
@@ -289,8 +305,8 @@ public class FoodMallActivity extends AppCompatActivity {
         if (foodMallMap != null) {
             for (FoodMallVO key : foodMallMap.keySet()) {
                 stringBuilder.append(key.getFood_m_name() + "\n");
-                stringBuilderQua.append("X" + foodMallMap.get(key).getChef_od_qty() + "\n");
-                stringBuilderStoral.append("＄" + (key.getFood_m_price() * foodMallMap.get(key).getChef_od_qty()) + "\n");
+                stringBuilderQua.append("x" + foodMallMap.get(key).getChef_od_qty() + "\n");
+                stringBuilderStoral.append("$" + (key.getFood_m_price() * foodMallMap.get(key).getChef_od_qty()) + "\n");
                 total += key.getFood_m_price() * foodMallMap.get(key).getChef_od_qty();
                 ChefOdDetailVO chefOdDetailVO = new ChefOdDetailVO();
                 chefOdDetailVO.setFood_ID(key.getFood_ID());
@@ -326,6 +342,48 @@ public class FoodMallActivity extends AppCompatActivity {
                 } finally {
                     dialog.dismiss();
                     finish();
+                }
+            }
+        });
+        idFoodOrderCheckNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                idFoodOrderCheckOK.setVisibility(View.VISIBLE);
+
+                idFoodOrderCheckNext.setVisibility(View.GONE);
+
+
+                TranslateAnimation mShowAction1 = new TranslateAnimation(
+                        Animation.RELATIVE_TO_PARENT, 0.0f,
+                        Animation.RELATIVE_TO_PARENT, -1.0f,
+                        Animation.RELATIVE_TO_PARENT, 0.0f,
+                        Animation.RELATIVE_TO_PARENT, 0.0f);
+
+                TranslateAnimation mShowAction2=new TranslateAnimation(
+                        Animation.RELATIVE_TO_PARENT, +1.0f,
+                        Animation.RELATIVE_TO_PARENT, 0.0f,
+                        Animation.RELATIVE_TO_PARENT, 0.0f,
+                        Animation.RELATIVE_TO_PARENT, 0.0f);
+
+
+                mShowAction2.setDuration(500);
+                mShowAction1.setDuration(500);
+                idChef_Or.setAnimation(mShowAction1);
+
+
+
+                idChef_Or_Data.setAnimation(mShowAction2);
+                idChef_Or.setVisibility(View.GONE);
+                idChef_Or_Data.setVisibility(View.VISIBLE);
+            }
+        });
+        rbtnChefData.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    idCheckName.setText(chef_name);
+                    idCheckTel.setText(chef_tel);
+                    idCheckAddr.setText(chef_addr);
                 }
             }
         });

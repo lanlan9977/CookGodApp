@@ -115,6 +115,7 @@
             android:layout_marginTop="13dp"
             android:layout_marginEnd="35dp"
             android:layout_marginRight="35dp"
+            android:dropDownWidth="50dp"
             />
 
         <RatingBar

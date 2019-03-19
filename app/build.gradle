@@ -39,4 +39,8 @@ dependencies {
     implementation 'com.github.psinetron:slycalendarview:0.0.9'
     implementation 'com.google.android.gms:play-services-location:15.0.1'
     implementation 'com.synnapps:carouselview:0.1.4'
+    implementation 'com.ptrstovka.calendarview2:calendarview2:2.0-alpha5'
+    implementation 'com.jakewharton:butterknife:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    implementation 'com.savvi.datepicker:rangepicker:1.2.0'
 }

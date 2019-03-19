@@ -12,6 +12,8 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -174,9 +176,21 @@ public class MenuOrderFragment extends Fragment {
                 public void onClick(View v) {
                     displayMenuOrder(position);
                     menu_ID = menuOrderList.get(position).getMenu_ID();
+
+
+                    ViewGroup.LayoutParams para;
+                    DisplayMetrics metrics =getContext().getResources().getDisplayMetrics();
+                   float highSize=metrics.heightPixels;
+                    Log.e(TAG,""+highSize);
                     if (isOnClick) {
                         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                        bottomSheetBehavior.setPeekHeight(755);
+
+                        if(highSize>1024){
+                            bottomSheetBehavior.setPeekHeight(755);
+                        }else{
+                            bottomSheetBehavior.setPeekHeight(290);
+                        }
+
                         isOnClick = false;
                         notifyDataSetChanged();
                     } else {
@@ -258,19 +272,33 @@ public class MenuOrderFragment extends Fragment {
                 btnCheckChefFoodOrder.setVisibility(View.GONE);
             }
         }
+        DateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
         String endDate = "";
         if (menuOrder.getMenu_od_end() == null) {
+            idMenu_Order_End.setTextColor(getResources().getColor(R.color.colorRed));
             endDate = "訂單尚未完成";
+        }else{
+            endDate=sdf.format(menuOrder.getMenu_od_end());
+        }
+        String rateMsg = "";
+        if(menuOrder.getMenu_od_msg()==null&& menuOrder.getMenu_od_rate()<=0){
+            rateMsg="尚未給評";
+            idMenu_Order_Rate.setText("訂單評價：" +rateMsg);
+            idMenu_Order_Rate.setTextColor(getResources().getColor(R.color.colorRed));
+            idMenu_Order_Msg.setTextColor(getResources().getColor(R.color.colorRed));
+        }else{
+            rateMsg=menuOrder.getMenu_od_msg();
+            idMenu_Order_Rate.setText("訂單評價：" + menuOrder.getMenu_od_rate()+"顆星");
         }
 
-        DateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
-        idMenu_Order_ID.setText("嚴選套餐訂單編號:" + menuOrder.getMenu_od_ID());
-        idMenu_Order_Status.setText("訂單狀態:" + status);
-        idMenu_Order_Start.setText("下單日期:" + sdf.format(menuOrder.getMenu_od_start()));
-        idMenu_Order_Appt.setText("預約日期:" + sdf.format(menuOrder.getMenu_od_book()));
-        idMenu_Order_End.setText("完成日期" + endDate);
-        idMenu_Order_Rate.setText("訂單評價:" + menuOrder.getMenu_od_rate());
-        idMenu_Order_Msg.setText("訂單評價留言:" + menuOrder.getMenu_od_msg());
+
+        idMenu_Order_ID.setText("嚴選套餐訂單編號：" + menuOrder.getMenu_od_ID());
+        idMenu_Order_Status.setText("訂單狀態：" + status);
+        idMenu_Order_Start.setText("下單日期：" + sdf.format(menuOrder.getMenu_od_start()));
+        idMenu_Order_Appt.setText("預約日期：" + sdf.format(menuOrder.getMenu_od_book()));
+        idMenu_Order_End.setText("完成日期：" + endDate);
+
+        idMenu_Order_Msg.setText("訂單評價留言：" + rateMsg);
         btnMenuOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

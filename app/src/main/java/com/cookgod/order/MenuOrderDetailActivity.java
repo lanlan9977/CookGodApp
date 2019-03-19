@@ -62,7 +62,7 @@ public class MenuOrderDetailActivity extends AppCompatActivity {
         super.onStart();
         Intent intent = getIntent();
         menu_ID = intent.getStringExtra("menu_ID");
-        int imageSize = getResources().getDisplayMetrics().widthPixels / 4;
+        int imageSize = getResources().getDisplayMetrics().widthPixels ;
         imageTask = new ImageTask(Util.Servlet_URL+"MenuServlet", menu_ID, imageSize, imageView);
         retrieveMenuOrderDetailTask = new RetrieveMenuOrderDetailTask(Util.Servlet_URL+"MenuDishServlet", menu_ID);
         try {
@@ -126,6 +126,12 @@ public class MenuOrderDetailActivity extends AppCompatActivity {
             viewHolder.idDish_name.setText(dishVO.getDish_name());
             viewHolder.idDish_Resume.setText(dishVO.getDish_resume());
             int imageSize = getResources().getDisplayMetrics().widthPixels / 4;
+//            ViewGroup.LayoutParams para;
+//            DisplayMetrics metrics =MenuOrderDetailActivity.this.getResources().getDisplayMetrics();
+//            float highSize=metrics.heightPixels;
+//            if(highSize=1024){
+//                imageSize = getResources().getDisplayMetrics().widthPixels;
+//            }
             dishImageTask = new DishImageTask(Util.Servlet_URL+"DishServlet", dishVO.getDish_ID(), imageSize, viewHolder.idDish_View);
             dishImageTask.execute();
         }

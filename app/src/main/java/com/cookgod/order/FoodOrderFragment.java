@@ -37,7 +37,8 @@ public class FoodOrderFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_foodorder, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.foodOrderView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));//設定recyclerView
-        recyclerView.setAdapter(new FoodOrderAdapter(inflater));
+        if(foodOrderVOList!=null){
+        recyclerView.setAdapter(new FoodOrderAdapter(inflater));}
         View bottomSheet = view.findViewById(R.id.bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);//設定bottomSheetBehavior
         idFood_Order_msg = view.findViewById(R.id.idFood_Order_msg);//設定bottomSheetBehavior中的TextView(顯示訂單內容)

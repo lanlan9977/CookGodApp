@@ -225,8 +225,11 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
                     final ImageView idCard1 = dialog.findViewById(R.id.idCard1);
                     final ImageView idCard2 = dialog.findViewById(R.id.idCard2);
                     final LinearLayout idCardLayout = dialog.findViewById(R.id.idCardLayout);
+                    final LinearLayout idCardLayoutContent=dialog.findViewById(R.id.idCardLayoutContent);
+                    final LinearLayout idPayPwd=dialog.findViewById(R.id.idPayPwd);
                     final  TextView idCareText=dialog.findViewById(R.id.idCareText);
-                    Button btnCardCheck=dialog.findViewById(R.id.btnCardCheck);
+                    final Button btnCardCheck=dialog.findViewById(R.id.btnCardCheck);
+                    final Button btnCardNext=dialog.findViewById(R.id.btnCardNext);
                     final EditText idCardName=dialog.findViewById(R.id.idCardName);
                     idCard1.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -280,6 +283,34 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
                             AlertDialog dialog = builder.create();
                             dialog.setCanceledOnTouchOutside(true);
                             dialog.show();
+                        }
+                    });
+                    btnCardNext.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            btnCardCheck.setVisibility(View.VISIBLE);
+                            btnCardNext.setVisibility(View.GONE);
+
+                            TranslateAnimation mShowAction1 = new TranslateAnimation(
+                                    Animation.RELATIVE_TO_PARENT, 0.0f,
+                                    Animation.RELATIVE_TO_PARENT, -1.0f,
+                                    Animation.RELATIVE_TO_PARENT, 0.0f,
+                                    Animation.RELATIVE_TO_PARENT, 0.0f);
+
+                            TranslateAnimation mShowAction2=new TranslateAnimation(
+                                    Animation.RELATIVE_TO_PARENT, +1.0f,
+                                    Animation.RELATIVE_TO_PARENT, 0.0f,
+                                    Animation.RELATIVE_TO_PARENT, 0.0f,
+                                    Animation.RELATIVE_TO_PARENT, 0.0f);
+
+                            mShowAction1.setDuration(500);
+                            mShowAction2.setDuration(500);
+
+                            idCardLayoutContent.setAnimation(mShowAction1);
+                            idPayPwd.setAnimation(mShowAction2);
+                            idCardLayoutContent.setVisibility(View.GONE);
+                            idPayPwd.setVisibility(View.VISIBLE);
+
                         }
                     });
                     final Window dialogWindow = dialog.getWindow();

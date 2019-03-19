@@ -38,6 +38,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:background="@color/colorBlue"
+        android:textColor="@color/colorWhite"
         android:text="確認所挑選的食材" />
 
 

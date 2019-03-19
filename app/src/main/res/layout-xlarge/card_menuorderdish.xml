@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardView2"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="2dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginRight="2dp"
+    android:layout_marginBottom="2dp"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:orientation="vertical"
+    card_view:cardCornerRadius="4dp"
+    card_view:cardElevation="@dimen/cardview_default_elevation">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        android:gravity="center_vertical"
+        android:paddingLeft="8dp"
+        android:paddingTop="8dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="8dp">
+
+        <ImageView
+            android:id="@+id/idDish_View"
+            android:layout_width="170dp"
+            android:layout_height="140dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:layout_editor_absoluteY="0dp"
+            android:scaleType="centerCrop"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/idDish_name"
+            android:layout_width="212dp"
+            android:layout_height="26dp"
+            android:layout_above="@+id/idDish_Resume"
+            android:layout_marginBottom="8dp"
+            android:text="Test"
+            android:textColor="@color/secondary_text_default_material_light"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/idDish_Resume"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="0dp"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/idDish_Resume"
+            android:layout_width="560dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="Test"
+            android:textColor="@color/colorRed"
+            android:textSize="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <!--訂單內容-->
+    </android.support.constraint.ConstraintLayout>
+</android.support.v7.widget.CardView><!--訂單選擇列表介面-->

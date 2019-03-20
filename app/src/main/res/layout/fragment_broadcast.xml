@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/idBroadcastScrollView"
-    android:layout_width="415dp"
+    android:layout_width="360dp"
     android:layout_height="wrap_content"
     android:layout_gravity="right"
     android:background="@color/colorWhite"

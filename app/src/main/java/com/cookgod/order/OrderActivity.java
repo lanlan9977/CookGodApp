@@ -82,7 +82,7 @@ public class OrderActivity extends AppCompatActivity {
     private RetrieveOrderTask retrieveOrderTask;
     private RetrieveOrderQRCode retrieveOrderQRCode;
     private Boolean isChef;
-    private String cust_ID;
+    private String cust_ID,chef_ID;
     private MenuOrderFragment menuOrderFragment;
     private Dialog dialog;
     public List<MenuOrderVO> getMenuOrderList() {
@@ -240,42 +240,15 @@ public class OrderActivity extends AppCompatActivity {
         startLocationUpdates();
         SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE, MODE_PRIVATE);
         isChef = preferences.getBoolean("isChef", false);
+        chef_ID=preferences.getString("chef_ID", "");
+        cust_ID= preferences.getString("cust_ID", "");
         boolean login = preferences.getBoolean("login", false);
         if (login) {
             if (Util.networkConnected(this)) {
-                try {
-                    if (isChef) {
-                        retrieveOrderTask = new RetrieveOrderTask(Util.Servlet_URL + "OrderByChefServlet", preferences.getString("chef_ID", ""));
-                    } else {
-                        retrieveOrderTask = new RetrieveOrderTask(Util.Servlet_URL + "OrderByCustServlet", preferences.getString("cust_ID", ""));
-                    }
 
-                    String OrderListJsonIn = retrieveOrderTask.execute().get();
-                    Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-                    Type orderType = new TypeToken<List<String>>() {
-                    }.getType();
-                    List<String> orderList = gson.fromJson(OrderListJsonIn, orderType);
-                    String menuOrderJsonIn = orderList.get(0);
-                    Type menuOrderType = new TypeToken<List<MenuOrderVO>>() {
-                    }.getType();
-                    menuOrderList = gson.fromJson(menuOrderJsonIn, menuOrderType);
 
-                    if(orderList.size()>1) {
-                        String festOrderJsonIn = orderList.get(1);
-                        Type festOrderType = new TypeToken<List<FestOrderVO>>() {
-                        }.getType();
-                        festOrderList = gson.fromJson(festOrderJsonIn, festOrderType);
-                    }
-                    if(orderList.size()>2) {
-                        String foodOrderJsonIn = orderList.get(2);
-                        Type foodOrderType = new TypeToken<List<FoodOrderVO>>() {
-                        }.getType();
-                        foodOrderList = gson.fromJson(foodOrderJsonIn, foodOrderType);
-                    }
+                getData();
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
                 if (menuOrderList != null) {
                     ViewPager viewPager = findViewById(R.id.viewPager);
                     viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));//頁面手勢滑動
@@ -284,6 +257,42 @@ public class OrderActivity extends AppCompatActivity {
                     tabLayout.setupWithViewPager(viewPager);
                 }
             }
+        }
+    }
+
+    public void getData() {
+        try {
+            if (isChef) {
+                retrieveOrderTask = new RetrieveOrderTask(Util.Servlet_URL + "OrderByChefServlet", chef_ID);
+            } else {
+                retrieveOrderTask = new RetrieveOrderTask(Util.Servlet_URL + "OrderByCustServlet",cust_ID);
+            }
+
+            String OrderListJsonIn = retrieveOrderTask.execute().get();
+            Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+            Type orderType = new TypeToken<List<String>>() {
+            }.getType();
+            List<String> orderList = gson.fromJson(OrderListJsonIn, orderType);
+            String menuOrderJsonIn = orderList.get(0);
+            Type menuOrderType = new TypeToken<List<MenuOrderVO>>() {
+            }.getType();
+            menuOrderList = gson.fromJson(menuOrderJsonIn, menuOrderType);
+
+            if(orderList.size()>1) {
+                String festOrderJsonIn = orderList.get(1);
+                Type festOrderType = new TypeToken<List<FestOrderVO>>() {
+                }.getType();
+                festOrderList = gson.fromJson(festOrderJsonIn, festOrderType);
+            }
+            if(orderList.size()>2) {
+                String foodOrderJsonIn = orderList.get(2);
+                Type foodOrderType = new TypeToken<List<FoodOrderVO>>() {
+                }.getType();
+                foodOrderList = gson.fromJson(foodOrderJsonIn, foodOrderType);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -514,6 +523,9 @@ public class OrderActivity extends AppCompatActivity {
                     }
                 });
         downloadDialog.show();
+    }
+    public List<MenuOrderVO> setData(){
+        return menuOrderList;
     }
 
 }

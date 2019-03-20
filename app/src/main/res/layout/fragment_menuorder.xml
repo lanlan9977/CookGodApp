@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout
+
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:context="com.cookgod.order.MenuOrderFragment"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:id="@+id/swipeRefreshLayout"
-    tools:context="com.cookgod.order.MenuOrderFragment"
-    android:layout_height="match_parent">
-<android.support.design.widget.CoordinatorLayout
-    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
 
-
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_height="match_parent">
     <android.support.v7.widget.RecyclerView
         android:id="@+id/menuOrderView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
+    </android.support.v4.widget.SwipeRefreshLayout>
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
@@ -95,7 +95,7 @@
 
                 <Button
                     android:id="@+id/btnCheckChefFoodOrder"
-                    android:layout_width="242dp"
+                    android:layout_width="245dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:background="@color/colorOrange"
@@ -178,4 +178,3 @@
 
 
 </android.support.design.widget.CoordinatorLayout>
-</android.support.v4.widget.SwipeRefreshLayout>

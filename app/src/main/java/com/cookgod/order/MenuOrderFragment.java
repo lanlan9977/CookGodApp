@@ -60,6 +60,7 @@ public class MenuOrderFragment extends Fragment {
     private BottomSheetBehavior bottomSheetBehavior;
     private Dialog dialog;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private MenuOrderAdapter menuOrderAdapter;
 
 
     @Override
@@ -84,7 +85,7 @@ public class MenuOrderFragment extends Fragment {
 
         RecyclerView recyclerView = view.findViewById(R.id.menuOrderView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));//設定recyclerView
-        recyclerView.setAdapter(new MenuOrderAdapter(inflater));
+        recyclerView.setAdapter(menuOrderAdapter=new MenuOrderAdapter(inflater));
         View bottomSheet = view.findViewById(R.id.bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         btnMenuOrder = view.findViewById(R.id.idMenuOrderButton); //設定bottomSheetBehavior中的TextView(顯示訂單內容)
@@ -110,9 +111,9 @@ public class MenuOrderFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                RecyclerView recyclerView = view.findViewById(R.id.menuOrderView);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));//設定recyclerView
-                recyclerView.setAdapter(new MenuOrderAdapter(inflater));
+                ((OrderActivity)getActivity()).getData();
+                menuOrderList=((OrderActivity)getActivity()).setData();
+                menuOrderAdapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -176,7 +177,7 @@ public class MenuOrderFragment extends Fragment {
                         break;
                     case "g3":
                         viewHolder.idMenu_or_status.setText("進行中訂單");
-                        viewHolder.idMenu_or_icon.setImageResource(R.drawable.ic_wait);
+                        viewHolder.idMenu_or_icon.setImageResource(R.drawable.ic_home);
                         break;
                     case "g4":
                         viewHolder.idMenu_or_status.setText("已完成訂單");
@@ -208,11 +209,11 @@ public class MenuOrderFragment extends Fragment {
                         }
 
                         isOnClick = false;
-                        notifyDataSetChanged();
+
                     } else {
                         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         isOnClick = true;
-                        notifyDataSetChanged();
+
                     }
                 }
             });

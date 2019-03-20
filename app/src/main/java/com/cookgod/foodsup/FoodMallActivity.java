@@ -329,20 +329,41 @@ public class FoodMallActivity extends AppCompatActivity {
         idFoodOrderCheckOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-                String chefOdDetailJsonIn = gson.toJson(chefOdDetailList);
-                retrieveChefOrderTask = new RetrieveChefOrderTask(Util.Servlet_URL + "ChefOdDetailServlet", chef_ID, chefOdDetailJsonIn);
-                try {
-                    String chef_or_ID = retrieveChefOrderTask.execute().get();
-                    SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
-                            MODE_PRIVATE);
-                    preferences.edit().putString(menu_od_ID, chef_or_ID).apply();
-                } catch (Exception e) {
-                    Log.e(TAG, e.toString());
-                } finally {
-                    dialog.dismiss();
-                    finish();
-                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(FoodMallActivity.this);
+                builder.setTitle("是否送出訂單");
+                builder.setPositiveButton("送出", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+                        String chefOdDetailJsonIn = gson.toJson(chefOdDetailList);
+                        retrieveChefOrderTask = new RetrieveChefOrderTask(Util.Servlet_URL + "ChefOdDetailServlet", chef_ID, chefOdDetailJsonIn);
+                        try {
+                            String chef_or_ID = retrieveChefOrderTask.execute().get();
+                            SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
+                                    MODE_PRIVATE);
+                            preferences.edit().putString(menu_od_ID, chef_or_ID).apply();
+                        } catch (Exception e) {
+                            Log.e(TAG, e.toString());
+                        } finally {
+                            dialog.dismiss();
+                            finish();
+                        }
+                    }
+                });
+                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.setCanceledOnTouchOutside(true);
+                dialog.show();
+
+
+
+
+
             }
         });
         idFoodOrderCheckNext.setOnClickListener(new View.OnClickListener() {

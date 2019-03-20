@@ -1,6 +1,5 @@
 package com.cookgod.main;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +13,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private CarouselView carouselView;
     private int adSize;
 
+
     public List<BroadcastVO> getBroadcastList() {
         Log.e(TAG, "getBroadcastList");
         return broadcastList;
@@ -139,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onStart() {
         super.onStart();
+
        retrieveAdTask=new RetrieveAdTask(Util.Servlet_URL + "AdServlet");
         try {
             String stringSize=retrieveAdTask.execute().get();
@@ -221,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ImageListener imageListener = new ImageListener() {
         @Override
         public void setImageForPosition(int position, ImageView imageView) {
-            int imageSize = getResources().getDisplayMetrics().widthPixels/4 ;
+            int imageSize = getResources().getDisplayMetrics().widthPixels/2 ;
             adImageTask = new AdImageTask(Util.Servlet_URL + "AdServlet", imageSize, imageView, position);
             adImageTask.execute();
 
@@ -235,6 +237,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         MenuItem menuItem = menu.findItem(R.id.myBadge);
         provider = (BadgeActionProvider) MenuItemCompat.getActionProvider(menuItem);
         provider.setOnClickListener(0, onClickListener);
+
         return true;
     }
 
@@ -299,10 +302,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 onItemSelectedTo(R.string.stringCustomerService, CustomerServiceActivity.class);
                 break;
             case R.id.logout://(登出)
-                SharedPreferences pref = getSharedPreferences(Util.PREF_FILE,
+                logout();
+                SharedPreferences pref=getSharedPreferences(Util.PREF_FILE,
                         MODE_PRIVATE);
                 pref.edit().putBoolean("login", false).putBoolean("isChef", false).apply();
-                logout();
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -348,19 +351,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         AlertFragment alertFragment = new AlertFragment();
         FragmentManager fm = getSupportFragmentManager();
         alertFragment.show(fm, "alert");
+
     }
 
     public static class AlertFragment extends DialogFragment implements DialogInterface.OnClickListener {
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
+            AlertDialog alertDialog = new AlertDialog.Builder(getActivity(),R.style.LightDialogTheme)
                     .setTitle("登出")
                     .setIcon(R.drawable.ic_login_button)
                     .setMessage(R.string.stringLogout)
                     .setPositiveButton(R.string.stringLogoutYes, this)
                     .setNegativeButton(R.string.stringLogoutNo, this)
                     .create();
+
             return alertDialog;
         }
 

@@ -282,7 +282,7 @@ public class FoodMallActivity extends AppCompatActivity {
         final Window dialogWindow = dialog.getWindow();
         dialogWindow.setGravity(Gravity.CENTER);
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-        lp.width = 1000;
+        lp.width = 700;
         lp.alpha = 1.0f;
         dialogWindow.setAttributes(lp);
         TextView idConfirmFood = dialog.findViewById(R.id.idConfirmFood);

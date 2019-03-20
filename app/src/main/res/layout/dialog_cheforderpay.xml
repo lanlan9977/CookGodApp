@@ -26,10 +26,10 @@
 
     <ImageView
         android:id="@+id/idCard1"
-        android:layout_width="331dp"
+        android:layout_width="327dp"
         android:layout_height="205dp"
         android:layout_below="@+id/idCareText"
-        android:layout_marginLeft="7dp"
+        android:layout_marginLeft="2dp"
         android:background="@drawable/card_credit1" />
 
     <LinearLayout
@@ -70,6 +70,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:paddingTop="15dp"
                     android:text="-" />
 
                 <EditText
@@ -81,6 +82,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:paddingTop="15dp"
                     android:text="-" />
 
                 <EditText
@@ -92,6 +94,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:paddingTop="15dp"
                     android:text="-" />
 
                 <EditText
@@ -212,7 +215,6 @@
         android:layout_width="335dp"
         android:layout_height="208dp"
         android:layout_below="@+id/idCardLayout"
-        android:layout_marginLeft="5dp"
         android:layout_marginTop="-150dp"
         android:background="@drawable/card_credit2" />
 

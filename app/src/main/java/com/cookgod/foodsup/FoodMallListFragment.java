@@ -128,13 +128,13 @@ public class FoodMallListFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     foodDialog = new Dialog(getContext());
-                    foodDialog.setTitle("確認訂單食材");
+                    foodDialog.setTitle("食材明細");
                     foodDialog.setCancelable(true);
                     foodDialog.setContentView(R.layout.dialog_fooddetail);
                     final Window dialogWindow = foodDialog.getWindow();
                     dialogWindow.setGravity(Gravity.CENTER);
                     WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-                    lp.width = 1000;
+                    lp.width = 700;
                     lp.alpha = 1.0f;
                     dialogWindow.setAttributes(lp);
                     TextView idfood_M_Resume = foodDialog.findViewById(R.id.idfood_M_Resume);

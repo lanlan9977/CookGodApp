@@ -56,6 +56,7 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
     private Map<String, List<FoodVO>> foodMap;
     private Dialog dialog;
     private ChefOrderDetailAdapter chefOrderDetailAdapter;
+    private int total ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,9 +82,9 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
 
     private void updateChefOrder(Boolean getOne) {
         if (getOne) {
-            retrieveChefOrderDetailTask = new RetrieveChefOrderDetailTask(Util.Servlet_URL + "ChefOdDetailByChefServlet", chef_ID, chef_or_ID,"add");
+            retrieveChefOrderDetailTask = new RetrieveChefOrderDetailTask(Util.Servlet_URL + "ChefOdDetailByChefServlet", chef_ID, chef_or_ID,0,"add");
         } else {
-            retrieveChefOrderDetailTask = new RetrieveChefOrderDetailTask(Util.Servlet_URL + "ChefOdDetailByChefServlet", chef_ID, "","add");
+            retrieveChefOrderDetailTask = new RetrieveChefOrderDetailTask(Util.Servlet_URL + "ChefOdDetailByChefServlet", chef_ID, "",0,"add");
         }
         try {
             Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
@@ -170,7 +171,7 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
                     viewHolder.foodList = foodMap.get(key);
                 }
             }
-            int total = 0;
+            total=0;
             for (ChefOdDetailVO chefOdDetailVO : viewHolder.chefOdDetailList) {
                 total += chefOdDetailVO.getChef_od_stotal();
             }
@@ -266,7 +267,7 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
                             builder.setPositiveButton("確定", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface aDialog, int which) {
-                                    retrieveChefOrderDetailTask= (RetrieveChefOrderDetailTask) new RetrieveChefOrderDetailTask(Util.Servlet_URL + "ChefOdDetailByChefServlet", "o1", chef_or_ID,"update").execute();
+                                    retrieveChefOrderDetailTask= (RetrieveChefOrderDetailTask) new RetrieveChefOrderDetailTask(Util.Servlet_URL + "ChefOdDetailByChefServlet", "o1", chef_or_ID,total,"update").execute();
                                     dialog.dismiss();
                                     onStart();
                                     Util.showToast(ChefOrderDetailActivity.this, "付款完畢");
@@ -314,9 +315,9 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
                         }
                     });
                     final Window dialogWindow = dialog.getWindow();
-                    dialogWindow.setGravity(Gravity.CENTER);
+                    dialogWindow.setGravity(Gravity.LEFT);
                     WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-                    lp.width = 1000;
+                    lp.width = 730;
                     lp.alpha = 1.0f;
                     dialogWindow.setAttributes(lp);
                     dialog.show();

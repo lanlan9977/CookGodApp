@@ -91,6 +91,11 @@
         <item>9</item>
         <item>10</item>
     </string-array>
+    <string-array name="stringTravelMode">
+        <item>汽車</item>
+        <item>大眾運輸</item>
+        <item>步行</item>
+    </string-array>
 
 
     <string name="dateFormat" translatable="false">EE, dd MMM</string>

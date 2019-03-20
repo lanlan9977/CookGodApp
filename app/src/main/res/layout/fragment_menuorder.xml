@@ -24,9 +24,9 @@
         android:layout_height="match_parent"
         android:clipToPadding="true"
         app:behavior_hideable="true"
-
         app:behavior_peekHeight="0dp"
-        app:layout_behavior="@string/bottom_sheet_behavior">
+        app:layout_behavior="@string/bottom_sheet_behavior"
+        >
         <!--app:layout_behavior="@string/bottom_sheet_behavior"-->
         <!---->
         <!-- 容器需加上layout_behavior這個設定，才會是系統認定的Bottom Sheets -->
@@ -95,16 +95,13 @@
 
                 <Button
                     android:id="@+id/btnCheckChefFoodOrder"
-                    android:layout_width="265dp"
+                    android:layout_width="242dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="11dp"
-                    android:layout_marginRight="11dp"
-                    android:layout_toStartOf="@+id/btnMenu_od_Food_Order"
-                    android:layout_toLeftOf="@+id/btnMenu_od_Food_Order"
-                    android:background="#2985D3"
+                    android:layout_alignParentTop="true"
+                    android:background="@color/colorOrange"
+                    android:visibility="gone"
                     android:text="查看食材訂單"
-                    android:textColor="@color/colorWhite"
-                    android:visibility="gone" />
+                    android:textColor="@color/colorWhite" />
 
                 <RatingBar
                     android:id="@+id/idMenu_od_ratinggbar"
@@ -129,14 +126,13 @@
                     android:id="@+id/btnMenu_od_Food_Order"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginEnd="11dp"
-                    android:layout_marginRight="11dp"
+                    android:layout_below="@+id/idMenu_od_ratinggbar"
+                    android:layout_marginLeft="2dp"
+                    android:layout_toRightOf="@+id/btnCheckChefFoodOrder"
                     android:background="#4CAF50"
                     android:text="選擇訂單所需食材"
-                    android:textColor="@color/colorWhite"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    android:textColor="@color/colorWhite" />
 
 
                 <Button
@@ -145,6 +141,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@id/idOrderQRCode"
                     android:layout_alignParentBottom="true"
+                    android:background="#2985D3"
+                    android:textColor="@color/colorWhite"
                     android:text="@string/stringMenuOrderButton" />
 
                 <Button

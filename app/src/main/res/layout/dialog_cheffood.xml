@@ -32,7 +32,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="190dp"
+            android:layout_width="170dp"
             android:layout_height="30dp"
             android:background="@drawable/text_view_border_black"
             android:gravity="top"
@@ -50,7 +50,7 @@
             android:textColor="@color/colorBlack" />
 
         <TextView
-            android:layout_width="100dp"
+            android:layout_width="80dp"
             android:layout_height="30dp"
             android:background="@drawable/text_view_border_black"
             android:gravity="left"
@@ -68,7 +68,7 @@
 
         <TextView
             android:id="@+id/idConfirmFood"
-            android:layout_width="190dp"
+            android:layout_width="170dp"
             android:layout_height="348dp"
             android:background="@drawable/text_view_border_black"
             android:gravity="top"
@@ -91,7 +91,7 @@
 
         <TextView
             android:id="@+id/idConfirmFoodStotal"
-            android:layout_width="100dp"
+            android:layout_width="80dp"
             android:layout_height="348dp"
             android:background="@drawable/text_view_border_black"
             android:gravity="top"
@@ -128,12 +128,12 @@
 
     <Button
         android:id="@+id/idFoodOrderCheckNext"
-        android:layout_width="130dp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="35dp"
+        android:layout_marginLeft="15dp"
         android:layout_marginBottom="4dp"
         android:background="@color/colorBlue"
         android:text="下一步"
@@ -155,12 +155,13 @@
 
     <Button
         android:id="@+id/idFoodOrderCancel"
-        android:layout_width="130dp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginRight="35dp"
+        android:layout_marginStart="203dp"
+        android:layout_marginLeft="190dp"
         android:layout_marginBottom="4dp"
         android:background="@color/colorBlue"
         android:text="取消"
@@ -180,7 +181,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="35dp"
             android:orientation="horizontal">
 
@@ -200,7 +201,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
             android:orientation="horizontal">
 
             <TextView
@@ -219,7 +220,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
             android:orientation="horizontal">
 
             <TextView

@@ -30,7 +30,7 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/viewFoodMallPager"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="530dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <Button

@@ -201,10 +201,10 @@ public class MenuOrderFragment extends Fragment {
                     if (isOnClick) {
                         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
-                        if (highSize > 1024) {
-                            bottomSheetBehavior.setPeekHeight(755);
-                        } else {
+                        if (highSize == 1024) {
                             bottomSheetBehavior.setPeekHeight(290);
+                        } else {
+                            bottomSheetBehavior.setPeekHeight(580);
                         }
 
                         isOnClick = false;
@@ -302,7 +302,10 @@ public class MenuOrderFragment extends Fragment {
             idMenu_Order_Rate.setText("訂單評價：" + rateMsg);
             idMenu_Order_Rate.setTextColor(getResources().getColor(R.color.colorRed));
             idMenu_Order_Msg.setTextColor(getResources().getColor(R.color.colorRed));
-        } else {
+        }else if(menuOrder.getMenu_od_msg() == null){
+            idMenu_Order_Rate.setText("訂單評價：" + menuOrder.getMenu_od_rate() + "顆星");
+            rateMsg="沒有評價留言";
+        }else {
             rateMsg = menuOrder.getMenu_od_msg();
             idMenu_Order_Rate.setText("訂單評價：" + menuOrder.getMenu_od_rate() + "顆星");
         }
@@ -346,7 +349,7 @@ public class MenuOrderFragment extends Fragment {
                 final Window dialogWindow = dialog.getWindow();
                 dialogWindow.setGravity(Gravity.CENTER);
                 WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-                lp.width = 1000;
+                lp.width = 500;
                 lp.alpha = 1.0f;
                 dialogWindow.setAttributes(lp);
                 Button btnOrder_Rate_Ok = dialog.findViewById(R.id.btnOrder_Rate_Ok);

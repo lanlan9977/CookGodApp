@@ -58,7 +58,7 @@ public class BroadcastVO implements java.io.Serializable ,Comparable<BroadcastVO
 
 	@Override
 	public int compareTo(BroadcastVO o) {
-		return getBroadcast_start().compareTo(o.getBroadcast_start());
+		return -getBroadcast_start().compareTo(o.getBroadcast_start());
 	}
 
 

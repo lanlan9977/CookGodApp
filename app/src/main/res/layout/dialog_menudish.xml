@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="600dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorBlack"
+        android:padding="16dp"
+        android:text="菜色明細"
+        android:textColor="@android:color/white"
+        android:textSize="16sp" />
+
+    <ImageView
+        android:id="@+id/idDish_Pic"
+        android:layout_width="400dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:layout_height="247dp" />
+
+    <TextView
+        android:id="@+id/idDish_ResumeText"
+        android:layout_width="480dp"
+        android:layout_height="192dp"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textSize="20dp" />
+
+    <Button
+        android:id="@+id/btnDish"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorBlue"
+        android:text="返回"
+        android:textColor="@color/colorWhite" />
+
+</LinearLayout>

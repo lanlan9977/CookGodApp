@@ -93,6 +93,7 @@ public class FoodMallListFragment extends Fragment {
             RatingBar idFood_M_Rate;
             Spinner idFood_Mall_Qty;
 
+
             public ViewHolder(View itemView) {
                 super(itemView);
                 idFood_M_Name = itemView.findViewById(R.id.idFood_M_Name);
@@ -119,6 +120,7 @@ public class FoodMallListFragment extends Fragment {
             final FoodMallVO foodMallVO = foodMallList.get(i);
             foodMallImageTask = new FoodMallImageTask(Util.Servlet_URL + "FoodMallServlet", foodMallVO.getFood_ID(), imageSize, viewHolder.idFood_M_Pic);
             foodMallImageTask.execute();
+
             viewHolder.idFood_M_Name.setText(foodMallVO.getFood_m_name());
             viewHolder.idFood_M_Place.setText(foodMallVO.getFood_m_place());
             viewHolder.idFood_M_Price.setText("$" + foodMallVO.getFood_m_price().toString());
@@ -134,7 +136,7 @@ public class FoodMallListFragment extends Fragment {
                     final Window dialogWindow = foodDialog.getWindow();
                     dialogWindow.setGravity(Gravity.CENTER);
                     WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-                    lp.width = 700;
+                    lp.width = 500;
                     lp.alpha = 1.0f;
                     dialogWindow.setAttributes(lp);
                     TextView idfood_M_Resume = foodDialog.findViewById(R.id.idfood_M_Resume);

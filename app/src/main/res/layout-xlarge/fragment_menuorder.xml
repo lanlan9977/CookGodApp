@@ -101,7 +101,7 @@
                         android:layout_marginRight="11dp"
                         android:layout_toStartOf="@+id/btnMenu_od_Food_Order"
                         android:layout_toLeftOf="@+id/btnMenu_od_Food_Order"
-                        android:background="#2985D3"
+                        android:background="@color/colorOrange"
                         android:text="查看食材訂單"
                         android:textColor="@color/colorWhite"
                         android:visibility="gone" />
@@ -144,6 +144,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignBottom="@id/idOrderQRCode"
+                        android:background="@color/colorBlue"
+                        android:textColor="@color/colorWhite"
                         android:layout_alignParentBottom="true"
                         android:text="@string/stringMenuOrderButton" />
 

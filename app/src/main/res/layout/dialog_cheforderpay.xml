@@ -218,5 +218,17 @@
         android:layout_marginTop="-150dp"
         android:background="@drawable/card_credit2" />
 
+    <ProgressBar
+        android:id="@+id/idPayProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="134dp"
+        android:visibility="gone"
+        android:layout_marginLeft="134dp"
+        android:layout_marginTop="265dp" />
+
 
 </RelativeLayout>

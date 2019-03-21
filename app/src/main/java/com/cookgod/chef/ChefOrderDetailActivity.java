@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +27,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -116,6 +118,7 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
         private LayoutInflater layoutInflater;
         private List<ChefOrderVO> chefOrderList;
         private Context context;
+        private Handler handler = new Handler();
 
         public ChefOrderDetailAdapter(Context context, List<ChefOrderVO> chefOrderList) {
             this.context = context;
@@ -232,6 +235,9 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
                     final Button btnCardCheck=dialog.findViewById(R.id.btnCardCheck);
                     final Button btnCardNext=dialog.findViewById(R.id.btnCardNext);
                     final EditText idCardName=dialog.findViewById(R.id.idCardName);
+                    ProgressBar idPayProgress = dialog.findViewById(R.id.idPayProgress);
+                    final int[] progress = {0};
+
                     idCard1.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -249,6 +255,7 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
                                     Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
                                     -2.05f, Animation.RELATIVE_TO_SELF, 0.0f);
                             mShowAction2.setDuration(600);
+
                             idCard2.setAnimation(mShowAction2);
                             idCardLayout.setVisibility(View.VISIBLE);
                         }
@@ -261,14 +268,36 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
                     });
                     btnCardCheck.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(View view) {
+                        public void onClick(View view2) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(ChefOrderDetailActivity.this);
                             builder.setTitle("是否確定送出付款訊息");
                             builder.setPositiveButton("確定", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface aDialog, int which) {
-                                    retrieveChefOrderDetailTask= (RetrieveChefOrderDetailTask) new RetrieveChefOrderDetailTask(Util.Servlet_URL + "ChefOdDetailByChefServlet", "o1", chef_or_ID,total,"update").execute();
-                                    dialog.dismiss();
+                                    idPayProgress.setVisibility(View.VISIBLE);
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            while (progress[0] <= 100) {
+                                                handler.post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        idPayProgress.setProgress(progress[0]);
+                                                    }
+                                                });
+                                                try {
+                                                    Thread.sleep(8);
+                                                } catch (InterruptedException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                progress[0]++;
+                                                if( progress[0]==100){
+                                                    dialog.dismiss();
+                                                }
+                                            }
+                                        }
+                                    }).start();
+                                    retrieveChefOrderDetailTask = (RetrieveChefOrderDetailTask) new RetrieveChefOrderDetailTask(Util.Servlet_URL + "ChefOdDetailByChefServlet", "o1", chef_or_ID, total, "update").execute();
                                     onStart();
                                     Util.showToast(ChefOrderDetailActivity.this, "付款完畢");
                                 }

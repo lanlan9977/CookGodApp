@@ -2,6 +2,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/colorWhite"
+    android:orientation="vertical"
+    tools:context=".other.LivesActivity"
+    >
+    <!--<view-->
+        <!--android:id="@+id/idYouTubePlayerView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--class="com.google.android.youtube.player.YouTubePlayerView"-->
+        <!--android:layout_height="300dp"/>-->
+    <!--<fragment-->
+        <!--android:name="com.google.android.youtube.player.YouTubePlayerSupportFragment"-->
+        <!--android:id="@+id/idYouTubePlayerView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="300dp"/>-->
+<com.google.android.youtube.player.YouTubePlayerView
+    android:layout_width="match_parent"
+    android:id="@+id/idYouTubePlayerView"
+    android:layout_height="300dp"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="videoPlay"/>
 </LinearLayout>
 <!--直播專區-->

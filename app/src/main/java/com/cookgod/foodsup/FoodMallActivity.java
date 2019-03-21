@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -26,6 +27,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -172,6 +174,7 @@ public class FoodMallActivity extends AppCompatActivity {
 
 
     private class MyPagerAdapter extends FragmentPagerAdapter {
+
         List<Page> pageList;
 
         private MyPagerAdapter(FragmentManager fragmentManager) {
@@ -275,6 +278,7 @@ public class FoodMallActivity extends AppCompatActivity {
     }
 
     public void showFoodOrder() {
+        Handler handler = new Handler();
         dialog = new Dialog(FoodMallActivity.this,R.style.PauseDialog);
         dialog.setTitle("確認訂單食材");
         dialog.setCancelable(true);
@@ -297,6 +301,8 @@ public class FoodMallActivity extends AppCompatActivity {
         final EditText idCheckName=dialog.findViewById(R.id.idCheckName);
         final EditText idCheckTel=dialog.findViewById(R.id.idCheckTel);
         final EditText idCheckAddr=dialog.findViewById(R.id.idCheckAddr);
+       ProgressBar idOrderProgress = dialog.findViewById(R.id.idOrderProgress);
+        final int[] progress = {0};
         RadioButton rbtnChefData=dialog.findViewById(R.id.rbtnChefData);
         StringBuilder stringBuilder = new StringBuilder();
         StringBuilder stringBuilderQua = new StringBuilder();
@@ -333,7 +339,33 @@ public class FoodMallActivity extends AppCompatActivity {
                 builder.setTitle("是否送出訂單");
                 builder.setPositiveButton("送出", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(DialogInterface dialog2, int which) {
+                        idOrderProgress.setVisibility(View.VISIBLE);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                while (progress[0] <= 100) {
+                                    handler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            idOrderProgress.setProgress(progress[0]);
+                                        }
+                                    });
+                                    try {
+                                        Thread.sleep(10);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                    progress[0]++;
+                                    if( progress[0]==100){
+                                        dialog.dismiss();
+                                        finish();
+
+                                    }
+                                }
+                            }
+                        }).start();
+
                         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
                         String chefOdDetailJsonIn = gson.toJson(chefOdDetailList);
                         retrieveChefOrderTask = new RetrieveChefOrderTask(Util.Servlet_URL + "ChefOdDetailServlet", chef_ID, chefOdDetailJsonIn);
@@ -342,12 +374,11 @@ public class FoodMallActivity extends AppCompatActivity {
                             SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
                                     MODE_PRIVATE);
                             preferences.edit().putString(menu_od_ID, chef_or_ID).apply();
-                            Log.e(TAG,"發送訂單完畢");
+
                         } catch (Exception e) {
                             Log.e(TAG, e.toString());
                         } finally {
-                            dialog.dismiss();
-                            finish();
+                            Util.showToast(FoodMallActivity.this,"發送訂單完畢");
                         }
                     }
                 });

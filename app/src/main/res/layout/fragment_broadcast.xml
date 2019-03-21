@@ -1,11 +1,12 @@
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/idBroadcastScrollView"
     android:layout_width="360dp"
     android:layout_height="wrap_content"
     android:layout_gravity="right"
+    android:orientation="vertical"
     android:background="@color/colorWhite"
     tools:context="com.cookgod.broadcast.BroadcastFragment">
 
@@ -32,7 +33,6 @@
             android:layout_marginTop="0dp"
             android:background="@color/colorYellow"
             android:paddingLeft="1dp"
-            android:nestedScrollingEnabled="false"
             android:paddingRight="1dp" />
 
 
@@ -54,8 +54,7 @@
             android:layout_below="@+id/noRead"
             android:layout_marginTop="0dp"
             android:background="@color/colorYellow"
-            android:nestedScrollingEnabled="false"
             android:paddingLeft="1dp"
             android:paddingRight="1dp" />
     </LinearLayout>
-</ScrollView>
+</LinearLayout>

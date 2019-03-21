@@ -1,15 +1,22 @@
 package com.cookgod.order;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -37,6 +44,7 @@ public class MenuOrderDetailActivity extends AppCompatActivity {
     private DishImageTask dishImageTask;
     private ImageView imageView;
     private RecyclerView recyclerView;
+    private Dialog dishDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,12 +113,15 @@ public class MenuOrderDetailActivity extends AppCompatActivity {
         class ViewHolder extends RecyclerView.ViewHolder {
             TextView idDish_name, idDish_Resume;
             ImageView idDish_View;
+            ConstraintLayout idDishLayout;
 
             public ViewHolder(View itemView) {
                 super(itemView);
                 idDish_name = itemView.findViewById(R.id.idDish_name);
                 idDish_Resume = itemView.findViewById(R.id.idDish_Resume);
                 idDish_View = itemView.findViewById(R.id.idDish_View);
+                idDishLayout=itemView.findViewById(R.id.idDishLayout);
+
             }
         }
 
@@ -132,8 +143,43 @@ public class MenuOrderDetailActivity extends AppCompatActivity {
 //            if(highSize=1024){
 //                imageSize = getResources().getDisplayMetrics().widthPixels;
 //            }
+
             dishImageTask = new DishImageTask(Util.Servlet_URL+"DishServlet", dishVO.getDish_ID(), imageSize, viewHolder.idDish_View);
             dishImageTask.execute();
+
+
+            viewHolder.idDishLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Drawable bitmap = (viewHolder.idDish_View.getDrawable());
+                    Log.e(TAG,""+bitmap);
+
+                    dishDialog = new Dialog(MenuOrderDetailActivity.this,R.style.PauseCustomDialog);
+                    dishDialog.setTitle("菜色明細");
+                    dishDialog.setCancelable(true);
+                    dishDialog.setContentView(R.layout.dialog_menudish);
+                    final Window dialogWindow = dishDialog.getWindow();
+                    dialogWindow.setGravity(Gravity.CENTER);
+                    WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+                    lp.width = 600;
+                    lp.alpha = 1.0f;
+                    dialogWindow.setAttributes(lp);
+                    ImageView idDish_Pic=dishDialog.findViewById(R.id.idDish_Pic);
+                    TextView idDish_ResumeText=dishDialog.findViewById(R.id.idDish_ResumeText);
+
+                    idDish_Pic.setImageDrawable(bitmap);
+
+                    Button btnDish=dishDialog.findViewById(R.id.btnDish);
+                    btnDish.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dishDialog.cancel();
+                        }
+                    });
+                    idDish_ResumeText.setText(dishVO.getDish_resume());
+                    dishDialog.show();
+                }
+            });
         }
 
         @Override

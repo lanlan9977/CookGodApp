@@ -95,7 +95,7 @@
 
                 <Button
                     android:id="@+id/btnCheckChefFoodOrder"
-                    android:layout_width="245dp"
+                    android:layout_width="255dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:background="@color/colorOrange"

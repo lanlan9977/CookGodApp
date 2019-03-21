@@ -179,6 +179,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Log.e(TAG, e.toString());
             }
         }
+
         Menu menu = navigationView.getMenu();
         if (login) {
             if (isChef) {
@@ -193,6 +194,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         carouselView.setPageCount(adSize);
         carouselView.setImageListener(imageListener);
+        Toast.makeText(MainActivity.this,"登入成功",Toast.LENGTH_LONG);
     }
     
 //    @Override
@@ -304,10 +306,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 break;
             case R.id.itemForums://(論壇專區)
-                Intent intent = new Intent(MainActivity.this, ChefZoneActivity.class);
-                intent.putExtra("chef_ID",chef_account.getChef_ID());
-                startActivity(intent);
-                overridePendingTransition(R.anim.in, R.anim.out);
+                if(isChef) {
+                    Intent intent = new Intent(MainActivity.this, ChefZoneActivity.class);
+                    intent.putExtra("chef_ID", chef_account.getChef_ID());
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.in, R.anim.out);
+                }else{
+                    Util.showToast(MainActivity.this,"此為主廚專區");
+                }
                 break;
             case R.id.itemLives://(直播專區)
                 onItemSelectedTo(R.string.stringLives, LivesActivity.class);

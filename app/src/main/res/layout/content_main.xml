@@ -31,13 +31,21 @@
         android:orientation="horizontal">
 
 
-        <ImageView
-            android:layout_width="205dp"
+        <TextView
+            android:layout_width="180dp"
             android:layout_height="match_parent"
+            android:text="嚴選套餐"
+            android:textSize="20dp"
+            android:layout_gravity="center"
+            android:textColor="@color/colorBlack"
             android:background="@color/colorWhite" />
-        <ImageView
-            android:layout_width="205dp"
+        <TextView
+            android:layout_width="180dp"
             android:layout_height="match_parent"
+            android:textColor="@color/colorWhite"
+            android:layout_gravity="center"
+            android:textSize="20dp"
+            android:text="節慶套餐"
             android:background="@color/colorGary" />
     </LinearLayout>
 
@@ -46,13 +54,21 @@
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:orientation="horizontal">
-        <ImageView
-            android:layout_width="205dp"
+        <TextView
+            android:layout_width="180dp"
             android:layout_height="match_parent"
+            android:textColor="@color/colorWhite"
+            android:layout_gravity="center"
+            android:textSize="20dp"
+            android:text="嚴選食材"
             android:background="@color/colorGary" />
-        <ImageView
-            android:layout_width="205dp"
+        <TextView
+            android:layout_width="180dp"
             android:layout_height="match_parent"
+            android:textSize="20dp"
+            android:layout_gravity="center"
+            android:textColor="@color/colorBlack"
+            android:text="其它"
             android:background="@color/colorWhite" />
     </LinearLayout>
 

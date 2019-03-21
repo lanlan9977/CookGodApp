@@ -239,11 +239,6 @@ public class FoodMallActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         foodMallMap = new LinkedHashMap<>();
-                        foodMallListFragmentOne.reMapData();
-                        foodMallListFragmentTwo.reMapData();
-                        foodMallListFragmentThree.reMapData();
-                        foodMallListFragmentFour.reMapData();
-                        foodMallListFragmentFive.reMapData();
                         for(int i=0;i<dishFoodList.size();i++){
                             for(int j=0;j<foodMallList.size();j++){
                                 if(dishFoodList.get(i).getFood_ID().equals(foodMallList.get(j).getFood_ID())){
@@ -255,7 +250,18 @@ public class FoodMallActivity extends AppCompatActivity {
                                 }
                             }
                         }
-                        foodMallListFragment.reMapData();
+                        if(foodMallListFragmentOne!=null)
+                        foodMallListFragmentOne.reMapData(foodMallMap);
+                        if(foodMallListFragmentTwo!=null)
+                        foodMallListFragmentTwo.reMapData(foodMallMap);
+                        if(foodMallListFragmentThree!=null)
+                        foodMallListFragmentThree.reMapData(foodMallMap);
+                        if(foodMallListFragmentFour!=null)
+                        foodMallListFragmentFour.reMapData(foodMallMap);
+                        if(foodMallListFragmentFive!=null)
+                        foodMallListFragmentFive.reMapData(foodMallMap);
+                        foodMallListFragment.reMapData(foodMallMap);
+
                         Util.showToast(FoodMallActivity.this, "已自動選取食材");
                     }
                 });
@@ -352,34 +358,39 @@ public class FoodMallActivity extends AppCompatActivity {
                                         }
                                     });
                                     try {
-                                        Thread.sleep(10);
+                                        Thread.sleep(5);
                                     } catch (InterruptedException e) {
                                         e.printStackTrace();
                                     }
                                     progress[0]++;
                                     if( progress[0]==100){
-                                        dialog.dismiss();
-                                        finish();
+                                        SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
+                                                MODE_PRIVATE);
+                                        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+                                        String chefOdDetailJsonIn = gson.toJson(chefOdDetailList);
+                                        retrieveChefOrderTask = new RetrieveChefOrderTask(Util.Servlet_URL + "ChefOdDetailServlet", chef_ID, chefOdDetailJsonIn);
+                                        try {
+                                            String chef_or_ID = retrieveChefOrderTask.execute().get();
+
+                                            preferences.edit().putString(menu_od_ID, chef_or_ID).apply();
+                                        } catch (Exception e) {
+                                            Log.e(TAG, e.toString());
+                                        } finally {
+
+                                            dialog.dismiss();
+                                            finish();
+
+
+                                        }
+
 
                                     }
                                 }
                             }
                         }).start();
+                        Util.showToast(FoodMallActivity.this,"發送訂單完畢");
 
-                        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-                        String chefOdDetailJsonIn = gson.toJson(chefOdDetailList);
-                        retrieveChefOrderTask = new RetrieveChefOrderTask(Util.Servlet_URL + "ChefOdDetailServlet", chef_ID, chefOdDetailJsonIn);
-                        try {
-                            String chef_or_ID = retrieveChefOrderTask.execute().get();
-                            SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
-                                    MODE_PRIVATE);
-                            preferences.edit().putString(menu_od_ID, chef_or_ID).apply();
 
-                        } catch (Exception e) {
-                            Log.e(TAG, e.toString());
-                        } finally {
-                            Util.showToast(FoodMallActivity.this,"發送訂單完畢");
-                        }
                     }
                 });
                 builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {

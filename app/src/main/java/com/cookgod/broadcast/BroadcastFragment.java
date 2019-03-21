@@ -24,7 +24,6 @@ import com.cookgod.task.RetrieveBroadcastTask;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -71,8 +70,8 @@ public class BroadcastFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_broadcast, container, false);
         broadcasNoReadtListAdapter = new BroadcastListAdapter(getActivity(), broadcastNoReadList);
         broadcastListAdapter = new BroadcastListAdapter(getActivity(), broadcastList);
-//        idBroadcastScrollView = view.findViewById(R.id.idBroadcastScrollView);
-//        idBroadcastScrollView.setFillViewport(true);
+        idBroadcastScrollView = view.findViewById(R.id.idBroadcastScrollView);
+        idBroadcastScrollView.setFillViewport(true);
         broadcastView = view.findViewById(R.id.idBroadcastView);
         broadcastView.setLayoutManager(new LinearLayoutManager(getActivity()));
         broadcastView.setNestedScrollingEnabled(false);
@@ -107,8 +106,6 @@ public class BroadcastFragment extends Fragment {
             this.context = context;
             layoutInflater = LayoutInflater.from(context);
             this.broadcastList1 = broadcastList1;
-            Collections.sort(this.broadcastList1);
-
         }
 
         class ViewHolder extends RecyclerView.ViewHolder  implements ItemTouchHelperViewHolder {
@@ -188,8 +185,6 @@ public class BroadcastFragment extends Fragment {
             }
             broadcastList1.remove(i);
             broadcastList.add(broadcastVO);
-            Collections.sort(broadcastList1);
-            Collections.sort(broadcastList);
             ((MainActivity)getActivity()).onProviderCount(broadcastList1);
             notifyItemRemoved(i);
         }

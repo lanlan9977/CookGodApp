@@ -72,6 +72,8 @@ public class ChefZoneActivity extends AppCompatActivity {
         get_selected_dates = findViewById(R.id.get_selected_dates);
         get_clear_dates = findViewById(R.id.get_clear_dates);
         get_add_dates = findViewById(R.id.get_add_dates);
+        CalendarPickerView.SelectionMode selectionMode;
+        selectionMode=CalendarPickerView.SelectionMode.RANGE;
 
 
         get_selected_dates.setOnClickListener(new View.OnClickListener() {
@@ -112,6 +114,7 @@ public class ChefZoneActivity extends AppCompatActivity {
                             }
                         }
                         retrieveChefSchTask = (RetrieveChefSchTask) new RetrieveChefSchTask(Util.Servlet_URL + "ChefSchServlet", chef_ID, arrayList, "add").execute();
+                        Util.showToast(ChefZoneActivity.this,"行程發送完畢");
 
                     }
                 });
@@ -131,7 +134,7 @@ public class ChefZoneActivity extends AppCompatActivity {
         lastYear.add(Calendar.YEAR, -10);
         calendar.deactivateDates(list);
         calendar.init(lastYear.getTime(), nextYear.getTime(), new SimpleDateFormat("MMMM, yyyy", Locale.getDefault())) //
-                .inMode(CalendarPickerView.SelectionMode.RANGE) //
+                .inMode(CalendarPickerView.SelectionMode.MULTIPLE) //
                 .withSelectedDate(new Date())
                 .withDeactivateDates(list)
                 .withHighlightedDates(arrayList);

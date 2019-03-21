@@ -384,7 +384,7 @@ public class OrderActivity extends AppCompatActivity {
 
                         List<String> list = new ArrayList<>();
                         list.add("location");
-                        list.add(cust_ID);
+                        list.add("C00009");
 //                        DecimalFormat df=new DecimalFormat("#.########");
                         list.add(String.valueOf(location.getLatitude()));
                         list.add(String.valueOf(location.getLongitude()));

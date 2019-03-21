@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main.MainActivity"
+    android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".main.MainActivity"
     tools:showIn="@layout/activity_main">
 
     <com.synnapps.carouselview.CarouselView
@@ -23,5 +23,53 @@
         app:strokeWidth="1dp"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="57dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:orientation="horizontal">
 
-</RelativeLayout>
+
+        <TextView
+            android:layout_width="385dp"
+            android:layout_height="match_parent"
+            android:text="嚴選套餐"
+            android:textSize="20dp"
+            android:layout_gravity="center"
+            android:textColor="@color/colorBlack"
+            android:background="@color/colorWhite" />
+        <TextView
+            android:layout_width="385dp"
+            android:layout_height="match_parent"
+            android:textColor="@color/colorWhite"
+            android:layout_gravity="center"
+            android:textSize="20dp"
+            android:text="節慶套餐"
+            android:background="@color/colorGary" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="385dp"
+            android:layout_height="match_parent"
+            android:textColor="@color/colorWhite"
+            android:layout_gravity="center"
+            android:textSize="20dp"
+            android:text="嚴選食材"
+            android:background="@color/colorGary" />
+        <TextView
+            android:layout_width="385dp"
+            android:layout_height="match_parent"
+            android:textSize="20dp"
+            android:layout_gravity="center"
+            android:textColor="@color/colorBlack"
+            android:text="其它"
+            android:background="@color/colorWhite" />
+    </LinearLayout>
+
+
+
+</LinearLayout>

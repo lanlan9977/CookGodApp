@@ -52,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
             String cust_acc = preferences.getString("cust_acc", "");
             String cust_pwd = preferences.getString("cust_pwd", "");
             if (isMember(cust_acc, cust_pwd)) {
+               Toast.makeText(LoginActivity.this,"登入成功",Toast.LENGTH_SHORT);
                 finish();
             }
         }
@@ -74,7 +75,9 @@ public class LoginActivity extends AppCompatActivity {
         }
         if (isMember(cust_acc, cust_pwd)) {
             custShared();
+            Toast.makeText(LoginActivity.this,"登入成功",Toast.LENGTH_SHORT);
             finish();
+
         } else {
             Util.showToast(LoginActivity.this, "帳號密碼輸入錯誤");
         }

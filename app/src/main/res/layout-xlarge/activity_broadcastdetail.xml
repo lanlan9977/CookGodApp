@@ -12,6 +12,6 @@
         android:layout_marginTop="150dp"
         android:layout_margin="10dp"
         android:text="33333"
-        android:textSize="40dp" />
+        android:textSize="60dp" />
 
 </LinearLayout>

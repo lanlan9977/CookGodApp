@@ -62,10 +62,12 @@ public class FoodMallListFragment extends Fragment {
         foodMallMap = ((FoodMallActivity) context).getFoodMallMap();
     }
 
-    public void reMapData() {
-        foodMallMap = new LinkedHashMap<>();
+    public void reMapData(Map<FoodMallVO, ChefOdDetailVO> foodMallMap) {
+        this.foodMallMap = new LinkedHashMap<>();
+        this.foodMallMap=foodMallMap;
         if (foodMallListAdapter != null) {
-            foodMallListAdapter.reData();
+//            foodMallListAdapter=null;
+            foodMallListAdapter.notifyDataSetChanged();
         }
     }
 
@@ -198,7 +200,7 @@ public class FoodMallListFragment extends Fragment {
 
         public void reData() {
 
-            notifyDataSetChanged();
+            foodMallListAdapter.notifyDataSetChanged();
         }
     }
 }

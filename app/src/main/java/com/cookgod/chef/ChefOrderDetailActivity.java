@@ -219,7 +219,7 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
             viewHolder.idPayOrder.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    dialog = new Dialog(ChefOrderDetailActivity.this);
+                    dialog = new Dialog(ChefOrderDetailActivity.this,R.style.PauseDialog);
                     dialog.setTitle("確認付款");
                     dialog.setCancelable(true);
                     dialog.setContentView(R.layout.dialog_cheforderpay);

@@ -275,13 +275,13 @@ public class MenuOrderFragment extends Fragment {
         } else if ("g4".equals(status)) {
             status = "訂單完成";
             if (!isChef) {
-                if ((menuOrder.getMenu_od_rate() == 0)) {
+                if ((menuOrder.getMenu_od_rate() ==null)) {
                     idMenu_od_ratinggbar.setVisibility(View.VISIBLE);
                     btnMenu_od_rate.setVisibility(View.VISIBLE);
                 } else {
                     idMenu_od_ratinggbar.setVisibility(View.VISIBLE);
 //                    idMenu_od_ratinggbar.isIndicator();
-                    btnMenu_od_rate.setVisibility(View.GONE);
+                    btnMenu_od_rate.setVisibility(View.VISIBLE);
                 }
             } else {
                 idMenu_od_status.setVisibility(View.GONE);

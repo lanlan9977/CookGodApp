@@ -25,4 +25,24 @@
     <style name="DialogButtonStyle" parent="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog">
         <item name="android:textColor">#007fff</item>
     </style>
+    <!--<style name="BottomDialogStyle" parent="@android:style/Theme.Dialog">-->
+        <!--<item name="android:windowFrame">@null</item>	&lt;!&ndash; 邊框 &ndash;&gt;-->
+        <!--<item name="android:windowIsFloating">true</item> &lt;!&ndash; 是否悬浮在activity上 &ndash;&gt;-->
+        <!--<item name="android:windowIsTranslucent">true</item> &lt;!&ndash; 半透明 &ndash;&gt;-->
+        <!--<item name="android:windowNoTitle">true</item> &lt;!&ndash; 無標题 &ndash;&gt;-->
+        <!--<item name="android:background">@android:color/transparent</item> &lt;!&ndash; 背景透明 &ndash;&gt;-->
+        <!--<item name="android:windowBackground">@android:color/transparent</item> &lt;!&ndash; 窗口背景透明 &ndash;&gt;-->
+        <!--<item name="android:backgroundDimEnabled">true</item> &lt;!&ndash; 背景模糊 預設true，設置false之後背景昏暗效果消失 &ndash;&gt;-->
+        <!--<item name="android:windowAnimationStyle">@style/BottomDialogAnimation</item> &lt;!&ndash; 顯示和消失的動畫效果 &ndash;&gt;-->
+        <!--<item name="android:colorBackgroundCacheHint">@null</item>&lt;!&ndash; 背景缓存颜色 &ndash;&gt;-->
+    <!--</style>-->
+
+    <style name="PauseDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowAnimationStyle">@style/PauseDialogAnimation</item>
+    </style>
+
+    <style name="PauseDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/fadein</item>
+        <item name="android:windowExitAnimation">@anim/fadeout</item>
+    </style>
 </resources>

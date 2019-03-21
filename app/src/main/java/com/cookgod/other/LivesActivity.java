@@ -15,7 +15,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.cookgod.R;
-import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,7 +34,7 @@ public class LivesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lives);
         mRequestQue = Volley.newRequestQueue(this);
-        FirebaseMessaging.getInstance().subscribeToTopic("news");
+//        FirebaseMessaging.getInstance().subscribeToTopic("news");
     }
 
     @Override

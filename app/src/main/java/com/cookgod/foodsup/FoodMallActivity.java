@@ -275,7 +275,7 @@ public class FoodMallActivity extends AppCompatActivity {
     }
 
     public void showFoodOrder() {
-        dialog = new Dialog(FoodMallActivity.this);
+        dialog = new Dialog(FoodMallActivity.this,R.style.PauseDialog);
         dialog.setTitle("確認訂單食材");
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.dialog_cheffood);
@@ -342,6 +342,7 @@ public class FoodMallActivity extends AppCompatActivity {
                             SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
                                     MODE_PRIVATE);
                             preferences.edit().putString(menu_od_ID, chef_or_ID).apply();
+                            Log.e(TAG,"發送訂單完畢");
                         } catch (Exception e) {
                             Log.e(TAG, e.toString());
                         } finally {
@@ -387,8 +388,8 @@ public class FoodMallActivity extends AppCompatActivity {
                         Animation.RELATIVE_TO_PARENT, 0.0f);
 
 
-                mShowAction2.setDuration(500);
-                mShowAction1.setDuration(500);
+                mShowAction2.setDuration(400);
+                mShowAction1.setDuration(400);
                 idChef_Or.setAnimation(mShowAction1);
 
 

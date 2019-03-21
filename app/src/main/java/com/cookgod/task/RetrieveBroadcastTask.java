@@ -15,19 +15,28 @@ import java.net.URL;
 
 public class RetrieveBroadcastTask extends AsyncTask<String,String,String> {
     private final static String TAG = "BroadcastDetailActivity";
-    private String url,broadcast_ID;
+    private String url,broadcast_ID,cust_id,action;
 
 
 
     public RetrieveBroadcastTask(String url, String broadcast_ID) {
         this.url=url;
         this.broadcast_ID=broadcast_ID;
+        this.action="update";
+    }
+
+    public RetrieveBroadcastTask(String url, String cust_id, String action) {
+        this.url=url;
+        this.cust_id=cust_id;
+        this.action=action;
     }
 
 
     @Override
     protected String doInBackground(String... strings) {
         JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("action", action);
+        jsonObject.addProperty("cust_ID", cust_id);
         jsonObject.addProperty("broadcast_ID", broadcast_ID);
         return getRemoteData(url, jsonObject.toString());
     }

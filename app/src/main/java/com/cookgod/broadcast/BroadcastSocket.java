@@ -129,7 +129,10 @@ public class BroadcastSocket extends WebSocketClient {
             con = getEndLocationTitle(result);
             Log.e(TAG, con);
 
-        } else {
+        }else if("menu_order_finsh".equals(type)){
+            con=stringList.get(1);
+        }
+        else {
             Log.e(TAG, "");
         }
 

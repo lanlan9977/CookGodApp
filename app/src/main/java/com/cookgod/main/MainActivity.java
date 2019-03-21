@@ -41,8 +41,8 @@ import com.cookgod.other.MallActivity;
 import com.cookgod.other.NewsActivity;
 import com.cookgod.task.AdImageTask;
 import com.cookgod.task.RetrieveAdTask;
+import com.cookgod.task.RetrieveBroadcastTask;
 import com.cookgod.task.RetrieveCustTask;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -72,18 +72,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FragmentManager manager;
     private ImageView idPicView;
     private FragmentTransaction transaction;
-    private BadgeActionProvider.OnClickListener onClickListener = new BadgeActionProvider.OnClickListener() {
-        @Override
-        public void onClick(int what) {
-            if (what == 0) {
-                Toast.makeText(MainActivity.this, getResources().getText(R.string.stringMainBroast), Toast.LENGTH_SHORT).show();
-                provider.setBadge(0);
-            }
-        }
-    };
+//    private BadgeActionProvider.OnClickListener onClickListener = new BadgeActionProvider.OnClickListener() {
+//        @Override
+//        public void onClick(int what) {
+//            if (what == 0) {
+//                Toast.makeText(MainActivity.this, getResources().getText(R.string.stringMainBroast), Toast.LENGTH_SHORT).show();
+//                provider.setBadge(0);
+//            }
+//        }
+//    };
     private AdImageTask adImageTask;
     private CarouselView carouselView;
     private int adSize;
+    private RetrieveBroadcastTask retrieveBroadcastTask;
 
 
     public List<BroadcastVO> getBroadcastList() {
@@ -100,10 +101,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 case R.id.navigation_home:
                     showFragment(item);
                     return true;
-                case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.title_dashboard);
-                    showFragment(item);
-                    return true;
+//                case R.id.navigation_dashboard:
+//                    mTextMessage.setText(R.string.title_dashboard);
+//                    showFragment(item);
+//                    return true;
                 case R.id.navigation_notifications:
                     showFragment(item);
                     return true;
@@ -117,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         transaction = manager.beginTransaction();
         hideFragment(transaction);
         switch (item.getItemId()) {
+
             case R.id.navigation_notifications:
                 if (broadcastFragment == null) {
                     Log.e(TAG, "null");
@@ -157,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             idCust_name.setText(preferences.getString("cust_name", ""));
             retrieveCustTask = new RetrieveCustTask(Util.Servlet_URL + "CustServlet", preferences.getString("cust_acc", ""), preferences.getString("cust_pwd", ""));
             try {
-                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
                 String jsonIn = retrieveCustTask.execute().get();
                 Type listType = new TypeToken<Map<String, String>>() {
                 }.getType();
@@ -177,25 +179,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Log.e(TAG, e.toString());
             }
         }
+        Menu menu = navigationView.getMenu();
+        if (login) {
+            if (isChef) {
+                idPicView.setImageDrawable(getResources().getDrawable(R.drawable.ic_chef_icon));
+                idHeaderText.setText("主廚");
+
+            } else {
+                idHeaderText.setText("顧客");
+                menu.findItem(R.id.itemForums).setVisible(true);
+            }
+            menu.findItem(R.id.logout).setVisible(true);
+        }
         carouselView.setPageCount(adSize);
         carouselView.setImageListener(imageListener);
     }
     
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        if (broadcastFragment != null) {
-            manager = getSupportFragmentManager();
-            transaction = manager.beginTransaction();
-            transaction.remove(broadcastFragment).commitAllowingStateLoss();
-            broadcastFragment = null;
-        }
-        Log.e(TAG, "onRestart");
-    }
+//    @Override
+//    protected void onRestart() {
+//        super.onRestart();
+//        if (broadcastFragment != null) {
+//            manager = getSupportFragmentManager();
+//            transaction = manager.beginTransaction();
+//            transaction.remove(broadcastFragment).commitAllowingStateLoss();
+//            broadcastFragment = null;
+//        }
+//        Log.e(TAG, "onRestart");
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        FirebaseMessaging.getInstance().setAutoInitEnabled(true);
+//        FirebaseMessaging.getInstance().setAutoInitEnabled(true);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_drawer);//設定主畫面為activity_navigation_drawer
         findViews();
@@ -236,7 +250,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         inflater.inflate(R.menu.option_menu, menu); //將option_menu inflate使用（膨脹）
         MenuItem menuItem = menu.findItem(R.id.myBadge);
         provider = (BadgeActionProvider) MenuItemCompat.getActionProvider(menuItem);
-        provider.setOnClickListener(0, onClickListener);
+//        provider.setOnClickListener(0, onClickListener);
 
         return true;
     }
@@ -322,8 +336,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
+
         super.onWindowFocusChanged(hasFocus);
         provider.setIcon(R.drawable.ic_broadcast_icon);//推播icon
+        onProviderCount(this.broadcastList);
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        Log.e(TAG,"FFFFFFFFFFFFF");
+        if (broadcastFragment != null) {
+            retrieveBroadcastTask=new RetrieveBroadcastTask(Util.Servlet_URL + "BroadcastServlet",cust_account.getCust_ID(),"action");
+            try {
+                String jsonIn=retrieveBroadcastTask.execute().get();
+                Type broadcastType = new TypeToken<List<BroadcastVO>>() {
+                }.getType();
+                broadcastList=gson.fromJson(jsonIn,broadcastType);
+                            broadcastFragment.onRead(broadcastList);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    public void onProviderCount(List<BroadcastVO> broadcastList) {
         int readStatus = 0;
         if (broadcastList != null && !broadcastList.isEmpty()) {
             for (int i = 0; i < broadcastList.size(); i++) {
@@ -333,18 +367,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
         provider.setBadge(readStatus);
-        Menu menu = navigationView.getMenu();
-        if (login) {
-            if (isChef) {
-                idPicView.setImageDrawable(getResources().getDrawable(R.drawable.ic_chef_icon));
-                idHeaderText.setText("主廚");
-
-            } else {
-                idHeaderText.setText("顧客");
-                menu.findItem(R.id.itemForums).setVisible(true);
-            }
-            menu.findItem(R.id.logout).setVisible(true);
-        }
     }
 
     public void logout() {

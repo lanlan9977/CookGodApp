@@ -2,7 +2,10 @@ package com.cookgod.broadcast;
 
 import java.sql.Timestamp;
 
-public class BroadcastVO implements java.io.Serializable {
+public class BroadcastVO implements java.io.Serializable ,Comparable<BroadcastVO> {
+
+
+
 	private String broadcast_ID;
 	private Timestamp broadcast_start;
 	private String broadcast_con;
@@ -10,7 +13,7 @@ public class BroadcastVO implements java.io.Serializable {
 	private String cust_ID;
 
 	public BroadcastVO() {
-		
+
 	}
 
 	public String getBroadcast_ID() {
@@ -52,5 +55,13 @@ public class BroadcastVO implements java.io.Serializable {
 	public void setCust_ID(String cust_ID) {
 		this.cust_ID = cust_ID;
 	}
+
+	@Override
+	public int compareTo(BroadcastVO o) {
+		return getBroadcast_start().compareTo(o.getBroadcast_start());
+	}
+
+
+
 
 }

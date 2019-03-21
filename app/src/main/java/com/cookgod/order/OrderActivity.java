@@ -139,6 +139,11 @@ public class OrderActivity extends AppCompatActivity {
                     String result = retrieveOrderQRCode.execute().get();
                     Log.e(TAG,result);
                     if(result.equals("訂單已完成!")){
+                        List<String> list=new ArrayList<>();
+                        list.add("menu_order_finsh");
+                        list.add(menu_od_ID);
+
+                        Util.broadcastSocket.send(new Gson().toJson(list));
                         AlertDialog.Builder builder = new AlertDialog.Builder(OrderActivity.this);
                         builder.setTitle("是否要快速給評");
                         builder.setNegativeButton("返回", new DialogInterface.OnClickListener() {
@@ -157,7 +162,7 @@ public class OrderActivity extends AppCompatActivity {
                                 final Window dialogWindow = dialog.getWindow();
                                 dialogWindow.setGravity(Gravity.CENTER);
                                 WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-                                lp.width = 1000;
+                                lp.width = 500;
                                 lp.alpha = 1.0f;
                                 dialogWindow.setAttributes(lp);
                                 Button btnOrder_Rate_Ok = dialog.findViewById(R.id.btnOrder_Rate_Ok);

@@ -134,7 +134,7 @@ public class ChefZoneActivity extends AppCompatActivity {
         lastYear.add(Calendar.YEAR, -10);
         calendar.deactivateDates(list);
         calendar.init(lastYear.getTime(), nextYear.getTime(), new SimpleDateFormat("MMMM, yyyy", Locale.getDefault())) //
-                .inMode(CalendarPickerView.SelectionMode.MULTIPLE) //
+                .inMode(CalendarPickerView.SelectionMode.RANGE) //
                 .withSelectedDate(new Date())
                 .withDeactivateDates(list)
                 .withHighlightedDates(arrayList);

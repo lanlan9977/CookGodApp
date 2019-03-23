@@ -16,6 +16,7 @@
     card_view:cardElevation="@dimen/cardview_default_elevation">
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/idDishLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorWhite"
@@ -54,7 +55,7 @@
 
         <TextView
             android:id="@+id/idDish_Resume"
-            android:layout_width="254dp"
+            android:layout_width="240dp"
             android:layout_height="wrap_content"
 
             android:layout_marginTop="40dp"

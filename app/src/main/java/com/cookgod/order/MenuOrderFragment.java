@@ -195,7 +195,6 @@ public class MenuOrderFragment extends Fragment {
                     menu_ID = menuOrderList.get(position).getMenu_ID();
 
 
-                    ViewGroup.LayoutParams para;
                     DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
                     float highSize = metrics.heightPixels;
                     Log.e(TAG, "" + highSize);
@@ -343,6 +342,8 @@ public class MenuOrderFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
+                DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
+                float highSize = metrics.heightPixels;
                 dialog = new Dialog(getContext());
                 dialog.setTitle("評價留言");
                 dialog.setCancelable(true);
@@ -350,7 +351,11 @@ public class MenuOrderFragment extends Fragment {
                 final Window dialogWindow = dialog.getWindow();
                 dialogWindow.setGravity(Gravity.CENTER);
                 WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-                lp.width = 500;
+                if(highSize==1024) {
+                    lp.width = 500;
+                }else{
+                    lp.width = 700;
+                }
                 lp.alpha = 1.0f;
                 dialogWindow.setAttributes(lp);
                 Button btnOrder_Rate_Ok = dialog.findViewById(R.id.btnOrder_Rate_Ok);

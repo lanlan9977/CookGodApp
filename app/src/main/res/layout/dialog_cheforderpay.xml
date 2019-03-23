@@ -38,7 +38,7 @@
         android:layout_height="400dp"
         android:layout_below="@+id/idCard1"
         android:layout_marginTop="1dp"
-        android:visibility="gone"
+android:visibility="gone"
         android:orientation="vertical">
 
         <LinearLayout
@@ -165,12 +165,14 @@
             android:layout_width="430dp"
             android:layout_height="162dp"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="gone"
+            >
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="20dp"
                 android:orientation="horizontal">
+
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -179,14 +181,23 @@
 
                     android:paddingTop="15dp"
                     android:text="輸入密碼：" />
+                <android.support.design.widget.TextInputLayout
+
+                    android:layout_width="match_parent"
+                    android:background="@color/colorWhite"
+                    android:layout_height="match_parent">
+
 
                 <EditText
                     android:id="@+id/idCardPwd"
                     android:layout_width="190dp"
+                    android:gravity="left"
                     android:inputType="textPassword"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center"
+                    android:layout_gravity="left"
+                    android:singleLine="true"
                     android:textSize="15dp" />
+                </android.support.design.widget.TextInputLayout>
             </LinearLayout>
         </LinearLayout>
         <Button

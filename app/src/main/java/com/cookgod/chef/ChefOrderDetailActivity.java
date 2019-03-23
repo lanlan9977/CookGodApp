@@ -235,6 +235,9 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
                     final Button btnCardCheck=dialog.findViewById(R.id.btnCardCheck);
                     final Button btnCardNext=dialog.findViewById(R.id.btnCardNext);
                     final EditText idCardName=dialog.findViewById(R.id.idCardName);
+                    EditText idCardPwd=dialog.findViewById(R.id.idCardPwd);
+
+
                     ProgressBar idPayProgress = dialog.findViewById(R.id.idPayProgress);
                     final int[] progress = {0};
 
@@ -269,6 +272,12 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
                     btnCardCheck.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view2) {
+                            idCardPwd.setError(null);
+                            String idPwd = idCardPwd.getText().toString().trim();
+                            if (idPwd.isEmpty()) {
+                                idCardPwd.setError("密碼不得為空");
+                                return;
+                            }
                             AlertDialog.Builder builder = new AlertDialog.Builder(ChefOrderDetailActivity.this);
                             builder.setTitle("是否確定送出付款訊息");
                             builder.setPositiveButton("確定", new DialogInterface.OnClickListener() {

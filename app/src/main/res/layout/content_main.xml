@@ -9,21 +9,34 @@
     tools:context=".main.MainActivity"
     tools:showIn="@layout/activity_main">
 
-
-    <com.synnapps.carouselview.CarouselView
-        android:id="@+id/carouselView"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="56dp"
-        app:fillColor="#FFFFFFFF"
-        app:pageColor="#00000000"
-        app:radius="6dp"
-        app:slideInterval="3000"
-        app:strokeColor="#FF777777"
-        app:strokeWidth="1dp"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="57dp" />
+        android:layout_marginTop="56dp">
+        <com.synnapps.carouselview.CarouselView
+            android:id="@+id/carouselView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:fillColor="#FFFFFFFF"
+            app:pageColor="#00000000"
+            app:radius="6dp"
+            app:slideInterval="3000"
+            app:strokeColor="#FF777777"
+            app:strokeWidth="1dp"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="57dp" />
+        <TextView
+            android:id="@+id/carouselCon"
+            android:textSize="60dp"
+            android:textColor="@color/colorWhite"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:text="FFFII"
+            android:layout_height="match_parent" />
+
+
+
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,19 +47,20 @@
         <TextView
             android:layout_width="180dp"
             android:layout_height="match_parent"
-            android:text="嚴選套餐"
-            android:textSize="20dp"
             android:layout_gravity="center"
+            android:background="@color/colorWhite"
+            android:text="嚴選套餐"
             android:textColor="@color/colorBlack"
-            android:background="@color/colorWhite" />
+            android:textSize="20dp" />
+
         <TextView
             android:layout_width="180dp"
             android:layout_height="match_parent"
-            android:textColor="@color/colorWhite"
             android:layout_gravity="center"
-            android:textSize="20dp"
+            android:background="@color/colorGary"
             android:text="節慶套餐"
-            android:background="@color/colorGary" />
+            android:textColor="@color/colorWhite"
+            android:textSize="20dp" />
     </LinearLayout>
 
 
@@ -54,22 +68,24 @@
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:orientation="horizontal">
+
         <TextView
             android:layout_width="180dp"
             android:layout_height="match_parent"
-            android:textColor="@color/colorWhite"
             android:layout_gravity="center"
-            android:textSize="20dp"
+            android:background="@color/colorGary"
             android:text="嚴選食材"
-            android:background="@color/colorGary" />
+            android:textColor="@color/colorWhite"
+            android:textSize="20dp" />
+
         <TextView
             android:layout_width="180dp"
             android:layout_height="match_parent"
-            android:textSize="20dp"
             android:layout_gravity="center"
-            android:textColor="@color/colorBlack"
+            android:background="@color/colorWhite"
             android:text="其它"
-            android:background="@color/colorWhite" />
+            android:textColor="@color/colorBlack"
+            android:textSize="20dp" />
     </LinearLayout>
 
 

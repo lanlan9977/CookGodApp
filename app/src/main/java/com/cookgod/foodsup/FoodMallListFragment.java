@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -25,8 +26,15 @@ import android.widget.TextView;
 import com.cookgod.R;
 import com.cookgod.chef.ChefOdDetailVO;
 import com.cookgod.main.Util;
+import com.cookgod.order.DishVO;
+import com.cookgod.task.DishImageTask;
 import com.cookgod.task.FoodMallImageTask;
+import com.cookgod.task.RetrieveFoodMallDetailTask;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,7 +72,7 @@ public class FoodMallListFragment extends Fragment {
 
     public void reMapData(Map<FoodMallVO, ChefOdDetailVO> foodMallMap) {
         this.foodMallMap = new LinkedHashMap<>();
-        this.foodMallMap=foodMallMap;
+        this.foodMallMap = foodMallMap;
         if (foodMallListAdapter != null) {
 //            foodMallListAdapter=null;
             foodMallListAdapter.notifyDataSetChanged();
@@ -83,6 +91,9 @@ public class FoodMallListFragment extends Fragment {
     private class FoodMallListAdapter extends RecyclerView.Adapter<FoodMallListAdapter.ViewHolder> {
         private List<FoodMallVO> foodMallList;
         private LayoutInflater inflater;
+        private List<DishVO> dishList;
+        private Gson gson;
+        private RetrieveFoodMallDetailTask retrieveFoodMallDetailTask;
 
         public FoodMallListAdapter(LayoutInflater inflater, List<FoodMallVO> foodMallList) {
             this.inflater = inflater;
@@ -109,6 +120,52 @@ public class FoodMallListFragment extends Fragment {
 
             }
         }
+        public class FoodMallDishAdapter extends  RecyclerView.Adapter<FoodMallDishAdapter.ViewHolder>  {
+            private List<DishVO> dishList;
+            private LayoutInflater layoutInflater;
+            private Context context;
+            private DishImageTask dishImageTask;
+
+            public FoodMallDishAdapter(Context context, List<DishVO> dishList) {
+                this.dishList=dishList;
+                this.context=context;
+                layoutInflater = LayoutInflater.from(context);
+            }
+
+            class ViewHolder extends RecyclerView.ViewHolder{
+                TextView idFoodMall_Dish_Name;
+                ImageView idFoodMall_Dish_Pic;
+
+                public ViewHolder(View itemView) {
+                    super(itemView);
+                    idFoodMall_Dish_Name=itemView.findViewById(R.id.idFoodMall_Dish_Name);
+                    idFoodMall_Dish_Pic=itemView.findViewById(R.id.idFoodMall_Dish_Pic);
+                }
+            }
+
+            @Override
+            public FoodMallDishAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+                View itemView = layoutInflater.inflate(R.layout.card_foodmalllistdetail, viewGroup, false);
+                return new FoodMallDishAdapter.ViewHolder(itemView);
+            }
+
+            @Override
+            public void onBindViewHolder(FoodMallDishAdapter.ViewHolder viewHolder, int i) {
+                int imageSize = getResources().getDisplayMetrics().widthPixels / 4;
+                DishVO dishVO=dishList.get(i);
+
+                dishImageTask= (DishImageTask) new DishImageTask(Util.Servlet_URL + "DishServlet",dishVO.getDish_ID(),imageSize,viewHolder.idFoodMall_Dish_Pic).execute();
+
+                viewHolder.idFoodMall_Dish_Name.setText(dishVO.getDish_name());
+                Util.showToast(getContext(),dishVO.getDish_name());
+            }
+
+            @Override
+            public int getItemCount() {
+                return dishList.size();
+            }
+        }
+
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
@@ -138,11 +195,24 @@ public class FoodMallListFragment extends Fragment {
                     final Window dialogWindow = foodDialog.getWindow();
                     dialogWindow.setGravity(Gravity.CENTER);
                     WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-                    lp.width = 500;
+                    lp.width = 700;
                     lp.alpha = 1.0f;
                     dialogWindow.setAttributes(lp);
                     TextView idfood_M_Resume = foodDialog.findViewById(R.id.idfood_M_Resume);
                     Button btnfood_M_Resume_Back = foodDialog.findViewById(R.id.btnfood_M_Resume_Back);
+                    gson= new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+                    retrieveFoodMallDetailTask=new RetrieveFoodMallDetailTask(Util.Servlet_URL + "FoodMallDetailServlet",foodMallVO.getFood_ID(),"dish_name");
+                    try {
+                        String jsoIn=retrieveFoodMallDetailTask.execute().get();
+                        Type dishType = new TypeToken<List<DishVO>>() {
+                        }.getType();
+                        dishList=gson.fromJson(jsoIn,dishType);
+                    } catch (Exception e) {
+                        Log.e(TAG,e.toString());
+                    }
+                    RecyclerView idfood_M_Detail_Handler_View=foodDialog.findViewById(R.id.idfood_M_Detail_Handler_View);
+                    idfood_M_Detail_Handler_View.setLayoutManager(new GridLayoutManager(getActivity(),3));
+                    idfood_M_Detail_Handler_View.setAdapter(new FoodMallDishAdapter(getActivity(),dishList));
                     btnfood_M_Resume_Back.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -183,7 +253,6 @@ public class FoodMallListFragment extends Fragment {
                         viewHolder.idCheckQua.setVisibility(View.GONE);
                         foodMallMap.remove(foodMallVO);
                     }
-                    Log.e(TAG,""+foodMallMap.size());
                 }
 
                 @Override
@@ -198,9 +267,5 @@ public class FoodMallListFragment extends Fragment {
             return foodMallList.size();
         }
 
-        public void reData() {
-
-            foodMallListAdapter.notifyDataSetChanged();
-        }
     }
 }

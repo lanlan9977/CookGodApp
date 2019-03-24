@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@color/colorYellow"
+    android:padding="2dp"
+    android:layout_height="100dp">
+    <ImageView
+        android:id="@+id/idFoodMall_Dish_Pic"
+        android:layout_width="100dp"
+        android:paddingTop="8dp"
+        android:layout_height="match_parent" />
+    <TextView
+        android:id="@+id/idFoodMall_Dish_Name"
+        android:layout_width="300dp"
+        android:gravity="left"
+        android:textColor="@color/colorBlack"
+        android:padding="2dp"
+        android:layout_height="match_parent" />
+
+</FrameLayout>

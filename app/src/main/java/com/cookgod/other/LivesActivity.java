@@ -1,10 +1,14 @@
 package com.cookgod.other;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.android.volley.RequestQueue;
 import com.cookgod.R;
@@ -12,6 +16,8 @@ import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
+
+import java.util.List;
 
 
 //直播專區
@@ -45,6 +51,7 @@ public class LivesActivity extends YouTubeBaseActivity implements YouTubePlayer.
         switch (item.getItemId()) {
             case R.id.itemStartLive:
 //                sendNotification();
+                validateMobileLiveIntent(this);
 
                 break;
             case R.id.itemStopLive:
@@ -129,50 +136,43 @@ public class LivesActivity extends YouTubeBaseActivity implements YouTubePlayer.
 
     }
 
-    public void videoPlay(View view) {
-        youTubePlayerView.initialize(getApi(),this);
+    private boolean canResolveMobileLiveIntent(Context context) {
+        Intent intent = new Intent("com.google.android.youtube.intent.action.CREATE_LIVE_STREAM")
+                .setPackage("com.google.android.youtube");
+        PackageManager pm = context.getPackageManager();
+        List resolveInfo =
+                pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        return resolveInfo != null && !resolveInfo.isEmpty();
     }
 
 
-//    private void sendNotification() {
-//
-//        JSONObject json = new JSONObject();
-//        try {
-//            json.put("to", "/topics/" + "news");
-//            JSONObject notificationObj = new JSONObject();
-//            notificationObj.put("title", "any title");
-//            notificationObj.put("body", "主廚開始直播");
-//            json.put("notification", notificationObj);
-//
-//            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, URL,
-//                    json,
-//                    new Response.Listener<JSONObject>() {
-//                        @Override
-//                        public void onResponse(JSONObject response) {
-//
-//                            Log.d("MUR", "onResponse: ");
-//                        }
-//                    }, new Response.ErrorListener() {
-//                @Override
-//                public void onErrorResponse(VolleyError error) {
-//                    Log.d("MUR", "onError: " + error.networkResponse);
-//                }
-//            }
-//            ) {
-//                @Override
-//                public Map<String, String> getHeaders() throws AuthFailureError {
-//                    Map<String, String> header = new HashMap<>();
-//                    header.put("content-type", "application/json");
-//                    header.put("authorization", "key=AIzaSyBtXIbI66YoR04StpbWLjH48LwaHtXMSKo");
-//                    return header;
-//                }
-//            };
-//            mRequestQue.add(request);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//
-//
-//    }
+    private void validateMobileLiveIntent(Context context) {
+        if (canResolveMobileLiveIntent(context)) {
+            startMobileLive(context);
+        } else {
+            // Prompt user to install or upgrade the YouTube app
+        }
+    }
+    private Intent createMobileLiveIntent(Context context, String description) {
+        Intent intent = new Intent("com.google.android.youtube.intent.action.CREATE_LIVE_STREAM")
+                .setPackage("com.google.android.youtube");
+        Uri referrer = new Uri.Builder()
+                .scheme("android-app")
+                .appendPath(context.getPackageName())
+                .build();
+
+        intent.putExtra(Intent.EXTRA_REFERRER, referrer);
+        if (!TextUtils.isEmpty(description)) {
+            intent.putExtra(Intent.EXTRA_SUBJECT, description);
+        }
+        return intent;
+    }
+
+
+    private void startMobileLive(Context context) {
+        Intent mobileLiveIntent = createMobileLiveIntent(context, "Streaming via ...");
+        startActivity(mobileLiveIntent);
+    }
+
 
 }

@@ -205,19 +205,6 @@ public class FoodMallActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onPause() {
-        if (foodMallImageTask != null) {
-            foodMallImageTask.cancel(true);
-            foodMallImageTask = null;
-        }
-        if (foodMallImageTask != null) {
-            foodMallImageTask.cancel(true);
-            foodMallImageTask = null;
-        }
-        super.onPause();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.foodmall_menu, menu);

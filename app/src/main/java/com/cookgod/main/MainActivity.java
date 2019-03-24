@@ -17,6 +17,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -40,6 +41,7 @@ import com.cookgod.other.LivesActivity;
 import com.cookgod.other.MallActivity;
 import com.cookgod.other.NewsActivity;
 import com.cookgod.task.AdImageTask;
+import com.cookgod.task.RetrieveAdConTask;
 import com.cookgod.task.RetrieveAdTask;
 import com.cookgod.task.RetrieveBroadcastTask;
 import com.cookgod.task.RetrieveCustTask;
@@ -48,6 +50,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageListener;
+import com.synnapps.carouselview.ViewListener;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -65,14 +68,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-    private TextView idCust_name, idHeaderText, mTextMessage;
+    private TextView idCust_name, idHeaderText, mTextMessage, carouselCon;
     private Boolean isChef, login;
     private BroadcastFragment broadcastFragment;
     private BadgeActionProvider provider;
     private FragmentManager manager;
     private ImageView idPicView;
     private FragmentTransaction transaction;
-//    private BadgeActionProvider.OnClickListener onClickListener = new BadgeActionProvider.OnClickListener() {
+    private RetrieveAdConTask retrieveAdConTask;
+    private List<String> stringConList;
+    //    private BadgeActionProvider.OnClickListener onClickListener = new BadgeActionProvider.OnClickListener() {
 //        @Override
 //        public void onClick(int what) {
 //            if (what == 0) {
@@ -142,11 +147,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onStart() {
         super.onStart();
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        retrieveAdConTask = new RetrieveAdConTask(Util.Servlet_URL + "AdServlet", "selectCon");
 
-       retrieveAdTask=new RetrieveAdTask(Util.Servlet_URL + "AdServlet");
         try {
-            String stringSize=retrieveAdTask.execute().get();
-            adSize = Integer.valueOf(stringSize);
+            String jsonInCon = retrieveAdConTask.execute().get();
+            Type stringListType = new TypeToken<List<String>>() {
+            }.getType();
+            stringConList = gson.fromJson(jsonInCon, stringListType);
+//            String stringSize=retrieveAdTask.execute().get();
+            adSize = stringConList.size();
+            Log.e(TAG, "" + stringConList);
         } catch (Exception e) {
             Log.e(TAG, e.toString());
         }
@@ -159,7 +170,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             idCust_name.setText(preferences.getString("cust_name", ""));
             retrieveCustTask = new RetrieveCustTask(Util.Servlet_URL + "CustServlet", preferences.getString("cust_acc", ""), preferences.getString("cust_pwd", ""));
             try {
-                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
                 String jsonIn = retrieveCustTask.execute().get();
                 Type listType = new TypeToken<Map<String, String>>() {
                 }.getType();
@@ -183,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Menu menu = navigationView.getMenu();
         if (login) {
             if (isChef) {
-                idPicView.setImageDrawable(getResources().getDrawable(R.drawable.ic_chef_icon));
+                idPicView.setImageDrawable(getResources().getDrawable(R.drawable.ic_iconfinder_chef));
                 idHeaderText.setText("主廚");
 
             } else {
@@ -194,9 +204,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         carouselView.setPageCount(adSize);
         carouselView.setImageListener(imageListener);
-        Toast.makeText(MainActivity.this,"登入成功",Toast.LENGTH_LONG);
+        carouselView.setViewListener(viewListener);
+        Toast.makeText(MainActivity.this, "登入成功", Toast.LENGTH_LONG);
     }
-    
+
 //    @Override
 //    protected void onRestart() {
 //        super.onRestart();
@@ -234,14 +245,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         idHeaderText = header.findViewById(R.id.idHeaderText);
         idPicView = header.findViewById(R.id.idPicView);
         carouselView = findViewById(R.id.carouselView);
+        carouselCon = findViewById(R.id.carouselCon);
+
+
     }
+
+    ViewListener viewListener = new ViewListener() {
+        @Override
+        public View setViewForPosition(int position) {
+
+            carouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP);
+
+            carouselCon.setText(stringConList.get(position));
+            return carouselView;
+        }
+    };
 
     ImageListener imageListener = new ImageListener() {
         @Override
         public void setImageForPosition(int position, ImageView imageView) {
-            int imageSize = getResources().getDisplayMetrics().widthPixels/2 ;
+            int imageSize = getResources().getDisplayMetrics().widthPixels / 2;
             adImageTask = new AdImageTask(Util.Servlet_URL + "AdServlet", imageSize, imageView, position);
             adImageTask.execute();
+
+
 
         }
     };
@@ -306,13 +333,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 break;
             case R.id.itemForums://(論壇專區)
-                if(isChef) {
+                if (isChef) {
                     Intent intent = new Intent(MainActivity.this, ChefZoneActivity.class);
                     intent.putExtra("chef_ID", chef_account.getChef_ID());
                     startActivity(intent);
                     overridePendingTransition(R.anim.in, R.anim.out);
-                }else{
-                    Util.showToast(MainActivity.this,"此為主廚專區");
+                } else {
+                    Util.showToast(MainActivity.this, "此為主廚專區");
                 }
                 break;
             case R.id.itemLives://(直播專區)
@@ -323,7 +350,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.logout://(登出)
                 logout();
-                SharedPreferences pref=getSharedPreferences(Util.PREF_FILE,
+                SharedPreferences pref = getSharedPreferences(Util.PREF_FILE,
                         MODE_PRIVATE);
                 pref.edit().putBoolean("login", false).putBoolean("isChef", false).apply();
                 break;
@@ -347,15 +374,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         provider.setIcon(R.drawable.ic_broadcast_icon);//推播icon
         onProviderCount(this.broadcastList);
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-        Log.e(TAG,"FFFFFFFFFFFFF");
         if (broadcastFragment != null) {
-            retrieveBroadcastTask=new RetrieveBroadcastTask(Util.Servlet_URL + "BroadcastServlet",cust_account.getCust_ID(),"action");
+            retrieveBroadcastTask = new RetrieveBroadcastTask(Util.Servlet_URL + "BroadcastServlet", cust_account.getCust_ID(), "action");
             try {
-                String jsonIn=retrieveBroadcastTask.execute().get();
+                String jsonIn = retrieveBroadcastTask.execute().get();
                 Type broadcastType = new TypeToken<List<BroadcastVO>>() {
                 }.getType();
-                broadcastList=gson.fromJson(jsonIn,broadcastType);
-                            broadcastFragment.onRead(broadcastList);
+                broadcastList = gson.fromJson(jsonIn, broadcastType);
+                broadcastFragment.onRead(broadcastList);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -386,7 +412,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            AlertDialog alertDialog = new AlertDialog.Builder(getActivity(),R.style.LightDialogTheme)
+            AlertDialog alertDialog = new AlertDialog.Builder(getActivity(), R.style.LightDialogTheme)
                     .setTitle("登出")
                     .setIcon(R.drawable.ic_login_button)
                     .setMessage(R.string.stringLogout)

@@ -68,5 +68,4 @@ public class RetrieveFoodMallTask extends AsyncTask<String, String, String> {
         }
         Log.d(TAG, "inStr：" + instr);
         return instr.toString();//將輸入進來的資料回傳
-    }
-}
+    }}

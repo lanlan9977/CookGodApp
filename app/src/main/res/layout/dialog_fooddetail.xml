@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="400dp">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -12,14 +15,46 @@
         android:textSize="16sp" />
 
     <TextView
+        android:layout_width="308dp"
+        android:layout_height="36dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="食材詳細資料："
+        android:textSize="18dp" />
+
+    <TextView
         android:id="@+id/idfood_M_Resume"
         android:layout_width="308dp"
-        android:layout_height="241dp"
+        android:layout_height="100dp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="82dp"
-        android:layout_marginBottom="77dp" />
+        android:layout_gravity="center"
+        android:background="@drawable/text_view_border_black"
+        android:padding="3dp" />
+
+    <TextView
+        android:id="@+id/idfood_M_Detail_Handler"
+        android:layout_width="308dp"
+        android:layout_height="36dp"
+        android:layout_below="@+id/idfood_M_Resume"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:text="適合哪種菜色?"
+        android:textSize="18dp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/idfood_M_Detail_Handler_View"
+        android:layout_width="308dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/idfood_M_Detail_Handler"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/text_view_border_black"
+        android:padding="4dp" />
 
     <Button
         android:id="@+id/btnfood_M_Resume_Back"
@@ -31,4 +66,4 @@
         android:text="返回"
         android:textColor="@color/colorWhite" />
 
-</RelativeLayout>
+</LinearLayout>

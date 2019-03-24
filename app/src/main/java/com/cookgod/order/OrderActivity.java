@@ -444,7 +444,6 @@ public class OrderActivity extends AppCompatActivity {
                 Log.e(TAG, "" + location);
 //                if (location != null)
 //                    updateLocationInfo();
-                Log.e(TAG, "FFFFFFFFFFFFFFFFFFFFFFF" + location);
 
             }
         };

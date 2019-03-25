@@ -153,6 +153,14 @@
                     android:text="審核訂單"
                     android:textColor="@color/colorWhite"
                     android:visibility="gone" />
+                <Button
+                    android:id="@+id/btnMenu_od_pay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPurple"
+                    android:textColor="@color/colorWhite"
+                    android:text="付款於該訂單"
+                    android:visibility="gone" />
 
             </RelativeLayout>
 

@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="觀看直播"
-        android:onClick="videoPlay"/>
+       />
     <Button
         android:id="@+id/btnLivesLive"
         android:layout_width="match_parent"

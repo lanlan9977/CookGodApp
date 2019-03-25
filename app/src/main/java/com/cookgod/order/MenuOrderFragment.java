@@ -52,7 +52,7 @@ public class MenuOrderFragment extends Fragment {
     private List<MenuOrderVO> menuOrderList;
     private TextView idMenu_Order_ID, idMenu_Order_Status, idMenu_Order_Start, idMenu_Order_Appt, idMenu_Order_End, idMenu_Order_Rate, idMenu_Order_Msg;
     private Boolean isOnClick = true;
-    private Button btnMenuOrder, btnMenu_od_rate, btnMenu_od_Food_Order, btnCheckChefFoodOrder, idMenu_od_status;
+    private Button btnMenuOrder, btnMenu_od_rate, btnMenu_od_Food_Order, btnCheckChefFoodOrder, idMenu_od_status, btnMenu_od_pay;
     private RatingBar idMenu_od_ratinggbar;
     private String menu_ID, cust_ID;
     private ImageView ivCode;
@@ -85,7 +85,7 @@ public class MenuOrderFragment extends Fragment {
 
         RecyclerView recyclerView = view.findViewById(R.id.menuOrderView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));//設定recyclerView
-        recyclerView.setAdapter(menuOrderAdapter=new MenuOrderAdapter(inflater));
+        recyclerView.setAdapter(menuOrderAdapter = new MenuOrderAdapter(inflater));
         View bottomSheet = view.findViewById(R.id.bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         btnMenuOrder = view.findViewById(R.id.idMenuOrderButton); //設定bottomSheetBehavior中的TextView(顯示訂單內容)
@@ -108,11 +108,12 @@ public class MenuOrderFragment extends Fragment {
 
         btnCheckChefFoodOrder = view.findViewById(R.id.btnCheckChefFoodOrder);
         idMenu_od_status = view.findViewById(R.id.idMenu_od_status);
+        btnMenu_od_pay = view.findViewById(R.id.btnMenu_od_pay);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                ((OrderActivity)getActivity()).getData();
-                menuOrderList=((OrderActivity)getActivity()).setData();
+                ((OrderActivity) getActivity()).getData();
+                menuOrderList = ((OrderActivity) getActivity()).setData();
                 menuOrderAdapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -168,18 +169,22 @@ public class MenuOrderFragment extends Fragment {
                         viewHolder.idMenu_or_icon.setImageResource(R.drawable.ic_question);
                         break;
                     case "g1":
-                        viewHolder.idMenu_or_status.setText("進行中訂單");
-                        viewHolder.idMenu_or_icon.setImageResource(R.drawable.ic_wait);
-                        break;
-                    case "g2":
                         viewHolder.idMenu_or_status.setText("未通過訂單");
                         viewHolder.idMenu_or_icon.setImageResource(R.drawable.ic_error);
                         break;
+                    case "g2":
+                        viewHolder.idMenu_or_status.setText("訂單待付款");
+                        viewHolder.idMenu_or_icon.setImageResource(R.drawable.ic_question);
+                        break;
                     case "g3":
+                        viewHolder.idMenu_or_status.setText("進行中訂單");
+                        viewHolder.idMenu_or_icon.setImageResource(R.drawable.ic_wait);
+                        break;
+                    case "g4":
                         viewHolder.idMenu_or_status.setText("進行中訂單");
                         viewHolder.idMenu_or_icon.setImageResource(R.drawable.ic_home);
                         break;
-                    case "g4":
+                    case "g5":
                         viewHolder.idMenu_or_status.setText("已完成訂單");
                         viewHolder.idMenu_or_icon.setImageResource(R.drawable.ic_checked);
                         break;
@@ -247,8 +252,10 @@ public class MenuOrderFragment extends Fragment {
                 idMenu_od_status.setVisibility(View.VISIBLE);
                 btnMenu_od_Food_Order.setVisibility(View.GONE);
                 btnCheckChefFoodOrder.setVisibility(View.GONE);
+            }else{
+                btnMenu_od_pay.setVisibility(View.GONE);
             }
-        } else if ("g2".equals(status)) {
+        } else if ("g1".equals(status)) {
             status = "審核未通過";
             if (isChef) {
                 idMenu_od_status.setVisibility(View.GONE);
@@ -256,36 +263,57 @@ public class MenuOrderFragment extends Fragment {
                 btnMenu_od_rate.setVisibility(View.GONE);
                 btnMenu_od_Food_Order.setVisibility(View.GONE);
                 btnCheckChefFoodOrder.setVisibility(View.GONE);
+            }else{
+                btnMenu_od_pay.setVisibility(View.GONE);
             }
-        } else if ("g1".equals(status)) {
+        } else if ("g2".equals(status)) {
+            status = "審核通過";
+            if (isChef) {
+                idMenu_od_status.setVisibility(View.GONE);
+                idMenu_od_ratinggbar.setVisibility(View.GONE);
+                btnMenu_od_rate.setVisibility(View.GONE);
+                btnMenu_od_Food_Order.setVisibility(View.GONE);
+                btnCheckChefFoodOrder.setVisibility(View.GONE);
+
+            }else{
+                btnMenu_od_pay.setVisibility(View.VISIBLE);
+            }
+        } else if ("g3".equals(status)) {
             status = "審核通過";
             if (isChef) {
                 idMenu_od_status.setVisibility(View.GONE);
                 btnMenu_od_Food_Order.setVisibility(View.VISIBLE);
                 btnCheckChefFoodOrder.setVisibility(View.VISIBLE);
+
+            }else{
+                btnMenu_od_pay.setVisibility(View.GONE);
             }
-        } else if ("g3".equals(status)) {
+        } else if ("g4".equals(status)) {
             status = "主廚到府";
             if (isChef) {
                 btnMenu_od_Food_Order.setVisibility(View.VISIBLE);
                 btnCheckChefFoodOrder.setVisibility(View.VISIBLE);
                 idMenu_od_status.setVisibility(View.GONE);
+            }else{
+                btnMenu_od_pay.setVisibility(View.GONE);
             }
-        } else if ("g4".equals(status)) {
+        } else if ("g5".equals(status)) {
             status = "訂單完成";
             if (!isChef) {
-                if ((menuOrder.getMenu_od_rate() ==null)) {
+                if ((menuOrder.getMenu_od_rate() == null)) {
                     idMenu_od_ratinggbar.setVisibility(View.VISIBLE);
                     btnMenu_od_rate.setVisibility(View.VISIBLE);
+                    btnMenu_od_pay.setVisibility(View.GONE);
                 } else {
                     idMenu_od_ratinggbar.setVisibility(View.VISIBLE);
-//                    idMenu_od_ratinggbar.isIndicator();
                     btnMenu_od_rate.setVisibility(View.VISIBLE);
+                    btnMenu_od_pay.setVisibility(View.GONE);
                 }
             } else {
                 idMenu_od_status.setVisibility(View.GONE);
                 btnMenu_od_Food_Order.setVisibility(View.GONE);
                 btnCheckChefFoodOrder.setVisibility(View.GONE);
+
             }
         }
         DateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
@@ -302,10 +330,10 @@ public class MenuOrderFragment extends Fragment {
             idMenu_Order_Rate.setText("訂單評價：" + rateMsg);
             idMenu_Order_Rate.setTextColor(getResources().getColor(R.color.colorRed));
             idMenu_Order_Msg.setTextColor(getResources().getColor(R.color.colorRed));
-        }else if(menuOrder.getMenu_od_msg() == null){
+        } else if (menuOrder.getMenu_od_msg() == null) {
             idMenu_Order_Rate.setText("訂單評價：" + menuOrder.getMenu_od_rate() + "顆星");
-            rateMsg="沒有評價留言";
-        }else {
+            rateMsg = "沒有評價留言";
+        } else {
             rateMsg = menuOrder.getMenu_od_msg();
             idMenu_Order_Rate.setText("訂單評價：" + menuOrder.getMenu_od_rate() + "顆星");
         }
@@ -324,6 +352,12 @@ public class MenuOrderFragment extends Fragment {
                 Intent intent = new Intent(getContext(), MenuOrderDetailActivity.class);
                 intent.putExtra("menu_ID", menu_ID);
                 startActivity(intent);
+            }
+        });
+        btnMenu_od_pay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
         final float[] menu_od_rate = {0};
@@ -351,9 +385,9 @@ public class MenuOrderFragment extends Fragment {
                 final Window dialogWindow = dialog.getWindow();
                 dialogWindow.setGravity(Gravity.CENTER);
                 WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-                if(highSize==1024) {
+                if (highSize == 1024) {
                     lp.width = 500;
-                }else{
+                } else {
                     lp.width = 700;
                 }
                 lp.alpha = 1.0f;
@@ -438,9 +472,9 @@ public class MenuOrderFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         RetrieveMenuOrderStatus retrieveMenuOrderStatus;
-                        retrieveMenuOrderStatus = new RetrieveMenuOrderStatus(Util.Servlet_URL + "MenuOrderServlet", "g1", menuOrder.getMenu_od_ID());
+                        retrieveMenuOrderStatus = new RetrieveMenuOrderStatus(Util.Servlet_URL + "MenuOrderServlet", "g2", menuOrder.getMenu_od_ID());
                         retrieveMenuOrderStatus.execute();
-                        menuOrderVO.setMenu_od_status("g1");
+                        menuOrderVO.setMenu_od_status("g2");
                         String menu_order_json = new Gson().toJson(menuOrderVO);
                         list.add("menu_order");
                         list.add(menu_order_json);
@@ -453,9 +487,9 @@ public class MenuOrderFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         RetrieveMenuOrderStatus retrieveMenuOrderStatus;
-                        retrieveMenuOrderStatus = new RetrieveMenuOrderStatus(Util.Servlet_URL + "MenuOrderServlet", "g2", menuOrder.getMenu_od_ID());
+                        retrieveMenuOrderStatus = new RetrieveMenuOrderStatus(Util.Servlet_URL + "MenuOrderServlet", "g1", menuOrder.getMenu_od_ID());
                         retrieveMenuOrderStatus.execute();
-                        menuOrderVO.setMenu_od_status("g2");
+                        menuOrderVO.setMenu_od_status("g1");
                         String menu_order_json = new Gson().toJson(menuOrderVO);
                         list.add("menu_order");
                         list.add(menu_order_json);

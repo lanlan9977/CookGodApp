@@ -404,8 +404,6 @@ public class ChefOrderDetailActivity extends AppCompatActivity {
                             idFood_Name = itemView.findViewById(R.id.idFood_Name);
                             idChefOrderDetail_Qty = itemView.findViewById(R.id.idChefOrderDetail_Qty);
                             idChefOrderDetail_Stotal = itemView.findViewById(R.id.idChefOrderDetail_Stotal);
-
-
                         }
                     }
 

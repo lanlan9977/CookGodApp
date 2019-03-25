@@ -9,6 +9,8 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.android.volley.RequestQueue;
 import com.cookgod.R;
@@ -29,6 +31,7 @@ public class LivesActivity extends YouTubeBaseActivity implements YouTubePlayer.
     private YouTubePlayerView youTubePlayerView;
     private String video_ID="z5Hh_2H8swA";
     YouTubePlayer.OnInitializedListener listener;
+    Button btnLivesPlay,btnLivesLive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +40,20 @@ public class LivesActivity extends YouTubeBaseActivity implements YouTubePlayer.
 //        mRequestQue = Volley.newRequestQueue(this);
         youTubePlayerView=(YouTubePlayerView)findViewById(R.id.idYouTubePlayerView);
 //        FirebaseMessaging.getInstance().subscribeToTopic("news");
+        btnLivesPlay=findViewById(R.id.btnLivesPlay);
+        btnLivesLive=findViewById(R.id.btnLivesLive);
+        btnLivesPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               youTubePlayerView.initialize(api,LivesActivity.this);
+            }
+        });
+        btnLivesLive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                validateMobileLiveIntent(LivesActivity.this);
+            }
+        });
 
     }
 
@@ -51,8 +68,6 @@ public class LivesActivity extends YouTubeBaseActivity implements YouTubePlayer.
         switch (item.getItemId()) {
             case R.id.itemStartLive:
 //                sendNotification();
-                validateMobileLiveIntent(this);
-
                 break;
             case R.id.itemStopLive:
                 break;
@@ -69,7 +84,6 @@ public class LivesActivity extends YouTubeBaseActivity implements YouTubePlayer.
 
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
-        youTubePlayer.setPlaybackEventListener(this);
         youTubePlayer.setPlaybackEventListener(this);
         if(!b){
             youTubePlayer.cueVideo(video_ID);
@@ -160,7 +174,6 @@ public class LivesActivity extends YouTubeBaseActivity implements YouTubePlayer.
                 .scheme("android-app")
                 .appendPath(context.getPackageName())
                 .build();
-
         intent.putExtra(Intent.EXTRA_REFERRER, referrer);
         if (!TextUtils.isEmpty(description)) {
             intent.putExtra(Intent.EXTRA_SUBJECT, description);

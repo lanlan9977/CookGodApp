@@ -41,15 +41,14 @@ import com.cookgod.other.LivesActivity;
 import com.cookgod.other.MallActivity;
 import com.cookgod.other.NewsActivity;
 import com.cookgod.task.AdImageTask;
+import com.cookgod.task.CustImageTask;
 import com.cookgod.task.RetrieveAdConTask;
-import com.cookgod.task.RetrieveAdTask;
 import com.cookgod.task.RetrieveBroadcastTask;
 import com.cookgod.task.RetrieveCustTask;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.synnapps.carouselview.CarouselView;
-import com.synnapps.carouselview.ImageListener;
 import com.synnapps.carouselview.ViewListener;
 
 import java.lang.reflect.Type;
@@ -62,41 +61,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public List<BroadcastVO> broadcastList;
     private final static String TAG = "MainActivity";
     private RetrieveCustTask retrieveCustTask;
-    private RetrieveAdTask retrieveAdTask;
     private CustVO cust_account;
     private ChefVO chef_account;
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-    private TextView idCust_name, idHeaderText, mTextMessage, carouselCon;
+    private TextView idCust_name, idHeaderText;
     private Boolean isChef, login;
     private BroadcastFragment broadcastFragment;
     private BadgeActionProvider provider;
     private FragmentManager manager;
-    private ImageView idPicView;
+    private ImageView idPicView,idCust_Pic;
     private FragmentTransaction transaction;
     private RetrieveAdConTask retrieveAdConTask;
     private List<String> stringConList;
-    //    private BadgeActionProvider.OnClickListener onClickListener = new BadgeActionProvider.OnClickListener() {
-//        @Override
-//        public void onClick(int what) {
-//            if (what == 0) {
-//                Toast.makeText(MainActivity.this, getResources().getText(R.string.stringMainBroast), Toast.LENGTH_SHORT).show();
-//                provider.setBadge(0);
-//            }
-//        }
-//    };
+    private CustImageTask custImageTask;
+    private CarouselView customCarouselView;
     private AdImageTask adImageTask;
-    private CarouselView carouselView;
     private int adSize;
     private RetrieveBroadcastTask retrieveBroadcastTask;
-
-
     public List<BroadcastVO> getBroadcastList() {
         Log.e(TAG, "getBroadcastList");
         return broadcastList;
     }
-
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
@@ -106,10 +93,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 case R.id.navigation_home:
                     showFragment(item);
                     return true;
-//                case R.id.navigation_dashboard:
-//                    mTextMessage.setText(R.string.title_dashboard);
-//                    showFragment(item);
-//                    return true;
                 case R.id.navigation_notifications:
                     showFragment(item);
                     return true;
@@ -117,7 +100,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return false;
         }
     };
-
 
     private void showFragment(MenuItem item) {
         transaction = manager.beginTransaction();
@@ -137,7 +119,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         transaction.commit();
     }
 
-
     private void hideFragment(FragmentTransaction fragmentTransaction) {
         if (broadcastFragment != null) {
             fragmentTransaction.hide(broadcastFragment);
@@ -148,14 +129,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onStart() {
         super.onStart();
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        int imageSize = getResources().getDisplayMetrics().widthPixels / 8;
         retrieveAdConTask = new RetrieveAdConTask(Util.Servlet_URL + "AdServlet", "selectCon");
-
         try {
             String jsonInCon = retrieveAdConTask.execute().get();
             Type stringListType = new TypeToken<List<String>>() {
             }.getType();
             stringConList = gson.fromJson(jsonInCon, stringListType);
-//            String stringSize=retrieveAdTask.execute().get();
             adSize = stringConList.size();
             Log.e(TAG, "" + stringConList);
         } catch (Exception e) {
@@ -167,7 +147,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         isChef = preferences.getBoolean("isChef", false);
         if (login) {
             Util.connectServer(preferences.getString("cust_ID", ""), this);
-            idCust_name.setText(preferences.getString("cust_name", ""));
+            idCust_name.setText(preferences.getString("cust_niname", ""));
+            custImageTask =new CustImageTask(Util.Servlet_URL + "CustImageServlet",preferences.getString("cust_acc", ""),imageSize,idCust_Pic);
+            custImageTask.execute();
             retrieveCustTask = new RetrieveCustTask(Util.Servlet_URL + "CustServlet", preferences.getString("cust_acc", ""), preferences.getString("cust_pwd", ""));
             try {
                 String jsonIn = retrieveCustTask.execute().get();
@@ -202,23 +184,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             menu.findItem(R.id.logout).setVisible(true);
         }
-        carouselView.setPageCount(adSize);
-        carouselView.setImageListener(imageListener);
-        carouselView.setViewListener(viewListener);
+        customCarouselView.setViewListener(viewListener);
+        customCarouselView.setSlideInterval(4000);
+        customCarouselView.setPageCount(adSize);
         Toast.makeText(MainActivity.this, "登入成功", Toast.LENGTH_LONG);
     }
 
-//    @Override
-//    protected void onRestart() {
-//        super.onRestart();
-//        if (broadcastFragment != null) {
-//            manager = getSupportFragmentManager();
-//            transaction = manager.beginTransaction();
-//            transaction.remove(broadcastFragment).commitAllowingStateLoss();
-//            broadcastFragment = null;
-//        }
-//        Log.e(TAG, "onRestart");
-//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -237,39 +208,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         View header = navigationView.inflateHeaderView(R.layout.nav_header_navigation_drawer);//設定Navigation上的HEADER元件
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        mTextMessage = findViewById(R.id.message);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_drawer, R.string.close_drawer);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();//將drawerLayout和toolbar整合，會出現'三'選單
         idCust_name = header.findViewById(R.id.idCust_name);
         idHeaderText = header.findViewById(R.id.idHeaderText);
         idPicView = header.findViewById(R.id.idPicView);
-        carouselView = findViewById(R.id.carouselView);
-        carouselCon = findViewById(R.id.carouselCon);
-
-
+        idCust_Pic=header.findViewById(R.id.idCust_Pic);
+        customCarouselView = findViewById(R.id.customCarouselView);
     }
 
     ViewListener viewListener = new ViewListener() {
         @Override
         public View setViewForPosition(int position) {
-
-            carouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP);
-
-            carouselCon.setText(stringConList.get(position));
-            return carouselView;
-        }
-    };
-
-    ImageListener imageListener = new ImageListener() {
-        @Override
-        public void setImageForPosition(int position, ImageView imageView) {
+            View customView = getLayoutInflater().inflate(R.layout.view_custom, null);
+            TextView labelTextView = customView.findViewById(R.id.labelTextView);
+            ImageView imageView =customView.findViewById(R.id.fruitImageView);
             int imageSize = getResources().getDisplayMetrics().widthPixels / 2;
             adImageTask = new AdImageTask(Util.Servlet_URL + "AdServlet", imageSize, imageView, position);
             adImageTask.execute();
+            labelTextView.setText(stringConList.get(position));
+            customCarouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL|Gravity.TOP);
 
-
-
+            return customView;
         }
     };
 
@@ -279,8 +240,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         inflater.inflate(R.menu.option_menu, menu); //將option_menu inflate使用（膨脹）
         MenuItem menuItem = menu.findItem(R.id.myBadge);
         provider = (BadgeActionProvider) MenuItemCompat.getActionProvider(menuItem);
-//        provider.setOnClickListener(0, onClickListener);
-
         return true;
     }
 
@@ -306,7 +265,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {//設定Navigation側滑Item轉至該Activity
             case R.id.itemNews://(廣告專區)
                 onItemSelectedTo(R.string.stringNews, NewsActivity.class);
@@ -321,7 +279,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (cust_account == null) {
                     onItemSelectedTo(R.string.stringLoginNo, LoginActivity.class);
                 } else {
-//                    onItemSelectedTo(R.string.stringOrder, OrderActivity.class);
                     Intent intent = new Intent(MainActivity.this, OrderActivity.class);
                     Toast.makeText(getApplicationContext(), R.string.stringOrder, Toast.LENGTH_LONG).show();
                     Bundle bundle = new Bundle();
@@ -369,7 +326,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
-
         super.onWindowFocusChanged(hasFocus);
         provider.setIcon(R.drawable.ic_broadcast_icon);//推播icon
         onProviderCount(this.broadcastList);
@@ -405,11 +361,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         AlertFragment alertFragment = new AlertFragment();
         FragmentManager fm = getSupportFragmentManager();
         alertFragment.show(fm, "alert");
-
     }
 
     public static class AlertFragment extends DialogFragment implements DialogInterface.OnClickListener {
-
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             AlertDialog alertDialog = new AlertDialog.Builder(getActivity(), R.style.LightDialogTheme)

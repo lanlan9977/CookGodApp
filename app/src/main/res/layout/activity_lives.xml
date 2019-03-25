@@ -23,8 +23,15 @@
     android:id="@+id/idYouTubePlayerView"
     android:layout_height="300dp"/>
     <Button
+        android:id="@+id/btnLivesPlay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="觀看直播"
         android:onClick="videoPlay"/>
+    <Button
+        android:id="@+id/btnLivesLive"
+        android:layout_width="match_parent"
+        android:text="主廚直播"
+        android:layout_height="wrap_content" />
 </LinearLayout>
 <!--直播專區-->

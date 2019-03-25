@@ -11,28 +11,40 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
-
     <ImageView
-        android:id="@+id/idPicView"
+        android:id="@+id/idCust_Pic"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:contentDescription="@string/nav_header_desc"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:background="@drawable/ic_iconfinder_food" />
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
     <TextView
         android:id="@+id/idHeaderText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:textSize="18dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-
-    <TextView
-        android:id="@+id/idCust_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18dp"
-        android:text="訪客"/>
-</LinearLayout>
-    <!--NavigationView選單Header-->
+        android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="18dp" />
+        <ImageView
+            android:id="@+id/idPicView"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:background="@drawable/ic_iconfinder_food"
+            android:contentDescription="@string/nav_header_desc"
+            />
+    </LinearLayout>
+        <TextView
+            android:id="@+id/idCust_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="訪客"
+            android:textSize="18dp" />
+
+
+
+</LinearLayout><!--NavigationView選單Header-->

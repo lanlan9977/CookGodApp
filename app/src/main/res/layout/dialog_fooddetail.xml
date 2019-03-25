@@ -49,7 +49,6 @@
         android:id="@+id/idfood_M_Detail_Handler_View"
         android:layout_width="308dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/idfood_M_Detail_Handler"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
         android:layout_marginBottom="20dp"

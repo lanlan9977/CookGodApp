@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -22,9 +23,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -34,6 +40,7 @@ import com.cookgod.foodsup.FoodMallActivity;
 import com.cookgod.main.Util;
 import com.cookgod.other.Contents;
 import com.cookgod.other.QRCodeEncoder;
+import com.cookgod.task.RetrieveChefOrderDetailTask;
 import com.cookgod.task.RetrieveMenuOrderRate;
 import com.cookgod.task.RetrieveMenuOrderStatus;
 import com.google.gson.Gson;
@@ -54,13 +61,14 @@ public class MenuOrderFragment extends Fragment {
     private Boolean isOnClick = true;
     private Button btnMenuOrder, btnMenu_od_rate, btnMenu_od_Food_Order, btnCheckChefFoodOrder, idMenu_od_status, btnMenu_od_pay;
     private RatingBar idMenu_od_ratinggbar;
-    private String menu_ID, cust_ID;
+    private String menu_ID, cust_ID,cust_name;
     private ImageView ivCode;
     private Boolean isChef;
     private BottomSheetBehavior bottomSheetBehavior;
     private Dialog dialog;
     private SwipeRefreshLayout swipeRefreshLayout;
     private MenuOrderAdapter menuOrderAdapter;
+    private RetrieveChefOrderDetailTask retrieveChefOrderDetailTask;
 
 
     @Override
@@ -68,6 +76,7 @@ public class MenuOrderFragment extends Fragment {
         super.onAttach(context);
         menuOrderList = ((OrderActivity) context).getMenuOrderList();
         isChef = ((OrderActivity) context).getIsChef();
+   cust_name=((OrderActivity) context).getCust_name();
     }
 
     public String setData() {
@@ -232,7 +241,7 @@ public class MenuOrderFragment extends Fragment {
     }
 
     private void displayMenuOrder(int position) {
-
+        Handler handler = new Handler();
         String qrCodeText = menuOrderList.get(position).getMenu_od_ID();
         int smallerDimension = getDimension();
         QRCodeEncoder qrCodeEncoder = new QRCodeEncoder(qrCodeText, null,
@@ -502,6 +511,149 @@ public class MenuOrderFragment extends Fragment {
                 builder.setCancelable(true);
                 AlertDialog dialog = builder.create();
                 dialog.setCanceledOnTouchOutside(true);
+                dialog.show();
+            }
+
+        });
+        btnMenu_od_pay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog = new Dialog(getContext(),R.style.PauseDialog);
+                dialog.setTitle("確認付款");
+                dialog.setCancelable(true);
+                dialog.setContentView(R.layout.dialog_cheforderpay);
+                final ImageView idCard1 = dialog.findViewById(R.id.idCard1);
+                final ImageView idCard2 = dialog.findViewById(R.id.idCard2);
+                final LinearLayout idCardLayout = dialog.findViewById(R.id.idCardLayout);
+                final LinearLayout idCardLayoutContent=dialog.findViewById(R.id.idCardLayoutContent);
+                final LinearLayout idPayPwd=dialog.findViewById(R.id.idPayPwd);
+                final  TextView idCareText=dialog.findViewById(R.id.idCareText);
+                final Button btnCardCheck=dialog.findViewById(R.id.btnCardCheck);
+                final Button btnCardNext=dialog.findViewById(R.id.btnCardNext);
+                final EditText idCardName=dialog.findViewById(R.id.idCardName);
+                EditText idCardPwd=dialog.findViewById(R.id.idCardPwd);
+
+
+                ProgressBar idPayProgress = dialog.findViewById(R.id.idPayProgress);
+                final int[] progress = {0};
+
+                idCard1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+//                            idCard1.bringToFront();
+
+                        idCardName.setText(cust_name);
+                        TranslateAnimation mShowAction1 = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+                                Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+                                0.11f, Animation.RELATIVE_TO_SELF, 0.0f);
+                        mShowAction1.setDuration(600);
+                        idCard1.setAnimation(mShowAction1);
+                        idCardLayout.setAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.alpha));
+                        idCareText.setVisibility(View.GONE);
+                        TranslateAnimation mShowAction2 = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+                                Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+                                -2.05f, Animation.RELATIVE_TO_SELF, 0.0f);
+                        mShowAction2.setDuration(600);
+
+                        idCard2.setAnimation(mShowAction2);
+                        idCardLayout.setVisibility(View.VISIBLE);
+                    }
+                });
+                idCard2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        idCard2.bringToFront();
+                    }
+                });
+                btnCardCheck.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view2) {
+                        idCardPwd.setError(null);
+                        String idPwd = idCardPwd.getText().toString().trim();
+                        if (idPwd.isEmpty()) {
+                            idCardPwd.setError("密碼不得為空");
+                            return;
+                        }
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setTitle("是否確定送出付款訊息");
+                        builder.setPositiveButton("確定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface aDialog, int which) {
+                                idPayProgress.setVisibility(View.VISIBLE);
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        while (progress[0] <= 100) {
+                                            handler.post(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    idPayProgress.setProgress(progress[0]);
+                                                }
+                                            });
+                                            try {
+                                                Thread.sleep(8);
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
+                                            progress[0]++;
+                                            if( progress[0]==100){
+                                                dialog.dismiss();
+                                            }
+                                        }
+                                    }
+                                }).start();
+                                retrieveChefOrderDetailTask = (RetrieveChefOrderDetailTask) new RetrieveChefOrderDetailTask(Util.Servlet_URL + "ChefOdDetailByChefServlet", "g3", menuOrder.getMenu_od_ID(),0, "updateCust").execute();
+                                onStart();
+                                Util.showToast(getContext(), "付款完畢");
+                            }
+                        });
+                        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Util.showToast(getContext(), "取消付款");
+                            }
+                        });
+
+                        builder.setCancelable(true);
+                        AlertDialog dialog = builder.create();
+                        dialog.setCanceledOnTouchOutside(true);
+                        dialog.show();
+                    }
+                });
+                btnCardNext.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        btnCardCheck.setVisibility(View.VISIBLE);
+                        btnCardNext.setVisibility(View.GONE);
+
+                        TranslateAnimation mShowAction1 = new TranslateAnimation(
+                                Animation.RELATIVE_TO_PARENT, 0.0f,
+                                Animation.RELATIVE_TO_PARENT, -1.0f,
+                                Animation.RELATIVE_TO_PARENT, 0.0f,
+                                Animation.RELATIVE_TO_PARENT, 0.0f);
+
+                        TranslateAnimation mShowAction2=new TranslateAnimation(
+                                Animation.RELATIVE_TO_PARENT, +1.0f,
+                                Animation.RELATIVE_TO_PARENT, 0.0f,
+                                Animation.RELATIVE_TO_PARENT, 0.0f,
+                                Animation.RELATIVE_TO_PARENT, 0.0f);
+
+                        mShowAction1.setDuration(500);
+                        mShowAction2.setDuration(500);
+
+                        idCardLayoutContent.setAnimation(mShowAction1);
+                        idPayPwd.setAnimation(mShowAction2);
+                        idCardLayoutContent.setVisibility(View.GONE);
+                        idPayPwd.setVisibility(View.VISIBLE);
+
+                    }
+                });
+                final Window dialogWindow = dialog.getWindow();
+                dialogWindow.setGravity(Gravity.LEFT);
+                WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+                lp.width = 730;
+                lp.alpha = 1.0f;
+                dialogWindow.setAttributes(lp);
                 dialog.show();
             }
 

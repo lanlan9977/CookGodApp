@@ -82,7 +82,7 @@ public class OrderActivity extends AppCompatActivity {
     private RetrieveOrderTask retrieveOrderTask;
     private RetrieveOrderQRCode retrieveOrderQRCode;
     private Boolean isChef;
-    private String cust_ID,chef_ID;
+    private String cust_ID,chef_ID,cust_name;
     private MenuOrderFragment menuOrderFragment;
     private Dialog dialog;
     public List<MenuOrderVO> getMenuOrderList() {
@@ -96,6 +96,9 @@ public class OrderActivity extends AppCompatActivity {
     }
     public Boolean getIsChef() {
         return isChef;
+    }
+    public String getCust_name(){
+        return cust_name;
     }
     private  RetrieveMenuOrderRate retrieveMenuOrderRate;
     private LocationCallback locationCallback;
@@ -247,6 +250,7 @@ public class OrderActivity extends AppCompatActivity {
         isChef = preferences.getBoolean("isChef", false);
         chef_ID=preferences.getString("chef_ID", "");
         cust_ID= preferences.getString("cust_ID", "");
+        cust_name=preferences.getString("cust_name", "");
         boolean login = preferences.getBoolean("login", false);
         if (login) {
             if (Util.networkConnected(this)) {

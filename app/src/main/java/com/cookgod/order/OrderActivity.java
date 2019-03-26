@@ -82,7 +82,7 @@ public class OrderActivity extends AppCompatActivity {
     private RetrieveOrderTask retrieveOrderTask;
     private RetrieveOrderQRCode retrieveOrderQRCode;
     private Boolean isChef;
-    private String cust_ID,chef_ID,cust_name;
+    private String cust_ID,chef_ID,cust_name,cust_id_location;
     private MenuOrderFragment menuOrderFragment;
     private Dialog dialog;
     public List<MenuOrderVO> getMenuOrderList() {
@@ -353,8 +353,8 @@ public class OrderActivity extends AppCompatActivity {
                 scanQRCode();
                 break;
             case R.id.idOrderLocation:
-                cust_ID = menuOrderFragment.setData();
-                Toast.makeText(OrderActivity.this, cust_ID, Toast.LENGTH_SHORT).show();
+                cust_id_location = menuOrderFragment.setData();
+                Toast.makeText(OrderActivity.this, cust_id_location, Toast.LENGTH_SHORT).show();
                 askPermissions();
 
                 ArrayAdapter<CharSequence> lunchList = ArrayAdapter.createFromResource(OrderActivity.this,
@@ -388,7 +388,7 @@ public class OrderActivity extends AppCompatActivity {
 
                         List<String> list = new ArrayList<>();
                         list.add("location");
-                        list.add("C00009");
+                        list.add(cust_id_location);
 //                        DecimalFormat df=new DecimalFormat("#.########");
                         list.add(String.valueOf(location.getLatitude()));
                         list.add(String.valueOf(location.getLongitude()));

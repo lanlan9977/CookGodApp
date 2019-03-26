@@ -61,7 +61,7 @@ public class MenuOrderFragment extends Fragment {
     private Boolean isOnClick = true;
     private Button btnMenuOrder, btnMenu_od_rate, btnMenu_od_Food_Order, btnCheckChefFoodOrder, idMenu_od_status, btnMenu_od_pay;
     private RatingBar idMenu_od_ratinggbar;
-    private String menu_ID, cust_ID,cust_name;
+    private String menu_ID, cust_ID,cust_name,cust_id_location;
     private ImageView ivCode;
     private Boolean isChef;
     private BottomSheetBehavior bottomSheetBehavior;
@@ -80,7 +80,7 @@ public class MenuOrderFragment extends Fragment {
     }
 
     public String setData() {
-        return cust_ID;
+        return cust_id_location;
     }
 
     @Override
@@ -207,6 +207,7 @@ public class MenuOrderFragment extends Fragment {
                 public void onClick(View v) {
                     displayMenuOrder(position);
                     menu_ID = menuOrderList.get(position).getMenu_ID();
+                    cust_id_location= menuOrderList.get(position).getCust_ID();
 
 
                     DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();

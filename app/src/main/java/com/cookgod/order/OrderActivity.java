@@ -141,11 +141,11 @@ public class OrderActivity extends AppCompatActivity {
                     retrieveOrderQRCode = new RetrieveOrderQRCode(Util.Servlet_URL + "OrderByChefQRCodeServlet", menu_od_ID, isChef, cust_ID);
                     String result = retrieveOrderQRCode.execute().get();
                     Log.e(TAG,result);
-                    if(result.equals("訂單已完成!")){
+                    if(result.equals("訂單已完成")){
                         List<String> list=new ArrayList<>();
                         list.add("menu_order_finsh");
                         list.add(menu_od_ID);
-
+                        Log.e(TAG,"FFFFFFFFFFFFF");
                         Util.broadcastSocket.send(new Gson().toJson(list));
                         AlertDialog.Builder builder = new AlertDialog.Builder(OrderActivity.this);
                         builder.setTitle("是否要快速給評");

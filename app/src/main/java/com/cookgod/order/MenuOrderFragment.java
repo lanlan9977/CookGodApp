@@ -521,9 +521,10 @@ public class MenuOrderFragment extends Fragment {
                 dialog = new Dialog(getContext(),R.style.PauseDialog);
                 dialog.setTitle("確認付款");
                 dialog.setCancelable(true);
-                dialog.setContentView(R.layout.dialog_cheforderpay);
+                dialog.setContentView(R.layout.dialog_menuorderpay);
                 final ImageView idCard1 = dialog.findViewById(R.id.idCard1);
                 final ImageView idCard2 = dialog.findViewById(R.id.idCard2);
+                final ImageView idCard3 = dialog.findViewById(R.id.idCard3);
                 final LinearLayout idCardLayout = dialog.findViewById(R.id.idCardLayout);
                 final LinearLayout idCardLayoutContent=dialog.findViewById(R.id.idCardLayoutContent);
                 final LinearLayout idPayPwd=dialog.findViewById(R.id.idPayPwd);
@@ -540,29 +541,32 @@ public class MenuOrderFragment extends Fragment {
                 idCard1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-//                            idCard1.bringToFront();
+                            idCard1.bringToFront();
 
-                        idCardName.setText(cust_name);
-                        TranslateAnimation mShowAction1 = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-                                Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-                                0.11f, Animation.RELATIVE_TO_SELF, 0.0f);
-                        mShowAction1.setDuration(600);
-                        idCard1.setAnimation(mShowAction1);
-                        idCardLayout.setAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.alpha));
-                        idCareText.setVisibility(View.GONE);
-                        TranslateAnimation mShowAction2 = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-                                Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-                                -2.05f, Animation.RELATIVE_TO_SELF, 0.0f);
-                        mShowAction2.setDuration(600);
 
-                        idCard2.setAnimation(mShowAction2);
-                        idCardLayout.setVisibility(View.VISIBLE);
                     }
                 });
                 idCard2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         idCard2.bringToFront();
+                        idCardName.setText(cust_name);
+                        TranslateAnimation mShowAction1 = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+                                Animation.RELATIVE_TO_SELF, 0.6f, Animation.RELATIVE_TO_SELF,
+                                0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
+                        mShowAction1.setDuration(600);
+                        idCard1.setAnimation(mShowAction1);
+                        idCardLayout.setAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.alpha));
+                        idCareText.setText("");
+                        TranslateAnimation mShowAction2 = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+                                Animation.RELATIVE_TO_SELF, -0.6f, Animation.RELATIVE_TO_SELF,
+                                0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
+                        mShowAction2.setDuration(600);
+
+                        idCard3.setAnimation(mShowAction2);
+                        idCard1.setVisibility(View.GONE);
+                        idCard3.setVisibility(View.GONE);
+                        idCardLayout.setVisibility(View.VISIBLE);
                     }
                 });
                 btnCardCheck.setOnClickListener(new View.OnClickListener() {
@@ -651,7 +655,7 @@ public class MenuOrderFragment extends Fragment {
                 final Window dialogWindow = dialog.getWindow();
                 dialogWindow.setGravity(Gravity.LEFT);
                 WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-                lp.width = 730;
+                lp.width = 750;
                 lp.alpha = 1.0f;
                 dialogWindow.setAttributes(lp);
                 dialog.show();

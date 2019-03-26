@@ -7,6 +7,16 @@ public class DishVO implements java.io.Serializable{
 	private String dish_status;
 	private String dish_resume;
 	private Integer dish_price;
+
+	public boolean isCheck() {
+		return check;
+	}
+
+	public void setCheck(boolean check) {
+		this.check = check;
+	}
+
+	private boolean check;
 	
 	public String getDish_ID() {
 		return dish_ID;

@@ -157,7 +157,6 @@ public class FoodMallListFragment extends Fragment {
                 dishImageTask= (DishImageTask) new DishImageTask(Util.Servlet_URL + "DishServlet",dishVO.getDish_ID(),imageSize,viewHolder.idFoodMall_Dish_Pic).execute();
 
                 viewHolder.idFoodMall_Dish_Name.setText(dishVO.getDish_name());
-                Util.showToast(getContext(),dishVO.getDish_name());
             }
 
             @Override

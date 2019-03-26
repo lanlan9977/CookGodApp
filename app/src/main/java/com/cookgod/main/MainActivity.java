@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (list.size() > 1) {
                     chef_account = gson.fromJson(map.get(list.get(1)), ChefVO.class);
                 }
-                Toast.makeText(MainActivity.this, "登入成功", Toast.LENGTH_LONG);
+
             } catch (Exception e) {
                 Log.e(TAG, e.toString());
             }
@@ -205,6 +205,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 menu.findItem(R.id.itemForums).setVisible(true);
             }
             menu.findItem(R.id.logout).setVisible(true);
+            Toast.makeText(MainActivity.this, "登入成功", Toast.LENGTH_LONG);
         }
         customCarouselView.setViewListener(viewListener);
         customCarouselView.setSlideInterval(4000);

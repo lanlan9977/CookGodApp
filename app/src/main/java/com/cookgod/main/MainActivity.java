@@ -16,6 +16,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -56,6 +57,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
+
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public List<BroadcastVO> broadcastList;
@@ -74,11 +78,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ImageView idPicView,idCust_Pic;
     private FragmentTransaction transaction;
     private RetrieveAdConTask retrieveAdConTask;
-    private List<String> stringConList;
+    private Map<String,String[]> stringConMap;
     private CustImageTask custImageTask;
     private CarouselView customCarouselView;
     private AdImageTask adImageTask;
     private int adSize;
+    private GifImageView gifImageView1;
+    private List<String> conList,tittleList;
     private RetrieveBroadcastTask retrieveBroadcastTask;
     public List<BroadcastVO> getBroadcastList() {
         Log.e(TAG, "getBroadcastList");
@@ -128,16 +134,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onStart() {
         super.onStart();
+        conList=new ArrayList<>();
+        tittleList=new ArrayList<>();
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-        int imageSize = getResources().getDisplayMetrics().widthPixels / 8;
+        int imageSize = getResources().getDisplayMetrics().widthPixels ;
+        DisplayMetrics metrics = MainActivity.this.getResources().getDisplayMetrics();
+        float highSize = metrics.heightPixels;
+
         retrieveAdConTask = new RetrieveAdConTask(Util.Servlet_URL + "AdServlet", "selectCon");
         try {
             String jsonInCon = retrieveAdConTask.execute().get();
-            Type stringListType = new TypeToken<List<String>>() {
+            Type stringMapType = new TypeToken<Map<String,String[]>>() {
             }.getType();
-            stringConList = gson.fromJson(jsonInCon, stringListType);
-            adSize = stringConList.size();
-            Log.e(TAG, "" + stringConList);
+            stringConMap = gson.fromJson(jsonInCon, stringMapType);
+            adSize = stringConMap.size();
+            for(String ad_ID:stringConMap.keySet()){
+                tittleList.add((stringConMap.get(ad_ID))[0]);
+                conList.add((stringConMap.get(ad_ID))[1]);
+            }
+            Log.e(TAG, "" + stringConMap);
         } catch (Exception e) {
             Log.e(TAG, e.toString());
         }
@@ -148,7 +163,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (login) {
             Util.connectServer(preferences.getString("cust_ID", ""), this);
             idCust_name.setText(preferences.getString("cust_niname", ""));
-            custImageTask =new CustImageTask(Util.Servlet_URL + "CustImageServlet",preferences.getString("cust_acc", ""),imageSize,idCust_Pic);
+            if (highSize == 1024) {
+                Log.e(TAG,"FFFFFFFFFFFFFFFFF");
+                custImageTask =new CustImageTask(Util.Servlet_URL + "CustImageServlet",preferences.getString("cust_acc", ""),imageSize,idCust_Pic);
+            } else {
+                custImageTask =new CustImageTask(Util.Servlet_URL + "CustImageServlet",preferences.getString("cust_acc", ""),imageSize/8,idCust_Pic);
+
+            }
             custImageTask.execute();
             retrieveCustTask = new RetrieveCustTask(Util.Servlet_URL + "CustServlet", preferences.getString("cust_acc", ""), preferences.getString("cust_pwd", ""));
             try {
@@ -167,6 +188,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (list.size() > 1) {
                     chef_account = gson.fromJson(map.get(list.get(1)), ChefVO.class);
                 }
+                Toast.makeText(MainActivity.this, "登入成功", Toast.LENGTH_LONG);
             } catch (Exception e) {
                 Log.e(TAG, e.toString());
             }
@@ -187,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         customCarouselView.setViewListener(viewListener);
         customCarouselView.setSlideInterval(4000);
         customCarouselView.setPageCount(adSize);
-        Toast.makeText(MainActivity.this, "登入成功", Toast.LENGTH_LONG);
+
     }
 
 
@@ -216,6 +238,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         idPicView = header.findViewById(R.id.idPicView);
         idCust_Pic=header.findViewById(R.id.idCust_Pic);
         customCarouselView = findViewById(R.id.customCarouselView);
+        gifImageView1=findViewById(R.id.logoGif);
+        try {
+            GifDrawable gifDrawable = new GifDrawable(getResources(), R.drawable.bkd_login);
+            gifImageView1.setImageDrawable(gifDrawable);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     ViewListener viewListener = new ViewListener() {
@@ -223,11 +252,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         public View setViewForPosition(int position) {
             View customView = getLayoutInflater().inflate(R.layout.view_custom, null);
             TextView labelTextView = customView.findViewById(R.id.labelTextView);
+            TextView labelConView=customView.findViewById(R.id.labelConView);
             ImageView imageView =customView.findViewById(R.id.fruitImageView);
             int imageSize = getResources().getDisplayMetrics().widthPixels / 2;
             adImageTask = new AdImageTask(Util.Servlet_URL + "AdServlet", imageSize, imageView, position);
             adImageTask.execute();
-            labelTextView.setText(stringConList.get(position));
+
+            labelTextView.setText(conList.get(position));
+            labelConView.setText(tittleList.get(position));
             customCarouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL|Gravity.TOP);
 
             return customView;

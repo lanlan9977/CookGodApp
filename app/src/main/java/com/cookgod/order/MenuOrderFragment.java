@@ -538,15 +538,6 @@ public class MenuOrderFragment extends Fragment {
 
                 ProgressBar idPayProgress = dialog.findViewById(R.id.idPayProgress);
                 final int[] progress = {0};
-
-                idCard1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                            idCard1.bringToFront();
-
-
-                    }
-                });
                 idCard2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

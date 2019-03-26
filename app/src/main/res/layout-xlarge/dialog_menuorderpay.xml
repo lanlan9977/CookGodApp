@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="700dp">
+    android:layout_height="600dp">
 
     <TextView
         android:id="@+id/idCardHandler"
@@ -37,7 +37,9 @@
         android:layout_width="335dp"
         android:layout_height="208dp"
         android:layout_below="@+id/idCareText"
+        android:paddingTop="5dp"
         android:layout_marginLeft="200dp"
+        android:layout_marginTop="2dp"
         android:background="@drawable/card_credit4" />
 
     <ImageView
@@ -55,15 +57,17 @@
         android:layout_height="400dp"
         android:layout_below="@+id/idCard2"
         android:layout_marginTop="1dp"
-        android:gravity="center"
+        android:gravity="top"
+android:visibility="gone"
         android:orientation="vertical"
-        android:visibility="gone">
+        >
 
         <LinearLayout
             android:id="@+id/idCardLayoutContent"
             android:layout_width="430dp"
             android:layout_height="162dp"
-            android:layout_marginLeft="65dp"
+           android:layout_marginLeft="70dp"
+            android:layout_gravity="center"
             android:orientation="vertical">
 
             <LinearLayout
@@ -81,7 +85,7 @@
                 <EditText
                     android:layout_width="45dp"
                     android:layout_height="match_parent"
-                    android:text="4386"
+                    android:text="4293"
                     android:textSize="15dp" />
 
                 <TextView
@@ -93,7 +97,7 @@
                 <EditText
                     android:layout_width="45dp"
                     android:layout_height="match_parent"
-                    android:text="7588"
+                    android:text="2092"
                     android:textSize="15dp" />
 
                 <TextView
@@ -138,7 +142,7 @@
                 <EditText
                     android:layout_width="50dp"
                     android:layout_height="match_parent"
-                    android:text="07/22"
+                    android:text="01/20"
                     android:textSize="15dp" />
 
                 <TextView
@@ -151,7 +155,7 @@
                 <EditText
                     android:layout_width="37dp"
                     android:layout_height="match_parent"
-                    android:text="768"
+                    android:text="852"
                     android:textSize="15dp" />
             </LinearLayout>
 
@@ -182,8 +186,9 @@
             android:id="@+id/idPayPwd"
             android:layout_width="430dp"
             android:layout_height="162dp"
-            android:layout_marginLeft="65dp"
+            android:layout_marginLeft="70dp"
             android:orientation="vertical"
+            android:layout_gravity="center"
             android:visibility="gone">
 
             <LinearLayout
@@ -243,15 +248,15 @@
 
     <ProgressBar
         android:id="@+id/idPayProgress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="80dp"
+        android:visibility="gone"
+        android:layout_height="80dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="360dp"
-        android:layout_marginLeft="360dp"
-        android:layout_marginTop="403dp"
-        android:visibility="gone" />
+        android:layout_marginStart="315dp"
+        android:layout_marginLeft="315dp"
+        android:layout_marginTop="327dp" />
 
 
 </RelativeLayout>

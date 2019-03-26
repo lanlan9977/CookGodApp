@@ -75,9 +75,9 @@ public class LoginActivity extends AppCompatActivity {
         }
         if (isMember(cust_acc, cust_pwd)) {
             custShared();
-            Toast.makeText(LoginActivity.this,"登入成功",Toast.LENGTH_SHORT);
-            finish();
 
+            finish();
+            Toast.makeText(LoginActivity.this,"登入成功",Toast.LENGTH_SHORT);
         } else {
             Util.showToast(LoginActivity.this, "帳號密碼輸入錯誤");
         }

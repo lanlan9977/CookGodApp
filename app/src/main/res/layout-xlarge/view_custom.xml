@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:gravity="center"
@@ -8,14 +8,23 @@
     <ImageView
         android:id="@+id/fruitImageView"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="400dp"
         android:scaleType="centerCrop" />
+    <TextView
+        android:id="@+id/labelConView"
+        android:layout_width="541dp"
+        android:layout_height="194dp"
+        android:layout_alignBottom="@+id/fruitImageView"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:textSize="45dp" />
 
     <TextView
         android:id="@+id/labelTextView"
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:layout_below="@+id/fruitImageView"
         android:padding="4dp"
         android:textSize="16dp"
         android:background="@color/colorAccent" />
-</LinearLayout>
+</RelativeLayout>

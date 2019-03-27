@@ -62,9 +62,9 @@ public class FoodMallActivity extends AppCompatActivity {
     private FoodMallListFragment foodMallListFragment, foodMallListFragmentOne, foodMallListFragmentTwo, foodMallListFragmentThree, foodMallListFragmentFour, foodMallListFragmentFive;
     private List<FoodSupVO> foodSupList;
     private List<FoodVO> foodList;
-    private List<DishFoodVO> dishFoodList,newFoodList;
+    private List<DishFoodVO> dishFoodList, newFoodList, checkList;
     private Dialog dialog;
-    private Map<FoodMallVO, ChefOdDetailVO> foodMallMap,newFoofMallMap;
+    private Map<FoodMallVO, ChefOdDetailVO> foodMallMap, newFoofMallMap;
     private Button btnFoodConfitm;
     private String chef_ID, chef_addr, chef_tel, chef_name;
     private List<ChefOdDetailVO> chefOdDetailList;
@@ -99,13 +99,14 @@ public class FoodMallActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chef_order);
         foodMallMap = new LinkedHashMap<>();
-        newFoofMallMap= new LinkedHashMap<>();
+        newFoofMallMap = new LinkedHashMap<>();
         chefOdDetailList = new ArrayList<>();
         foodMallListOne = new ArrayList<>();
         foodMallListTwo = new ArrayList<>();
         foodMallListThree = new ArrayList<>();
         foodMallListFour = new ArrayList<>();
         foodMallListFive = new ArrayList<>();
+        checkList = new ArrayList<>();
         btnFoodConfitm = findViewById(R.id.btnFoodConfitm);
         btnFoodConfitm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,50 +144,60 @@ public class FoodMallActivity extends AppCompatActivity {
                 RecyclerView idfood_M_Detail_Handler_View = newDishDialog.findViewById(R.id.idfood_M_Detail_newDish_View);
                 idfood_M_Detail_Handler_View.setLayoutManager(new LinearLayoutManager(FoodMallActivity.this));
                 idfood_M_Detail_Handler_View.setAdapter(new NewDishAdapter(FoodMallActivity.this, newDishList));
-                Button benNewDish_go=newDishDialog.findViewById(R.id.benNewDish_go);
+                Button benNewDish_go = newDishDialog.findViewById(R.id.benNewDish_go);
+                Log.e(TAG, "" + foodMallMap.size());
                 benNewDish_go.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        checkDishIDList=new ArrayList<>();
-                        for(DishVO dishVO:newDishList){
-                            if(dishVO.isCheck()){
+                        checkDishIDList = new ArrayList<>();
+                        for (DishVO dishVO : newDishList) {
+                            if (dishVO.isCheck()) {
                                 checkDishIDList.add(dishVO.getDish_ID());
                             }
                         }
-                        String jsonin=gson.toJson(checkDishIDList);
-                        retrieveDishTask = new RetrieveDishTask(Util.Servlet_URL + "DishSelectServlet","dishAll", jsonin);
+                        String jsonin = gson.toJson(checkDishIDList);
+                        retrieveDishTask = new RetrieveDishTask(Util.Servlet_URL + "DishSelectServlet", "dishAll", jsonin);
                         try {
-                            String newJson=retrieveDishTask.execute().get();
+                            String newJson = retrieveDishTask.execute().get();
                             Type stringDishListType = new TypeToken<List<DishFoodVO>>() {
                             }.getType();
-                            newFoodList=gson.fromJson(newJson,stringDishListType);
+                            newFoodList = gson.fromJson(newJson, stringDishListType);
                         } catch (Exception e) {
-                            Log.e(TAG,e.toString());
+                            Log.e(TAG, e.toString());
                         }
-                        for(int i=0;i<foodMallList.size();i++){
-                            for(int j=0;j<newFoodList.size();j++) {
-                                if (foodMallList.get(i).getFood_ID().equals(newFoodList.get(j).getFood_ID())) {
-                                    ChefOdDetailVO chefOdDetailVO = new ChefOdDetailVO();
-                                    chefOdDetailVO.setFood_ID(foodMallList.get(i).getFood_ID());
-                                    chefOdDetailVO.setChef_od_qty(newFoodList.get(j).getDish_f_qty());
-                                    chefOdDetailVO.setFood_sup_ID(foodMallList.get(i).getFood_sup_ID());
-                                    foodMallMap.put(foodMallList.get(j),chefOdDetailVO);
+
+                        if (newFoodList!=null) {
+                            for (int i = 0; i < foodMallList.size(); i++) {
+                                for (int j = 0; j < newFoodList.size(); j++) {
+                                    if (foodMallList.get(i).getFood_ID().contains(newFoodList.get(j).getFood_ID())) {
+                                        ChefOdDetailVO chefOdDetailVO = new ChefOdDetailVO();
+                                        chefOdDetailVO.setFood_ID(foodMallList.get(i).getFood_ID());
+                                        chefOdDetailVO.setChef_od_qty(newFoodList.get(j).getDish_f_qty());
+                                        chefOdDetailVO.setFood_sup_ID(foodMallList.get(i).getFood_sup_ID());
+                                        if (foodMallMap.containsKey(foodMallList.get(j))) {
+                                            int newQty = foodMallMap.get(foodMallList.get(j)).getChef_od_qty();
+                                            newQty += chefOdDetailVO.getChef_od_qty();
+                                            chefOdDetailVO.setChef_od_qty(newQty);
+                                            foodMallMap.put(foodMallList.get(i), chefOdDetailVO);
+                                        } else {
+                                            foodMallMap.put(foodMallList.get(i), chefOdDetailVO);
+                                        }
+                                    }
                                 }
                             }
-                        }
-                        if (foodMallListFragmentOne != null)
-                            foodMallListFragmentOne.reMapData(foodMallMap);
-                        if (foodMallListFragmentTwo != null)
-                            foodMallListFragmentTwo.reMapData(foodMallMap);
-                        if (foodMallListFragmentThree != null)
-                            foodMallListFragmentThree.reMapData(foodMallMap);
-                        if (foodMallListFragmentFour != null)
-                            foodMallListFragmentFour.reMapData(foodMallMap);
-                        if (foodMallListFragmentFive != null)
-                            foodMallListFragmentFive.reMapData(foodMallMap);
-                        foodMallListFragment.reMapData(foodMallMap);
-                        newDishDialog.dismiss();
+                            if (foodMallListFragmentOne != null)
+                                foodMallListFragmentOne.reMapData(foodMallMap);
+                            if (foodMallListFragmentTwo != null)
+                                foodMallListFragmentTwo.reMapData(foodMallMap);
+                            if (foodMallListFragmentThree != null)
+                                foodMallListFragmentThree.reMapData(foodMallMap);
+                            if (foodMallListFragmentFour != null)
+                                foodMallListFragmentFour.reMapData(foodMallMap);
+                            if (foodMallListFragmentFive != null)
+                                foodMallListFragmentFive.reMapData(foodMallMap);
+                            foodMallListFragment.reMapData(foodMallMap);
 
+                        }newDishDialog.dismiss();
 //                        Util.showToast(FoodMallActivity.this,""+checkDishIDList.get(0));
                     }
                 });
@@ -208,14 +219,21 @@ public class FoodMallActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         foodMallMap = new LinkedHashMap<>();
-                        for (int i = 0; i < dishFoodList.size(); i++) {
-                            for (int j = 0; j < foodMallList.size(); j++) {
-                                if (dishFoodList.get(i).getFood_ID().equals(foodMallList.get(j).getFood_ID())) {
+                        for (int i = 0; i < foodMallList.size(); i++) {
+                            for (int j = 0; j < dishFoodList.size(); j++) {
+                                if (dishFoodList.get(j).getFood_ID().contains(foodMallList.get(i).getFood_ID())) {
                                     ChefOdDetailVO chefOdDetailVO = new ChefOdDetailVO();
-                                    chefOdDetailVO.setFood_ID(foodMallList.get(j).getFood_ID());
-                                    chefOdDetailVO.setFood_sup_ID(foodMallList.get(j).getFood_sup_ID());
-                                    chefOdDetailVO.setChef_od_qty(dishFoodList.get(i).getDish_f_qty());
-                                    foodMallMap.put(foodMallList.get(i), chefOdDetailVO);
+                                    chefOdDetailVO.setFood_ID(foodMallList.get(i).getFood_ID());
+                                    chefOdDetailVO.setFood_sup_ID(foodMallList.get(i).getFood_sup_ID());
+                                    chefOdDetailVO.setChef_od_qty(dishFoodList.get(j).getDish_f_qty());
+                                    if (foodMallMap.containsKey(foodMallList.get(i))) {
+                                        int newQty = foodMallMap.get(foodMallList.get(i)).getChef_od_qty();
+                                        newQty += chefOdDetailVO.getChef_od_qty();
+                                        chefOdDetailVO.setChef_od_qty(newQty);
+                                        foodMallMap.put(foodMallList.get(i), chefOdDetailVO);
+                                    } else {
+                                        foodMallMap.put(foodMallList.get(i), chefOdDetailVO);
+                                    }
                                 }
                             }
                         }
@@ -514,7 +532,7 @@ public class FoodMallActivity extends AppCompatActivity {
             public ViewHolder(View itemView) {
                 super(itemView);
                 idNewDish_Name = itemView.findViewById(R.id.idNewDish_Name);
-                idDishCheck=itemView.findViewById(R.id.idDishCheck);
+                idDishCheck = itemView.findViewById(R.id.idDishCheck);
             }
         }
 
@@ -537,7 +555,6 @@ public class FoodMallActivity extends AppCompatActivity {
                     newDishList.get(i).setCheck(b);
                 }
             });
-
 
 
         }

@@ -1,9 +1,37 @@
 package com.cookgod.foodsup;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 public class FoodMallVO implements java.io.Serializable {
 	
 	private static final long serialVersionUID = 2L;
 	private String food_sup_ID;
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		FoodMallVO that = (FoodMallVO) o;
+		return Objects.equals(food_sup_ID, that.food_sup_ID) &&
+				Objects.equals(food_ID, that.food_ID) &&
+				Objects.equals(food_m_name, that.food_m_name) &&
+				Objects.equals(food_m_status, that.food_m_status) &&
+				Objects.equals(food_m_price, that.food_m_price) &&
+				Objects.equals(food_m_unit, that.food_m_unit) &&
+				Objects.equals(food_m_place, that.food_m_place) &&
+				Arrays.equals(food_m_pic, that.food_m_pic) &&
+				Objects.equals(food_m_resume, that.food_m_resume) &&
+				Objects.equals(food_m_rate, that.food_m_rate);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = Objects.hash(food_sup_ID, food_ID, food_m_name, food_m_status, food_m_price, food_m_unit, food_m_place, food_m_resume, food_m_rate);
+		result = 31 * result + Arrays.hashCode(food_m_pic);
+		return result;
+	}
+
 	private String food_ID;
 	private String food_m_name;
 	private String food_m_status;

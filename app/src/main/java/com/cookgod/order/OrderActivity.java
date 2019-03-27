@@ -82,25 +82,31 @@ public class OrderActivity extends AppCompatActivity {
     private RetrieveOrderTask retrieveOrderTask;
     private RetrieveOrderQRCode retrieveOrderQRCode;
     private Boolean isChef;
-    private String cust_ID,chef_ID,cust_name,cust_id_location;
+    private String cust_ID, chef_ID, cust_name, cust_id_location;
     private MenuOrderFragment menuOrderFragment;
     private Dialog dialog;
+
     public List<MenuOrderVO> getMenuOrderList() {
         return menuOrderList;
     }
+
     public List<FestOrderVO> getFestOrderList() {
         return festOrderList;
     }
+
     public List<FoodOrderVO> getFoodOrderList() {
         return foodOrderList;
     }
+
     public Boolean getIsChef() {
         return isChef;
     }
-    public String getCust_name(){
+
+    public String getCust_name() {
         return cust_name;
     }
-    private  RetrieveMenuOrderRate retrieveMenuOrderRate;
+
+    private RetrieveMenuOrderRate retrieveMenuOrderRate;
     private LocationCallback locationCallback;
     private static final int REQUEST_CHECK_SETTINGS = 1;
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -108,104 +114,20 @@ public class OrderActivity extends AppCompatActivity {
     private LocationRequest locationRequest;
     private LocationSettingsRequest locationSettingsRequest;
     private Location location;
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_ORDER_QRCODE) {
             SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE,
                     MODE_PRIVATE);
-            String menu_od_ID = data.getStringExtra("SCAN_RESULT");
-            if (isChef) {
-                try {
-                    String chef_ID = preferences.getString("chef_ID", "");
-                    retrieveOrderQRCode = new RetrieveOrderQRCode(Util.Servlet_URL + "OrderByChefQRCodeServlet", menu_od_ID, isChef, chef_ID);
-                    String result = retrieveOrderQRCode.execute().get();
-                    AlertDialog.Builder builder = new AlertDialog.Builder(OrderActivity.this);
-                    builder.setTitle(result);
-                    builder.setPositiveButton("確認", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
-                    AlertDialog dialog = builder.create();
-                    dialog.setCanceledOnTouchOutside(true);
-                    dialog.show();
-                } catch (Exception e) {
-                    Log.e(TAG, e.toString());
-                }
-            } else {
-                try {
-
-                    String cust_ID = preferences.getString("cust_ID", "");
-                    retrieveOrderQRCode = new RetrieveOrderQRCode(Util.Servlet_URL + "OrderByChefQRCodeServlet", menu_od_ID, isChef, cust_ID);
-                    String result = retrieveOrderQRCode.execute().get();
-                    Log.e(TAG,result);
-                    if(result.equals("訂單已完成")){
-                        List<String> list=new ArrayList<>();
-                        list.add("menu_order_finsh");
-                        list.add(menu_od_ID);
-                        Log.e(TAG,"FFFFFFFFFFFFF");
-                        Util.broadcastSocket.send(new Gson().toJson(list));
-                        AlertDialog.Builder builder = new AlertDialog.Builder(OrderActivity.this);
-                        builder.setTitle("是否要快速給評");
-                        builder.setNegativeButton("返回", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
-                        builder.setPositiveButton("確認", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogOK, int which) {
-                                dialog = new Dialog(OrderActivity.this);
-                                dialog.setTitle("評價留言");
-                                dialog.setCancelable(true);
-                                dialog.setContentView(R.layout.dialog_foodorderrate);
-                                final Window dialogWindow = dialog.getWindow();
-                                dialogWindow.setGravity(Gravity.CENTER);
-                                WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-                                lp.width = 500;
-                                lp.alpha = 1.0f;
-                                dialogWindow.setAttributes(lp);
-                                Button btnOrder_Rate_Ok = dialog.findViewById(R.id.btnOrder_Rate_Ok);
-                                Button btnOrder_Rate_Back = dialog.findViewById(R.id.btnOrder_Rate_Back);
-                                final EditText idOrder_Msg = dialog.findViewById(R.id.idOrder_Msg);
-                                RatingBar idOrder_Rate = dialog.findViewById(R.id.idOrder_Rate);
-                                final float[] menu_od_rate = {0};
-                                idOrder_Rate.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-                                    @Override
-                                    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                                        menu_od_rate[0] = rating;
-                                    }
-                                });
-                                btnOrder_Rate_Ok.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        String msg = idOrder_Msg.getText().toString().trim();
-                                        retrieveMenuOrderRate = new RetrieveMenuOrderRate(Util.Servlet_URL + "MenuOrderRateServlet", String.valueOf(menu_od_rate[0]),menu_od_ID, msg);
-                                        retrieveMenuOrderRate.execute();
-                                        Util.showToast(OrderActivity.this, "評價成功");
-                                        dialog.dismiss();
-
-                                    }
-                                });
-                                btnOrder_Rate_Back.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        dialog.cancel();
-                                    }
-                                });
-                                dialog.show();
-                                dialogOK.dismiss();
-
-                            }
-                        });
-                        AlertDialog dialogQuestion = builder.create();
-                        dialogQuestion.setCanceledOnTouchOutside(true);
-                        dialogQuestion.show();
-
-                    }else{
+            if (resultCode != 0) {
+                String menu_od_ID = data.getStringExtra("SCAN_RESULT");
+                if (isChef) {
+                    try {
+                        String chef_ID = preferences.getString("chef_ID", "");
+                        retrieveOrderQRCode = new RetrieveOrderQRCode(Util.Servlet_URL + "OrderByChefQRCodeServlet", menu_od_ID, isChef, chef_ID);
+                        String result = retrieveOrderQRCode.execute().get();
                         AlertDialog.Builder builder = new AlertDialog.Builder(OrderActivity.this);
                         builder.setTitle(result);
                         builder.setPositiveButton("確認", new DialogInterface.OnClickListener() {
@@ -217,14 +139,103 @@ public class OrderActivity extends AppCompatActivity {
                         AlertDialog dialog = builder.create();
                         dialog.setCanceledOnTouchOutside(true);
                         dialog.show();
+                    } catch (Exception e) {
+                        Log.e(TAG, e.toString());
                     }
+                } else {
+                    try {
+                        String cust_ID = preferences.getString("cust_ID", "");
+                        retrieveOrderQRCode = new RetrieveOrderQRCode(Util.Servlet_URL + "OrderByChefQRCodeServlet", menu_od_ID, isChef, cust_ID);
+                        String result = retrieveOrderQRCode.execute().get();
+                        Log.e(TAG, result);
+                        if (result.equals("finsh")) {
+                            List<String> list = new ArrayList<>();
+                            list.add("menu_order_finsh");
+                            list.add(menu_od_ID);
+                            Log.e(TAG, "FFFFFFFFFFFFF");
+                            Util.broadcastSocket.send(new Gson().toJson(list));
+                            AlertDialog.Builder builder = new AlertDialog.Builder(OrderActivity.this);
+                            builder.setTitle("是否要快速給評");
+                            Log.e(TAG, "GGGGGGGGGG");
 
-                } catch (Exception e) {
-                    Log.e(TAG, e.toString());
+                            builder.setNegativeButton("返回", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+                            builder.setPositiveButton("確認", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogOK, int which) {
+                                    dialog = new Dialog(OrderActivity.this);
+                                    dialog.setTitle("評價留言");
+                                    dialog.setCancelable(true);
+                                    dialog.setContentView(R.layout.dialog_foodorderrate);
+                                    final Window dialogWindow = dialog.getWindow();
+                                    dialogWindow.setGravity(Gravity.CENTER);
+                                    WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+                                    lp.width = 500;
+                                    lp.alpha = 1.0f;
+                                    dialogWindow.setAttributes(lp);
+                                    Button btnOrder_Rate_Ok = dialog.findViewById(R.id.btnOrder_Rate_Ok);
+                                    Button btnOrder_Rate_Back = dialog.findViewById(R.id.btnOrder_Rate_Back);
+                                    final EditText idOrder_Msg = dialog.findViewById(R.id.idOrder_Msg);
+                                    RatingBar idOrder_Rate = dialog.findViewById(R.id.idOrder_Rate);
+                                    final float[] menu_od_rate = {0};
+                                    idOrder_Rate.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                                        @Override
+                                        public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                                            menu_od_rate[0] = rating;
+                                        }
+                                    });
+                                    btnOrder_Rate_Ok.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            String msg = idOrder_Msg.getText().toString().trim();
+                                            retrieveMenuOrderRate = new RetrieveMenuOrderRate(Util.Servlet_URL + "MenuOrderRateServlet", String.valueOf(menu_od_rate[0]), menu_od_ID, msg);
+                                            retrieveMenuOrderRate.execute();
+                                            Util.showToast(OrderActivity.this, "評價成功");
+                                            dialog.dismiss();
+
+                                        }
+                                    });
+                                    btnOrder_Rate_Back.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                                    dialog.show();
+                                    dialogOK.dismiss();
+
+                                }
+                            });
+                            AlertDialog dialogQuestion = builder.create();
+                            dialogQuestion.setCanceledOnTouchOutside(true);
+                            dialogQuestion.show();
+
+
+                        } else {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(OrderActivity.this);
+                            builder.setTitle(result);
+                            builder.setPositiveButton("確認", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+                            AlertDialog dialog = builder.create();
+                            dialog.setCanceledOnTouchOutside(true);
+                            dialog.show();
+                        }
+
+                    } catch (Exception e) {
+                        Log.e(TAG, e.toString());
+                    }
                 }
-
             }
         }
+//        }
     }
 
     @Override
@@ -236,21 +247,21 @@ public class OrderActivity extends AppCompatActivity {
         createLocationCallback();
         createLocationRequest();
         buildLocationSettingsRequest();
-        Log.e(TAG,"onCreate");
+        Log.e(TAG, "onCreate");
     }
 
 
     @Override
     protected void onStart() {
         super.onStart();
-        Log.e(TAG,"onStart");
+        Log.e(TAG, "onStart");
         askPermissions();
         startLocationUpdates();
         SharedPreferences preferences = getSharedPreferences(Util.PREF_FILE, MODE_PRIVATE);
         isChef = preferences.getBoolean("isChef", false);
-        chef_ID=preferences.getString("chef_ID", "");
-        cust_ID= preferences.getString("cust_ID", "");
-        cust_name=preferences.getString("cust_name", "");
+        chef_ID = preferences.getString("chef_ID", "");
+        cust_ID = preferences.getString("cust_ID", "");
+        cust_name = preferences.getString("cust_name", "");
         boolean login = preferences.getBoolean("login", false);
         if (login) {
             if (Util.networkConnected(this)) {
@@ -274,7 +285,7 @@ public class OrderActivity extends AppCompatActivity {
             if (isChef) {
                 retrieveOrderTask = new RetrieveOrderTask(Util.Servlet_URL + "OrderByChefServlet", chef_ID);
             } else {
-                retrieveOrderTask = new RetrieveOrderTask(Util.Servlet_URL + "OrderByCustServlet",cust_ID);
+                retrieveOrderTask = new RetrieveOrderTask(Util.Servlet_URL + "OrderByCustServlet", cust_ID);
             }
 
             String OrderListJsonIn = retrieveOrderTask.execute().get();
@@ -287,13 +298,13 @@ public class OrderActivity extends AppCompatActivity {
             }.getType();
             menuOrderList = gson.fromJson(menuOrderJsonIn, menuOrderType);
 
-            if(orderList.size()>1) {
+            if (orderList.size() > 1) {
                 String festOrderJsonIn = orderList.get(1);
                 Type festOrderType = new TypeToken<List<FestOrderVO>>() {
                 }.getType();
                 festOrderList = gson.fromJson(festOrderJsonIn, festOrderType);
             }
-            if(orderList.size()>2) {
+            if (orderList.size() > 2) {
                 String foodOrderJsonIn = orderList.get(2);
                 Type foodOrderType = new TypeToken<List<FoodOrderVO>>() {
                 }.getType();
@@ -341,6 +352,7 @@ public class OrderActivity extends AppCompatActivity {
         inflater.inflate(R.menu.order_menu, menu);//登記menu id=options_menu的選單
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         //點選相機icon後發生事件
@@ -410,9 +422,10 @@ public class OrderActivity extends AppCompatActivity {
                 AlertDialog dialog = builder.create();
                 dialog.setCanceledOnTouchOutside(true);
                 dialog.show();
-                break;}
-            return false;
+                break;
         }
+        return false;
+    }
 
     private void askPermissions() {
         String[] permissions = {
@@ -433,11 +446,13 @@ public class OrderActivity extends AppCompatActivity {
                     MY_REQUEST_CODE);
         }
     }
+
     private void buildLocationSettingsRequest() {
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
         builder.addLocationRequest(locationRequest);
         locationSettingsRequest = builder.build();
     }
+
     private void createLocationCallback() {
 
         locationCallback = new LocationCallback() {
@@ -461,6 +476,7 @@ public class OrderActivity extends AppCompatActivity {
         locationRequest.setFastestInterval(5000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
+
     private void startLocationUpdates() {
         settingsClient.checkLocationSettings(locationSettingsRequest)
                 .addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
@@ -532,7 +548,8 @@ public class OrderActivity extends AppCompatActivity {
                 });
         downloadDialog.show();
     }
-    public List<MenuOrderVO> setData(){
+
+    public List<MenuOrderVO> setData() {
         return menuOrderList;
     }
 

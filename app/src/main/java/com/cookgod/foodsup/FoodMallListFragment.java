@@ -35,6 +35,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -229,10 +230,14 @@ public class FoodMallListFragment extends Fragment {
                     break;
                 }
             }
+            List<String> arrayList=new ArrayList<>();
+            for(int index=0;index<999;index++){
+                arrayList.add(String.valueOf(index));
+            }
+
             viewHolder.idFood_Mall_Qty = viewHolder.itemView.findViewById(R.id.idFood_Mall_Qty);
-            ArrayAdapter<CharSequence> lunchList = ArrayAdapter.createFromResource(getContext(),
-                    R.array.stringFoodMallArray,
-                    android.R.layout.simple_spinner_dropdown_item);
+            ArrayAdapter<CharSequence> lunchList = new ArrayAdapter(getContext(),
+                    android.R.layout.simple_spinner_dropdown_item,arrayList);
             viewHolder.idFood_Mall_Qty.setAdapter(lunchList);
             if (foodMallMap.get(foodMallVO) != null && foodMallMap.size() > 0) {
 

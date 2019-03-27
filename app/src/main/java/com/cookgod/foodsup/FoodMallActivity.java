@@ -99,7 +99,7 @@ public class FoodMallActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chef_order);
         foodMallMap = new LinkedHashMap<>();
-        newFoofMallMap = new LinkedHashMap<>();
+
         chefOdDetailList = new ArrayList<>();
         foodMallListOne = new ArrayList<>();
         foodMallListTwo = new ArrayList<>();
@@ -166,7 +166,7 @@ public class FoodMallActivity extends AppCompatActivity {
                             Log.e(TAG, e.toString());
                         }
 
-                        if (newFoodList!=null) {
+                        if (newFoodList != null) {
                             for (int i = 0; i < foodMallList.size(); i++) {
                                 for (int j = 0; j < newFoodList.size(); j++) {
                                     if (foodMallList.get(i).getFood_ID().contains(newFoodList.get(j).getFood_ID())) {
@@ -174,13 +174,25 @@ public class FoodMallActivity extends AppCompatActivity {
                                         chefOdDetailVO.setFood_ID(foodMallList.get(i).getFood_ID());
                                         chefOdDetailVO.setChef_od_qty(newFoodList.get(j).getDish_f_qty());
                                         chefOdDetailVO.setFood_sup_ID(foodMallList.get(i).getFood_sup_ID());
-                                        if (foodMallMap.containsKey(foodMallList.get(j))) {
-                                            int newQty = foodMallMap.get(foodMallList.get(j)).getChef_od_qty();
-                                            newQty += chefOdDetailVO.getChef_od_qty();
-                                            chefOdDetailVO.setChef_od_qty(newQty);
+                                        if (foodMallMap.size() == 0) {
+
                                             foodMallMap.put(foodMallList.get(i), chefOdDetailVO);
                                         } else {
-                                            foodMallMap.put(foodMallList.get(i), chefOdDetailVO);
+                                            if (foodMallMap.containsKey(foodMallList.get(i))) {
+
+                                                Log.e(TAG, "此食材重複");
+                                                int newQty = foodMallMap.get(foodMallList.get(i)).getChef_od_qty();
+                                                newQty += chefOdDetailVO.getChef_od_qty();
+                                                chefOdDetailVO.setChef_od_qty(newQty);
+                                                foodMallMap.put(foodMallList.get(i), chefOdDetailVO);
+                                            } else {
+                                                for (FoodMallVO foodMallVO : foodMallMap.keySet()) {
+                                                    Log.e(TAG, "" + foodMallVO.getFood_ID() + "-" + foodMallList.get(i).getFood_ID());
+                                                }
+
+                                                Log.e(TAG, "此食材不重複");
+                                                foodMallMap.put(foodMallList.get(i), chefOdDetailVO);
+                                            }
                                         }
                                     }
                                 }
@@ -197,7 +209,8 @@ public class FoodMallActivity extends AppCompatActivity {
                                 foodMallListFragmentFive.reMapData(foodMallMap);
                             foodMallListFragment.reMapData(foodMallMap);
 
-                        }newDishDialog.dismiss();
+                        }
+                        newDishDialog.dismiss();
 //                        Util.showToast(FoodMallActivity.this,""+checkDishIDList.get(0));
                     }
                 });
@@ -219,20 +232,35 @@ public class FoodMallActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         foodMallMap = new LinkedHashMap<>();
+                        newFoofMallMap = new LinkedHashMap<>();
                         for (int i = 0; i < foodMallList.size(); i++) {
                             for (int j = 0; j < dishFoodList.size(); j++) {
-                                if (dishFoodList.get(j).getFood_ID().contains(foodMallList.get(i).getFood_ID())) {
+
+                                if (dishFoodList.get(j).getFood_ID().equals(foodMallList.get(i).getFood_ID())) {
                                     ChefOdDetailVO chefOdDetailVO = new ChefOdDetailVO();
                                     chefOdDetailVO.setFood_ID(foodMallList.get(i).getFood_ID());
                                     chefOdDetailVO.setFood_sup_ID(foodMallList.get(i).getFood_sup_ID());
                                     chefOdDetailVO.setChef_od_qty(dishFoodList.get(j).getDish_f_qty());
-                                    if (foodMallMap.containsKey(foodMallList.get(i))) {
-                                        int newQty = foodMallMap.get(foodMallList.get(i)).getChef_od_qty();
-                                        newQty += chefOdDetailVO.getChef_od_qty();
-                                        chefOdDetailVO.setChef_od_qty(newQty);
+                                    Log.e(TAG, "增加食材");
+                                    if (foodMallMap.size() == 0) {
+
                                         foodMallMap.put(foodMallList.get(i), chefOdDetailVO);
                                     } else {
-                                        foodMallMap.put(foodMallList.get(i), chefOdDetailVO);
+                                        if (foodMallMap.containsKey(foodMallList.get(i))) {
+
+                                            Log.e(TAG, "此食材重複");
+                                            int newQty = foodMallMap.get(foodMallList.get(i)).getChef_od_qty();
+                                            newQty += chefOdDetailVO.getChef_od_qty();
+                                            chefOdDetailVO.setChef_od_qty(newQty);
+                                            foodMallMap.put(foodMallList.get(i), chefOdDetailVO);
+                                        } else {
+                                            for (FoodMallVO foodMallVO : foodMallMap.keySet()) {
+                                                Log.e(TAG, "" + foodMallVO.getFood_ID() + "-" + foodMallList.get(i).getFood_ID());
+                                            }
+
+                                            Log.e(TAG, "此食材不重複");
+                                            foodMallMap.put(foodMallList.get(i), chefOdDetailVO);
+                                        }
                                     }
                                 }
                             }

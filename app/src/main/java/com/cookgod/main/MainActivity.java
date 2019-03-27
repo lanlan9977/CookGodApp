@@ -363,7 +363,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         provider.setIcon(R.drawable.ic_broadcast_icon);//推播icon
         onProviderCount(this.broadcastList);
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-        if (broadcastFragment != null) {
+        if (broadcastFragment != null&&cust_account!=null) {
             retrieveBroadcastTask = new RetrieveBroadcastTask(Util.Servlet_URL + "BroadcastServlet", cust_account.getCust_ID(), "action");
             try {
                 String jsonIn = retrieveBroadcastTask.execute().get();

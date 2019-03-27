@@ -21,6 +21,7 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import com.cookgod.R;
+import com.cookgod.order.MenuOrderDetailActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -49,7 +50,7 @@ public class BroadcastSocket extends WebSocketClient {
     private Context context;
     private LocationManager locationManager;
     private static final int MY_PERMISSION_ACCESS_COARSE_LOCATION = 11;
-    private String commadStr;
+    private String commadStr,menu_ID;
     private NotificationManager notificationManager;
 
 
@@ -86,7 +87,9 @@ public class BroadcastSocket extends WebSocketClient {
         Log.e(TAG, type);
         if ("menu_order".equals(type)) {
             BroadcastVO broadcastVO = gson.fromJson(stringList.get(1), BroadcastVO.class);
+            menu_ID=stringList.get(2);
             con = broadcastVO.getBroadcast_con();
+            showNotification(con,true);
             Log.e(TAG, con);
         } else if ("location".equals(type)) {
 //            String stringLocation =
@@ -127,16 +130,17 @@ public class BroadcastSocket extends WebSocketClient {
                 Log.e(TAG, e.toString());
             }
             con = getEndLocationTitle(result);
+            showNotification(con,false);
             Log.e(TAG, con);
 
         }else if("menu_order_finsh".equals(type)){
             con=stringList.get(1);
-        }
-        else {
+            showNotification(con,false);
+        }else {
             Log.e(TAG, "");
         }
 
-        showNotification(con);
+
     }
 
     @Override
@@ -152,9 +156,16 @@ public class BroadcastSocket extends WebSocketClient {
         Log.e(TAG, "onError: exception = " + ex.toString());
     }
 
-    private void showNotification(String con) {
-        Intent intent = new Intent(context, BroadcastDetailActivity.class);
-        intent.putExtra("msg", con);
+    private void showNotification(String con,Boolean isMenu) {
+        Intent intent;
+        if(isMenu){
+            intent = new Intent(context, MenuOrderDetailActivity.class);
+            intent.putExtra("menu_ID", menu_ID);
+        }else {
+
+            intent = new Intent(context, BroadcastDetailActivity.class);
+            intent.putExtra("msg", con);
+        }
         PendingIntent pendingIntent = PendingIntent.getActivity(context
                 , 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         Log.e(TAG, con);

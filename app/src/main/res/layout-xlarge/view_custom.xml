@@ -17,7 +17,7 @@
         android:layout_alignBottom="@+id/fruitImageView"
         android:gravity="center"
         android:layout_centerHorizontal="true"
-        android:textSize="45dp" />
+        android:textSize="50dp" />
 
     <TextView
         android:id="@+id/labelTextView"
@@ -25,6 +25,6 @@
         android:layout_height="100dp"
         android:layout_below="@+id/fruitImageView"
         android:padding="4dp"
-        android:textSize="16dp"
+        android:textSize="20dp"
         android:background="@color/colorAccent" />
 </RelativeLayout>

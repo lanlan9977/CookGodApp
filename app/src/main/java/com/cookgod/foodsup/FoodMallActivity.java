@@ -363,17 +363,18 @@ public class FoodMallActivity extends AppCompatActivity {
                         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
                         String chefOdDetailJsonIn = gson.toJson(chefOdDetailList);
                         retrieveChefOrderTask = new RetrieveChefOrderTask(Util.Servlet_URL + "ChefOdDetailServlet", chef_ID, chefOdDetailJsonIn);
+
                         try {
                             String chef_or_ID = retrieveChefOrderTask.execute().get();
                             preferences.edit().putString(menu_od_ID, chef_or_ID).apply();
 
                         } catch (Exception e) {
                             Log.e(TAG, e.toString());
+                        }finally {
+                            Util.showToast(FoodMallActivity.this, "發送訂單完畢");
+                            dialog.dismiss();
+                            finish();
                         }
-                        Util.showToast(FoodMallActivity.this, "發送訂單完畢");
-                        dialog.dismiss();
-                        finish();
-
 
                     }
                 });

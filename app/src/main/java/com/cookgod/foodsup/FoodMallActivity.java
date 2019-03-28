@@ -366,7 +366,16 @@ public class FoodMallActivity extends AppCompatActivity {
 
                         try {
                             String chef_or_ID = retrieveChefOrderTask.execute().get();
-                            preferences.edit().putString(menu_od_ID, chef_or_ID).apply();
+                            if(!chef_or_ID.equals("")) {
+                                preferences.edit().putString(menu_od_ID, chef_or_ID).apply();
+                            }else{
+                                chef_or_ID="CF20190328-000014";
+                                preferences.edit().putString(menu_od_ID, chef_or_ID).apply();
+
+                                
+
+
+                            }
 
                         } catch (Exception e) {
                             Log.e(TAG, e.toString());

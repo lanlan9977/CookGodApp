@@ -113,7 +113,7 @@ public class OrderActivity extends AppCompatActivity {
     private SettingsClient settingsClient;
     private LocationRequest locationRequest;
     private LocationSettingsRequest locationSettingsRequest;
-    private Location location;
+    private  Location location;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

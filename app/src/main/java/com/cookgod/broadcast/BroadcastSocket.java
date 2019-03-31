@@ -22,6 +22,8 @@ import android.util.Log;
 
 import com.cookgod.R;
 import com.cookgod.order.MenuOrderDetailActivity;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationResult;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -52,6 +54,8 @@ public class BroadcastSocket extends WebSocketClient {
     private static final int MY_PERMISSION_ACCESS_COARSE_LOCATION = 11;
     private String commadStr,menu_ID;
     private NotificationManager notificationManager;
+    private Location myLocation;
+    private LocationCallback locationCallback;
 
 
     public BroadcastSocket(URI serverURI, Context context) {
@@ -92,9 +96,7 @@ public class BroadcastSocket extends WebSocketClient {
             showNotification(con,true);
             Log.e(TAG, con);
         } else if ("location".equals(type)) {
-//            String stringLocation =
 
-//            Location location = gson.fromJson(stringLocation, Location.class);
             DateTime now = new DateTime();
             DirectionsResult result = null;
             commadStr = LocationManager.GPS_PROVIDER;
@@ -105,8 +107,17 @@ public class BroadcastSocket extends WebSocketClient {
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSION_ACCESS_COARSE_LOCATION);
             }
-            Location myLocation = locationManager.getLastKnownLocation(commadStr);
-            String stringMyDestination = "" + myLocation.getLatitude() + "," + myLocation.getLongitude();
+            myLocation = locationManager.getLastKnownLocation(commadStr);
+            String stringMyDestination="";
+            if(myLocation!=null) {
+                stringMyDestination = "" + myLocation.getLatitude() + "," + myLocation.getLongitude();
+                Log.e(TAG, "FFFFFFFFFFFFFFFFFFFF"+stringMyDestination);
+            }else {
+                createLocationCallback();
+                stringMyDestination = "" + myLocation.getLatitude() + "," + myLocation.getLongitude();
+                Log.e(TAG, "KKKKKKKKKKKKKKKKK"+stringMyDestination);
+            }
+
             TravelMode travelMode = null;
             switch (stringList.get(4)) {
                 case "0":
@@ -119,13 +130,13 @@ public class BroadcastSocket extends WebSocketClient {
                     travelMode = TravelMode.WALKING;
                     break;
             }
-            Log.e(TAG, stringMyDestination);
+
             Log.e(TAG, travelMode.toString());
             try {
 
 
                 result = DirectionsApi.newRequest(getGeoContext()).mode(travelMode).origin(stringMyDestination).destination(stringDestination).departureTime(now).await();
-//                Log.e(TAG, result.toString());
+                Log.e(TAG, result.toString());
             } catch (Exception e) {
                 Log.e(TAG, e.toString());
             }
@@ -149,6 +160,21 @@ public class BroadcastSocket extends WebSocketClient {
                 "code = %d, reason = %s, remote = %b",
                 code, reason, remote);
         Log.e(TAG, "onClose: " + text);
+    }
+
+    private void createLocationCallback() {
+
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+                myLocation = locationResult.getLastLocation();
+                Log.e(TAG, "" + myLocation);
+//                if (location != null)
+//                    updateLocationInfo();
+
+            }
+        };
     }
 
     @Override

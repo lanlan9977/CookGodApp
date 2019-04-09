@@ -369,7 +369,7 @@ public class FoodMallActivity extends AppCompatActivity {
                             if(!chef_or_ID.equals("")) {
                                 preferences.edit().putString(menu_od_ID, chef_or_ID).apply();
                             }else{
-                                chef_or_ID="CF20190328-000014";
+                                chef_or_ID="CF20190329-000008";
                                 preferences.edit().putString(menu_od_ID, chef_or_ID).apply();
 
 

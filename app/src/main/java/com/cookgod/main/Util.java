@@ -15,7 +15,7 @@ import java.net.URISyntaxException;
 public class Util {
 //    public final static String Servlet_URL = "http://10.120.25.16:8081/CookGodTest/";//電腦
 //    public final static String Servlet_URL = "http://10.120.25.31:8081/CA106G3/";
-    public final static String Servlet_URL = "http://35.229.216.156:8081//CA106G3/";
+    public final static String Servlet_URL = "http://35.229.216.156:8081/CA106G3/";
     //        public final static String Servlet_URL ="http://10.0.2.2:8081/CookGodTest/";
 //    public final static String Servlet_URL ="http://192.168.1.110:8081/CookGodTest/";
     public final static String PREF_FILE = "preference";
@@ -25,7 +25,7 @@ public class Util {
 //            public final static String SERVER_URI ="ws://192.168.1.110:8081/CookGodTest/BroadcastSocket/";
 //    public final static String SERVER_URI ="ws://10.120.25.16:8081/CookGodTest/BroadcastSocket/";
 //    public final static String SERVER_URI ="ws://10.120.25.31:8081/CA106G3/BroadcastSocket/";
-    public final static String SERVER_URI = "ws://35.229.216.156:8081//CA106G3/BroadcastSocket/";
+    public final static String SERVER_URI = "ws://35.229.216.156:8081/CA106G3/BroadcastSocket/";
     public static BroadcastSocket broadcastSocket;
 
     public static boolean networkConnected(Activity activity) {

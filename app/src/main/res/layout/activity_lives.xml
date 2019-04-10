@@ -27,11 +27,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="觀看直播"
+        android:background="@color/colorRed"
        />
     <Button
         android:id="@+id/btnLivesLive"
         android:layout_width="match_parent"
         android:text="主廚直播"
+        android:background="@color/colorBlue"
+        android:layout_marginTop="2dp"
         android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/btnLivesFcm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:background="@color/colorOrange"
+        android:text="FCM推播"
+        />
 </LinearLayout>
 <!--直播專區-->

@@ -42,6 +42,9 @@ dependencies {
     implementation 'com.synnapps:carouselview:0.1.4'
     implementation 'com.savvi.datepicker:rangepicker:1.2.0'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.+'
+    implementation 'com.google.firebase:firebase-messaging:17.3.4'
+
 }
-///    implementation 'com.google.firebase:firebase-messaging:17.3.4'
+
 //    implementation 'com.google.firebase:firebase-core:16.0.7'
+

@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
@@ -46,6 +47,11 @@ import com.cookgod.task.CustImageTask;
 import com.cookgod.task.RetrieveAdConTask;
 import com.cookgod.task.RetrieveBroadcastTask;
 import com.cookgod.task.RetrieveCustTask;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -339,6 +345,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 onItemSelectedTo(R.string.stringCustomerService, CustomerServiceActivity.class);
                 break;
             case R.id.logout://(登出)
+                GoogleSignInClient mGoogleSignInClient;
+
+                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestId()
+                        .requestEmail()
+                        .requestProfile()
+                        .build();
+                mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+                mGoogleSignInClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                    }
+                });
                 logout();
                 SharedPreferences pref = getSharedPreferences(Util.PREF_FILE,
                         MODE_PRIVATE);

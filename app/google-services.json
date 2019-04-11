@@ -29,6 +29,10 @@
             "package_name": "com.cookgod",
             "certificate_hash": "00c4a2f31ecb2dd9d374b70bd6886d6a024e99c4"
           }
+        },
+        {
+          "client_id": "331119958448-hnu0q6v8milp60rss539im7mgqs462ce.apps.googleusercontent.com",
+          "client_type": 3
         }
       ],
       "api_key": [
